@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { elementOrder, elementLabels, weaponTypes } from '#lib/data/characters.ts';
+	import { elementOrder, weaponTypes } from '#lib/data/characters.ts';
 	import { characterViews } from '#lib/data/merged.ts';
 	import type { Element, WeaponType } from '#lib/data/types.ts';
+	import Portrait from '#lib/ui/Portrait.svelte';
+	import ElementChip from '#lib/ui/ElementChip.svelte';
 
 	let query = $state('');
 	let element = $state<Element | null>(null);
@@ -30,163 +32,130 @@
 </script>
 
 <svelte:head>
-	<title>Karakter — WuWa Tools</title>
+	<title>Resonator — WuWa Tools</title>
 </svelte:head>
 
-<h1>Karakter</h1>
-
-<div class="filters card">
-	<input type="search" placeholder="Cari nama karakter…" bind:value={query} aria-label="Cari nama" />
-	<div class="chips" role="group" aria-label="Filter elemen">
-		<button type="button" class="chip" class:active={element === null} onclick={() => (element = null)}>Semua</button>
-		{#each elementOrder as el (el)}
-			<button
-				type="button"
-				class="chip"
-				class:active={element === el}
-				style="--c: var(--el-{el})"
-				onclick={() => (element = element === el ? null : el)}>{elementLabels[el]}</button
-			>
-		{/each}
-	</div>
-	<div class="selects">
-		<label
-			>Peran
-			<select bind:value={role}>
-				<option value="">Semua peran</option>
-				{#each roles as r (r)}<option value={r}>{r}</option>{/each}
-			</select>
-		</label>
-		<label
-			>Tipe senjata
-			<select bind:value={weapon}>
-				<option value="">Semua tipe</option>
-				{#each weaponTypes as w (w)}<option value={w}>{w}</option>{/each}
-			</select>
-		</label>
-		<button type="button" class="chip" onclick={reset}>Atur ulang</button>
-	</div>
+<div class="page-head">
+	<h1>Resonator</h1>
 </div>
 
-<p class="count">
-	{filtered.length} dari {characterViews.length} karakter
-	{#if role !== ''}<span class="muted"> — filter peran hanya mencakup karakter yang sudah punya data build.</span>{/if}
+<div class="filters">
+	<label class="grow">
+		<span class="visually-hidden">Cari nama</span>
+		<input type="search" placeholder="Cari resonator" bind:value={query} />
+	</label>
+	<div class="segmented" role="group" aria-label="Filter elemen">
+		<button type="button" aria-pressed={element === null} onclick={() => (element = null)}>Semua</button>
+		{#each elementOrder as el (el)}
+			<button type="button" aria-pressed={element === el} onclick={() => (element = element === el ? null : el)}>
+				<ElementChip element={el} />
+			</button>
+		{/each}
+	</div>
+	<label>
+		Peran
+		<select bind:value={role}>
+			<option value="">Semua peran</option>
+			{#each roles as r (r)}<option value={r}>{r}</option>{/each}
+		</select>
+	</label>
+	<label>
+		Tipe senjata
+		<select bind:value={weapon}>
+			<option value="">Semua tipe</option>
+			{#each weaponTypes as w (w)}<option value={w}>{w}</option>{/each}
+		</select>
+	</label>
+	<button type="button" class="btn" onclick={reset}>Atur ulang</button>
+</div>
+
+<p class="count muted">
+	{filtered.length} resonator{#if role !== ''}. Filter peran hanya mencakup yang sudah punya data build.{/if}
 </p>
 
 <div class="grid">
 	{#each filtered as { game: c, build } (c.slug)}
-		<a class="card char" href="/characters/{c.slug}/" style="--c: var(--el-{c.element})">
-			<img src={c.icon} alt={c.name} loading="lazy" width="64" height="64" />
-			<div class="info">
-				<span class="el">{elementLabels[c.element]}</span>
-				<h2>{c.name}</h2>
-				<p class="meta">{'★'.repeat(c.rarity)} · {c.weaponType}</p>
-				<p class="roles">
-					{#if build}{build.roles.join(' / ')}{:else}<span class="badge">Belum ada data build</span>{/if}
-				</p>
-			</div>
+		<a class="tile" href="/characters/{c.slug}/">
+			<Portrait src={c.icon} name={c.name} element={c.element} rarity={c.rarity} />
+			<span class="name">{c.name}</span>
+			<span class="line"><ElementChip element={c.element} /><span class="weapon muted">{c.weaponType}</span></span>
+			{#if build}
+				<span class="roles muted">{build.roles.join(' / ')}</span>
+			{:else}
+				<span class="badge">Belum ada data build</span>
+			{/if}
 		</a>
 	{:else}
-		<p class="muted">Tidak ada karakter yang cocok dengan filter.</p>
+		<p class="muted">Tidak ada resonator yang cocok dengan filter.</p>
 	{/each}
 </div>
 
 <style>
 	.filters {
 		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-	input[type='search'],
-	select {
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		padding: 0.45rem 0.7rem;
-		width: 100%;
-	}
-	.chips,
-	.selects {
-		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 0.75rem;
 		align-items: end;
 	}
-	.selects label {
-		display: flex;
-		flex-direction: column;
-		font-size: 0.8rem;
-		color: var(--text-muted);
-		gap: 0.2rem;
-		flex: 1 1 160px;
+	.filters label {
+		flex: 0 1 9rem;
 	}
-	.chip {
-		--c: var(--accent);
-		background: transparent;
-		border: 1px solid var(--c);
-		color: var(--c);
-		border-radius: 999px;
-		padding: 0.3rem 0.8rem;
-		cursor: pointer;
+	.filters .grow {
+		flex: 1 1 10rem;
 	}
-	.chip.active {
-		background: var(--c);
-		color: var(--bg);
+	.segmented button {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2rem;
+	}
+	.segmented button :global(.el) {
+		color: inherit;
+		font-size: var(--fs-sm);
+		font-weight: 500;
 	}
 	.count {
-		color: var(--text-muted);
-		margin: 1rem 0 0.5rem;
-	}
-	.muted {
-		color: var(--text-muted);
+		margin: 1rem 0 0.75rem;
+		font-size: var(--fs-sm);
 	}
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-		gap: 0.8rem;
+		grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+		gap: 0.75rem;
 	}
-	.char {
+	.tile {
 		display: flex;
-		gap: 0.7rem;
-		align-items: center;
-		text-decoration: none;
+		flex-direction: column;
+		gap: 0.3rem;
+		padding: 0.5rem 0.5rem 0.75rem;
+		background: var(--surface);
+		border-radius: var(--radius);
 		color: var(--text);
-		border-left: 4px solid var(--c);
-		transition: background 0.15s;
+		text-decoration: none;
 	}
-	.char:hover {
+	.tile:hover {
 		background: var(--surface-2);
 	}
-	.char h2 {
-		margin: 0.1rem 0;
-		font-size: 1.05rem;
-	}
-	.el {
-		color: var(--c);
-		font-size: 0.75rem;
+	.name {
 		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
+		margin-top: 0.3rem;
 	}
-	.roles,
-	.meta {
-		margin: 0;
-		font-size: 0.85rem;
-		color: var(--text-muted);
+	.line {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		flex-wrap: wrap;
 	}
-	.char img {
-		width: 64px;
-		height: 64px;
-		border-radius: 8px;
-		background: var(--surface-2);
-		object-fit: cover;
-		flex: none;
+	.weapon,
+	.roles {
+		font-size: var(--fs-xs);
 	}
 	.badge {
-		display: inline-block;
-		padding: 0.05rem 0.5rem;
-		border: 1px solid var(--border);
-		border-radius: 999px;
-		font-size: 0.72rem;
+		align-self: flex-start;
+		font-size: var(--fs-xs);
+		padding: 0.1rem 0.5rem;
+		border-radius: var(--radius-sm);
+		background: var(--violet-soft);
+		color: var(--violet);
 	}
 </style>
