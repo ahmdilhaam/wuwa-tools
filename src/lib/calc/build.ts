@@ -1,7 +1,9 @@
 // State input UI (satuan persen) dan konversi ke DamageInput (pecahan).
 import type { DamageInput } from './damage';
 import { CUSTOM_ENEMY_ID, DEFAULT_ENEMY_ID, presetResFor, type Element } from './enemies';
+import type { GameCharacter, GameWeapon } from '#lib/data/game/types.ts';
 import type { ScalingStat } from './skills';
+import { weaponContribution, type WeaponToggle } from './weapon';
 
 export const damageTypes = [
 	{ id: 'basic', label: 'Basic Attack' },
@@ -34,6 +36,10 @@ export interface BuildState {
 	/** MV hasil isian picker; dipakai mendeteksi suntingan manual */
 	pickedMv: number | null;
 	pickWeapon: string;
+	/** Refinement senjata 1..5 */
+	pickRefine: number;
+	/** Saklar efek pasif senjata, kunci = indeks efek */
+	weaponToggles: Record<number, WeaponToggle>;
 	flatDmg: NumField;
 	element: Element;
 	elementBonusPct: NumField;
@@ -65,6 +71,8 @@ export function defaultBuild(): BuildState {
 		pickLevel: 10,
 		pickedMv: null,
 		pickWeapon: '',
+		pickRefine: 1,
+		weaponToggles: {},
 		flatDmg: 0,
 		element: 'spectro',
 		elementBonusPct: 30,
@@ -96,24 +104,33 @@ export function baseResOf(b: BuildState): number {
 	return presetResFor(b.enemyId, b.element) ?? num(b.customResPct) / 100;
 }
 
-export function toDamageInput(b: BuildState): DamageInput {
+/**
+ * Konversi build ke DamageInput. Efek pasif senjata yang aktif ditambahkan di atas isian pengguna
+ * (isian tidak pernah diubah).
+ */
+export function toDamageInput(
+	b: BuildState,
+	weapon: GameWeapon | null = null,
+	character: GameCharacter | null = null
+): DamageInput {
+	const w = weaponContribution(b, weapon, character);
 	return {
 		attackerLevel: num(b.attackerLevel),
 		enemyLevel: num(b.enemyLevel),
-		atk: num(b.scalingStat),
-		critRate: num(b.critRatePct) / 100,
-		critDmg: num(b.critDmgPct) / 100,
+		atk: num(b.scalingStat) + w.scalingStat,
+		critRate: (num(b.critRatePct) + w.critRatePct) / 100,
+		critDmg: (num(b.critDmgPct) + w.critDmgPct) / 100,
 		mv: num(b.mvPct),
 		flatDmg: num(b.flatDmg),
 		elementBonus: num(b.elementBonusPct) / 100,
 		typeBonus: num(b.typeBonusPct) / 100,
 		generalBonus: num(b.generalBonusPct) / 100,
-		combatBonus: num(b.combatBonusPct) / 100,
-		amplify: num(b.amplifyPct) / 100,
+		combatBonus: (num(b.combatBonusPct) + w.dmgBonusPct) / 100,
+		amplify: (num(b.amplifyPct) + w.amplifyPct) / 100,
 		special: num(b.specialPct) / 100,
 		defReduction: num(b.defReductionPct) / 100,
-		defIgnore: num(b.defIgnorePct) / 100,
+		defIgnore: (num(b.defIgnorePct) + w.defIgnorePct) / 100,
 		baseRes: baseResOf(b),
-		resShred: num(b.resShredPct) / 100
+		resShred: (num(b.resShredPct) + w.resShredPct) / 100
 	};
 }
