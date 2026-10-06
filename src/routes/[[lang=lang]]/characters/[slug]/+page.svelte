@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inlineMd } from '#lib/data/format.ts';
+	import { formatNumber, getLocale, localize, t } from '#lib/i18n/index.svelte.ts';
 	import type { CharacterSection } from '#lib/data/types.ts';
 	import Portrait from '#lib/ui/Portrait.svelte';
 	import Rarity from '#lib/ui/Rarity.svelte';
@@ -26,42 +27,50 @@
 	// Level MV yang dipilih (1–10), default Lv10.
 	let level = $state(10);
 	const levels = Array.from({ length: 10 }, (_, i) => i + 1);
-	const fmt = (n: number | undefined) => (n === undefined ? '—' : `${Math.round(n * 100) / 100}%`);
+	const fmt = (n: number | undefined) =>
+		n === undefined ? '—' : `${formatNumber(n, { maximumFractionDigits: 2 })}%`;
 
 	// Urutan tetap bagian: Echo, Senjata, Stat, Forte, Substat, Tim, Rotasi, Sequence, Catatan, lainnya.
 	const blocks = $derived(
 		!c
 			? []
 			: ([
-					...c.echo.map((s) => ({ title: 'Echo', s })),
-					c.weapons && { title: 'Senjata', s: c.weapons },
-					c.stats && { title: 'Stat', s: c.stats },
-					c.forte && { title: 'Forte', s: c.forte },
-					c.substats && { title: 'Substat', s: c.substats },
-					c.teams && { title: 'Tim', s: c.teams },
-					c.rotation && { title: 'Rotasi', s: c.rotation },
-					c.sequences && { title: 'Prioritas sequence', s: c.sequences },
-					c.notes && { title: 'Catatan', s: c.notes },
-					...c.other.map((s) => ({ title: 'Lainnya', s }))
+					...c.echo.map((s) => ({ title: t('library.detail.block.echo'), s })),
+					c.weapons && { title: t('library.detail.block.weapons'), s: c.weapons },
+					c.stats && { title: t('library.detail.block.stats'), s: c.stats },
+					c.forte && { title: t('library.detail.block.forte'), s: c.forte },
+					c.substats && { title: t('library.detail.block.substats'), s: c.substats },
+					c.teams && { title: t('library.detail.block.teams'), s: c.teams },
+					c.rotation && { title: t('library.detail.block.rotation'), s: c.rotation },
+					c.sequences && { title: t('library.detail.block.sequences'), s: c.sequences },
+					c.notes && { title: t('library.detail.block.notes'), s: c.notes },
+					...c.other.map((s) => ({ title: t('library.detail.block.other'), s }))
 				].filter(Boolean) as { title: string; s: CharacterSection }[])
 	);
 
-	// Teks Indonesia (fallback Inggris); paragraf dipisah baris kosong, baris baru tunggal dijaga lewat CSS.
+	// Teks sesuai bahasa aktif, atau bahasa lainnya bila tombol ditekan (fallback Inggris);
+	// paragraf dipisah baris kosong, baris baru tunggal dijaga lewat CSS.
 	type Localized = { en: string; id: string };
-	const paragraphs = (d: Localized, showEn: boolean) => (showEn ? d.en : d.id || d.en).split(/\n{2,}/);
+	const paragraphs = (d: Localized, showOther: boolean) => {
+		const lang = (getLocale() === 'en') !== showOther ? 'en' : 'id';
+		return (lang === 'en' ? d.en : d.id || d.en).split(/\n{2,}/);
+	};
+	// Label tombol selalu menawarkan bahasa yang sedang tidak tampil.
+	const toggleLabel = (showOther: boolean) =>
+		(getLocale() === 'en') !== showOther ? t('library.toggle.showTranslation') : t('library.toggle.showOriginal');
 	const hasTranslation = (list: { description: Localized }[]) => list.some((x) => x.description.id && x.description.id !== x.description.en);
-	let showEnSkill = $state(false);
-	let showEnSeq = $state(false);
+	let showOtherSkill = $state(false);
+	let showOtherSeq = $state(false);
 	const skillsTranslated = $derived(hasTranslation(skills?.skills ?? []));
 	const seqTranslated = $derived(hasTranslation(skills?.sequences ?? []));
 	const movingSkills = $derived((skills?.skills ?? []).filter((sk) => sk.hits.length > 0));
 </script>
 
 <svelte:head>
-	<title>{game.name} — WuWa Tools</title>
+	<title>{t('library.pageTitle', { name: game.name })}</title>
 </svelte:head>
 
-<p class="back"><a href="/characters/">Semua resonator</a></p>
+<p class="back"><a href={localize('/characters/')}>{t('library.detail.back')}</a></p>
 
 <header class="panel-cut head" style="--c: var(--el-{game.element})">
 	<svg class="wave" viewBox="0 0 400 120" preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
@@ -76,24 +85,24 @@
 			<span class="weapon">{game.weaponType}</span>
 		</div>
 		{#if c && c.roles.length}<p class="roles">{c.roles.join(' / ')}</p>{/if}
-		{#if c?.source}<p class="src muted">Sumber: {c.source}</p>{/if}
+		{#if c?.source}<p class="src muted">{t('library.detail.source', { source: c.source })}</p>{/if}
 	</div>
 </header>
 
-<nav class="subnav" aria-label="Bagian halaman">
-	{#if c}<a href="#build">Build</a>{/if}
+<nav class="subnav" aria-label={t('library.detail.subnavLabel')}>
+	{#if c}<a href="#build">{t('library.detail.section.build')}</a>{/if}
 	{#if skills}
-		<a href="#skill">Skill</a>
-		<a href="#mv">Motion value</a>
-		<a href="#sequence">Sequence</a>
+		<a href="#skill">{t('library.detail.section.skill')}</a>
+		<a href="#mv">{t('library.detail.section.motionValue')}</a>
+		<a href="#sequence">{t('library.detail.section.sequence')}</a>
 	{/if}
 </nav>
 
 {#if !c}
-	<p class="notice">Belum ada data build untuk resonator ini. Data skill dan sequence di bawah berasal dari game.</p>
+	<p class="notice">{t('library.detail.noBuildNotice')}</p>
 {:else}
 	<section id="build" class="block">
-		<h2>Build</h2>
+		<h2>{t('library.detail.section.build')}</h2>
 		<div class="sections">
 			{#each blocks as { title, s }, i (i)}
 				<section class="sec">
@@ -113,13 +122,13 @@
 
 {#if skills}
 	<section id="skill" class="block">
-		<h2>Skill</h2>
+		<h2>{t('library.detail.section.skill')}</h2>
 		{#if skillsTranslated}
-			<button type="button" class="toggle" aria-pressed={showEnSkill} onclick={() => (showEnSkill = !showEnSkill)}>
-				{showEnSkill ? 'Tampilkan terjemahan (Indonesia)' : 'Tampilkan teks asli (Inggris)'}
+			<button type="button" class="toggle" aria-pressed={showOtherSkill} onclick={() => (showOtherSkill = !showOtherSkill)}>
+				{toggleLabel(showOtherSkill)}
 			</button>
-		{:else}
-			<p class="muted note">Teks dari game (bahasa Inggris)</p>
+		{:else if getLocale() === 'id'}
+			<p class="muted note">{t('library.detail.gameTextEnglish')}</p>
 		{/if}
 		{#each grouped as [type, list] (type)}
 			<div class="group">
@@ -128,8 +137,8 @@
 					<div class="skill">
 						<strong>{sk.name}</strong>
 						<details>
-							<summary>Deskripsi</summary>
-							{#each paragraphs(sk.description, showEnSkill) as para, k (k)}<p class="desc">{para}</p>{/each}
+							<summary>{t('library.detail.description')}</summary>
+							{#each paragraphs(sk.description, showOtherSkill) as para, k (k)}<p class="desc">{para}</p>{/each}
 						</details>
 					</div>
 				{/each}
@@ -138,9 +147,9 @@
 	</section>
 
 	<section id="mv" class="block">
-		<h2>Motion value</h2>
+		<h2>{t('library.detail.section.motionValue')}</h2>
 		<div class="levels">
-			<span class="muted" id="lvl-label">Level skill</span>
+			<span class="muted" id="lvl-label">{t('library.detail.skillLevel')}</span>
 			<div class="segmented" role="group" aria-labelledby="lvl-label">
 				{#each levels as l (l)}
 					<button type="button" aria-pressed={level === l} onclick={() => (level = l)}>{l}</button>
@@ -153,7 +162,7 @@
 				<div class="table-wrap">
 					<table>
 						<thead>
-							<tr><th>Jenis damage</th><th>Skala</th><th>Jenis</th><th class="num">MV Lv {level}</th></tr>
+							<tr><th>{t('library.detail.mv.damageType')}</th><th>{t('library.detail.mv.scaling')}</th><th>{t('library.detail.mv.kind')}</th><th class="num">{t('library.detail.mv.column', { level })}</th></tr>
 						</thead>
 						<tbody>
 							{#each sk.hits as h (h.id)}
@@ -172,10 +181,10 @@
 	</section>
 
 	<section id="sequence" class="block">
-		<h2>Sequence</h2>
+		<h2>{t('library.detail.section.sequence')}</h2>
 		{#if seqTranslated}
-			<button type="button" class="toggle" aria-pressed={showEnSeq} onclick={() => (showEnSeq = !showEnSeq)}>
-				{showEnSeq ? 'Tampilkan terjemahan (Indonesia)' : 'Tampilkan teks asli (Inggris)'}
+			<button type="button" class="toggle" aria-pressed={showOtherSeq} onclick={() => (showOtherSeq = !showOtherSeq)}>
+				{toggleLabel(showOtherSeq)}
 			</button>
 		{/if}
 		<ol class="seq">
@@ -184,7 +193,7 @@
 					<span class="sn" aria-hidden="true">S{sq.index}</span>
 					<div>
 						<h3><span class="visually-hidden">S{sq.index}, </span>{sq.name}</h3>
-						{#each paragraphs(sq.description, showEnSeq) as para, k (k)}<p class="desc">{para}</p>{/each}
+						{#each paragraphs(sq.description, showOtherSeq) as para, k (k)}<p class="desc">{para}</p>{/each}
 					</div>
 				</li>
 			{/each}

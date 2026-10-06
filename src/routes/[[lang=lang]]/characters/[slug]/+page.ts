@@ -1,4 +1,6 @@
 import { error } from '@sveltejs/kit';
+import { en } from '#lib/i18n/en.ts';
+import { id } from '#lib/i18n/id.ts';
 import { characterViews, getCharacterView } from '#lib/data/merged.ts';
 import type { CharacterSkills } from '#lib/data/game/types.ts';
 
@@ -15,9 +17,9 @@ export function entries() {
 	]);
 }
 
-export async function load({ params }: { params: { slug: string } }) {
+export async function load({ params }: { params: { slug: string; lang?: string } }) {
 	const view = getCharacterView(params.slug);
-	if (!view) error(404, 'Karakter tidak ditemukan');
+	if (!view) error(404, (params.lang === 'en' ? en : id).library.detail.notFound);
 	const loader = skillFiles[`../../../../lib/data/game/skills/${params.slug}.json`];
 	const skills = loader ? await loader() : null;
 	return { view, skills };

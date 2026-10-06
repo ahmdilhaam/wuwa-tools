@@ -4,6 +4,7 @@
 	import type { Element, WeaponType } from '#lib/data/types.ts';
 	import Portrait from '#lib/ui/Portrait.svelte';
 	import ElementChip from '#lib/ui/ElementChip.svelte';
+	import { localize, t } from '#lib/i18n/index.svelte.ts';
 
 	let query = $state('');
 	let element = $state<Element | null>(null);
@@ -32,20 +33,20 @@
 </script>
 
 <svelte:head>
-	<title>Resonator — WuWa Tools</title>
+	<title>{t('library.pageTitle', { name: t('library.characters.title') })}</title>
 </svelte:head>
 
 <div class="page-head">
-	<h1>Resonator</h1>
+	<h1>{t('library.characters.title')}</h1>
 </div>
 
 <div class="filters">
 	<label class="grow">
-		<span class="visually-hidden">Cari nama</span>
-		<input type="search" placeholder="Cari resonator" bind:value={query} />
+		<span class="visually-hidden">{t('library.characters.searchLabel')}</span>
+		<input type="search" placeholder={t('library.characters.searchPlaceholder')} bind:value={query} />
 	</label>
-	<div class="segmented" role="group" aria-label="Filter elemen">
-		<button type="button" aria-pressed={element === null} onclick={() => (element = null)}>Semua</button>
+	<div class="segmented" role="group" aria-label={t('library.characters.elementFilter')}>
+		<button type="button" aria-pressed={element === null} onclick={() => (element = null)}>{t('library.characters.all')}</button>
 		{#each elementOrder as el (el)}
 			<button type="button" aria-pressed={element === el} onclick={() => (element = element === el ? null : el)}>
 				<ElementChip element={el} />
@@ -53,40 +54,40 @@
 		{/each}
 	</div>
 	<label>
-		Peran
+		{t('library.characters.role')}
 		<select bind:value={role}>
-			<option value="">Semua peran</option>
+			<option value="">{t('library.characters.allRoles')}</option>
 			{#each roles as r (r)}<option value={r}>{r}</option>{/each}
 		</select>
 	</label>
 	<label>
-		Tipe senjata
+		{t('library.characters.weaponType')}
 		<select bind:value={weapon}>
-			<option value="">Semua tipe</option>
+			<option value="">{t('library.characters.allWeaponTypes')}</option>
 			{#each weaponTypes as w (w)}<option value={w}>{w}</option>{/each}
 		</select>
 	</label>
-	<button type="button" class="btn" onclick={reset}>Atur ulang</button>
+	<button type="button" class="btn" onclick={reset}>{t('library.characters.reset')}</button>
 </div>
 
 <p class="count muted">
-	{filtered.length} resonator{#if role !== ''}. Filter peran hanya mencakup yang sudah punya data build.{/if}
+	{t('characters.count', { count: filtered.length })}{#if role !== ''}. {t('library.characters.roleNote')}{/if}
 </p>
 
 <div class="grid">
 	{#each filtered as { game: c, build } (c.slug)}
-		<a class="tile" href="/characters/{c.slug}/">
+		<a class="tile" href={localize(`/characters/${c.slug}/`)}>
 			<Portrait src={c.icon} name={c.name} element={c.element} rarity={c.rarity} />
 			<span class="name">{c.name}</span>
 			<span class="line"><ElementChip element={c.element} /><span class="weapon muted">{c.weaponType}</span></span>
 			{#if build}
 				<span class="roles muted">{build.roles.join(' / ')}</span>
 			{:else}
-				<span class="badge">Belum ada data build</span>
+				<span class="badge">{t('library.characters.noBuild')}</span>
 			{/if}
 		</a>
 	{:else}
-		<p class="muted">Tidak ada resonator yang cocok dengan filter.</p>
+		<p class="muted">{t('library.characters.empty')}</p>
 	{/each}
 </div>
 

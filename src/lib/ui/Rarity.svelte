@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { t } from '#lib/i18n/index.svelte.ts';
+
 	let { rarity }: { rarity: number } = $props();
 </script>
 
-<span class="rarity r{rarity}" role="img" aria-label="{rarity} bintang">{'★'.repeat(rarity)}</span>
+<span class="rarity r{rarity}" role="img" aria-label={t('library.stars', { count: rarity })}>{'★'.repeat(rarity)}</span>
 
 <style>
 	.rarity {

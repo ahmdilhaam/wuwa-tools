@@ -3,6 +3,7 @@
 	import type { SonataSet } from '#lib/data/game/types.ts';
 	import { echoSets, comboNotes } from '#lib/data/echo-sets.ts';
 	import { normalizeName } from '#lib/data/merged.ts';
+	import { gameText, t } from '#lib/i18n/index.svelte.ts';
 
 	// Nama di game berbeda dari catatan tulisan tangan: samakan lewat alias.
 	const aliases: Record<string, string> = {
@@ -40,30 +41,30 @@
 </script>
 
 <svelte:head>
-	<title>Echo set — WuWa Tools</title>
+	<title>{t('library.pageTitle', { name: t('library.echoSets.title') })}</title>
 </svelte:head>
 
 <div class="page-head">
-	<h1>Echo set</h1>
-	<p>{rows.length} set Sonata. Teks bonus dari game (bahasa Inggris); singkatan dan catatan ditulis tangan.</p>
+	<h1>{t('library.echoSets.title')}</h1>
+	<p>{t('library.echoSets.intro', { count: rows.length })}</p>
 </div>
 
 <div class="filters">
 	<label>
-		<span class="visually-hidden">Cari set</span>
-		<input type="search" placeholder="Cari set atau singkatan" bind:value={query} />
+		<span class="visually-hidden">{t('library.echoSets.searchLabel')}</span>
+		<input type="search" placeholder={t('library.echoSets.searchPlaceholder')} bind:value={query} />
 	</label>
-	<span class="muted count">{filtered.length} set</span>
+	<span class="muted count">{t('library.echoSets.count', { count: filtered.length })}</span>
 </div>
 
 <div class="table-wrap">
 	<table>
 		<thead>
 			<tr>
-				<th>Set</th>
-				<th>Singkatan</th>
-				<th class="num">Echo</th>
-				<th>Bonus</th>
+				<th>{t('library.echoSets.set')}</th>
+				<th>{t('library.echoSets.abbreviation')}</th>
+				<th class="num">{t('library.echoSets.echoes')}</th>
+				<th>{t('library.echoSets.bonus')}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -74,7 +75,7 @@
 							{#if r.icon}<img src={r.icon} alt="" loading="lazy" width="28" height="28" />{/if}
 							<strong>{r.name}</strong>
 						</span>
-						{#if r.note}<div class="muted small">{r.note}</div>{/if}
+						{#if r.note}<div class="muted small">{gameText(r.note)}</div>{/if}
 					</td>
 					<td class="muted">{r.abbrev.join(', ') || '—'}</td>
 					<td class="num">{r.echoCount}</td>
@@ -90,16 +91,16 @@
 					</td>
 				</tr>
 			{:else}
-				<tr><td colspan="4" class="muted">Tidak ada set yang cocok.</td></tr>
+				<tr><td colspan="4" class="muted">{t('library.echoSets.empty')}</td></tr>
 			{/each}
 		</tbody>
 	</table>
 </div>
 
 <section class="combo">
-	<h2>Kombinasi 3pc + 2pc umum</h2>
+	<h2>{t('library.echoSets.comboHeading')}</h2>
 	<ul>
-		{#each comboNotes as n (n)}<li>{n}</li>{/each}
+		{#each comboNotes as n (n.en)}<li>{gameText(n)}</li>{/each}
 	</ul>
 </section>
 

@@ -1,5 +1,11 @@
 // Tipe data bersama untuk perpustakaan pengetahuan WuWa.
 
+/** Teks tulisan tangan dua bahasa. */
+export interface LocalizedText {
+	id: string;
+	en: string;
+}
+
 export type Element = 'aero' | 'glacio' | 'fusion' | 'electro' | 'spectro' | 'havoc';
 export type WeaponType = 'Sword' | 'Broadblade' | 'Pistols' | 'Gauntlets' | 'Rectifier';
 
@@ -41,7 +47,7 @@ export interface EchoSet {
 	/** null = detail bonus belum ada di sumber. */
 	bonuses: { twoPiece: string | null; fivePiece: string | null } | null;
 	verified: boolean;
-	note?: string;
+	note?: LocalizedText;
 }
 
 export interface Weapon {
@@ -49,13 +55,13 @@ export interface Weapon {
 	type: WeaponType;
 	stats?: string;
 	users: string[];
-	notes?: string;
+	notes?: LocalizedText;
 	/** Catatan koreksi atas data sumber. */
-	correction?: string;
+	correction?: LocalizedText;
 }
 
 export interface SubstatRow {
-	stat: string;
+	stat: string | LocalizedText;
 	low: string;
 	midLow: string;
 	midHigh: string;
