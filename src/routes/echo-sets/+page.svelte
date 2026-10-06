@@ -6,7 +6,6 @@
 
 	// Nama di game berbeda dari catatan tulisan tangan: samakan lewat alias.
 	const aliases: Record<string, string> = {
-		havoceclipse: 'sunsinkingeclipse',
 		reelsofsplicedmemories: 'reelofsplicedmemories'
 	};
 	const key = (name: string) => {
@@ -18,7 +17,6 @@
 
 	const rows = (sonataSets as SonataSet[]).map((s) => {
 		const hand = notesByKey.get(key(s.name));
-		const text = (p: number) => s.bonuses.find((b) => b.pieces === p)?.text.en ?? '—';
 		return {
 			id: s.id,
 			name: s.name,
@@ -26,9 +24,8 @@
 			abbrev: hand?.abbrev ?? [],
 			note: hand?.note,
 			forCharacter: hand?.forCharacter,
-			two: text(2),
-			three: s.bonuses.some((b) => b.pieces === 3) ? text(3) : null,
-			five: text(5),
+			// Urut per jumlah keping; set 3pc tidak punya bonus 2pc/5pc.
+			bonuses: [...s.bonuses].sort((a, b) => a.pieces - b.pieces).map((b) => ({ pieces: b.pieces, text: b.text.en })),
 			echoCount: s.echoIds.length
 		};
 	});
@@ -66,9 +63,7 @@
 				<th>Set</th>
 				<th>Singkatan</th>
 				<th class="num">Echo</th>
-				<th>2pc</th>
-				<th>3pc</th>
-				<th>5pc</th>
+				<th>Bonus</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -83,12 +78,19 @@
 					</td>
 					<td class="muted">{r.abbrev.join(', ') || '—'}</td>
 					<td class="num">{r.echoCount}</td>
-					<td class="txt">{r.two}</td>
-					<td class="txt">{r.three ?? '—'}</td>
-					<td class="txt">{r.five}</td>
+					<td class="txt">
+						<dl class="bonuses">
+							{#each r.bonuses as b (b.pieces)}
+								<div>
+									<dt>{b.pieces}pc</dt>
+									<dd>{b.text}</dd>
+								</div>
+							{/each}
+						</dl>
+					</td>
 				</tr>
 			{:else}
-				<tr><td colspan="6" class="muted">Tidak ada set yang cocok.</td></tr>
+				<tr><td colspan="4" class="muted">Tidak ada set yang cocok.</td></tr>
 			{/each}
 		</tbody>
 	</table>
@@ -128,8 +130,25 @@
 		min-width: 12rem;
 	}
 	.txt {
-		max-width: 48ch;
-		min-width: 16rem;
+		min-width: 22rem;
+	}
+	.bonuses {
+		display: grid;
+		gap: 0.45rem;
+		margin: 0;
+		max-width: 68ch;
+	}
+	.bonuses div {
+		display: grid;
+		grid-template-columns: 2.6rem 1fr;
+		gap: 0.5rem;
+	}
+	.bonuses dt {
+		font-weight: 600;
+		color: var(--gold);
+	}
+	.bonuses dd {
+		margin: 0;
 	}
 	.small {
 		font-size: var(--fs-xs);

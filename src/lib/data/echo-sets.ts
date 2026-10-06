@@ -19,13 +19,13 @@ export const echoSets: EchoSet[] = [
 	{ name: 'Molten Rift', abbrev: ['MR'], kind: 'fusion', bonuses: b('Fusion DMG +10%', 'Fusion DMG +30% selama 15 dtk setelah Resonance Skill'), verified: true },
 	{ name: 'Freezing Frost', abbrev: ['FF'], kind: 'glacio', bonuses: b('Glacio DMG +10%', 'Glacio DMG +10% setelah Basic/Heavy ATK (stack 3×, masing-masing 15 dtk)'), verified: true },
 	{
-		// Koreksi: sumber menulis "Havoc Eclipse"; nama resmi set Havoc adalah Sun-sinking Eclipse (SSE).
-		name: 'Sun-sinking Eclipse',
-		abbrev: ['SSE', 'HE'],
+		// Nama di data game saat ini "Havoc Eclipse"; "Sun-sinking Eclipse" (SSE) adalah nama lamanya.
+		name: 'Havoc Eclipse',
+		abbrev: ['HE', 'SSE'],
 		kind: 'havoc',
 		bonuses: b('Havoc DMG +10%', 'Havoc DMG +7.5% setelah Basic/Heavy ATK (stack 4×, masing-masing 15 dtk)'),
 		verified: true,
-		note: 'Di sumber dan data karakter tertulis "Havoc Eclipse"; nama resminya Sun-sinking Eclipse.'
+		note: 'Dulu bernama Sun-sinking Eclipse; singkatan SSE masih sering dipakai komunitas.'
 	},
 	{ name: 'Celestial Light', abbrev: ['CL'], kind: 'spectro', bonuses: b('Spectro DMG +10%', 'Spectro DMG +30% selama 15 dtk setelah Intro Skill'), verified: true },
 
