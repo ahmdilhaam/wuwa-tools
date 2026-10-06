@@ -276,7 +276,7 @@
 										checked={r.on}
 										onchange={(ev) => setToggle(r.index, r.effect, { on: ev.currentTarget.checked })}
 									/>
-									<span>{r.effect.sentence}</span>
+									<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
 								</label>
 								{#if r.effect.team}
 									<span class="tag">Buff rekan tim. Aktifkan bila penyerang adalah penerima buff.</span>
@@ -300,10 +300,10 @@
 									<span class="result">{effectAmountLabel(r, fmt)}</span>
 								{/if}
 							{:else if r.kind === 'permanent'}
-								<span>{r.effect.sentence}</span>
+								<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
 								<span class="tag">Sudah termasuk di halaman atribut</span>
 							{:else}
-								<span>{r.effect.sentence}</span>
+								<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
 							{/if}
 						</li>
 					{/each}

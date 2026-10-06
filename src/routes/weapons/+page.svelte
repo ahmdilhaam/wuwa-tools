@@ -25,8 +25,13 @@
 		)
 	);
 
-	const passiveText = (w: GameWeapon, r: number) =>
-		w.passive[`r${r}` as 'r1' | 'r2' | 'r3' | 'r4' | 'r5'].en;
+	/** Tampilkan teks asli (Inggris) di detail pasif */
+	let showOriginal = $state(false);
+	const passiveText = (w: GameWeapon, r: number) => {
+		const t = w.passive[`r${r}` as 'r1' | 'r2' | 'r3' | 'r4' | 'r5'];
+		return showOriginal ? t.en : t.id || t.en;
+	};
+	const translated = $derived(list.some((w) => w.passive.r1.id !== w.passive.r1.en));
 	const secondaryUnit = (name: string) => (name.endsWith('%') || name.startsWith('Crit') || name === 'Energy Regen' ? '%' : '');
 </script>
 
@@ -36,7 +41,7 @@
 
 <div class="page-head">
 	<h1>Senjata</h1>
-	<p>{list.length} senjata. Teks pasif dari game (bahasa Inggris); kolom pengguna ditulis tangan.</p>
+	<p>{list.length} senjata.{#if !translated} Teks pasif dari game (bahasa Inggris).{/if} Kolom pengguna ditulis tangan.</p>
 </div>
 
 <div class="filters">
@@ -100,6 +105,9 @@
 								{/each}
 							</div>
 							<p class="desc">{passiveText(w, r)}</p>
+							{#if translated}
+								<label class="orig muted"><input type="checkbox" bind:checked={showOriginal} /> Tampilkan teks asli (Inggris)</label>
+							{/if}
 						</details>
 					</td>
 				</tr>
@@ -148,6 +156,12 @@
 	.users {
 		max-width: 24ch;
 		min-width: 10rem;
+	}
+	.orig {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.8rem;
 	}
 	.passive {
 		min-width: 16rem;
