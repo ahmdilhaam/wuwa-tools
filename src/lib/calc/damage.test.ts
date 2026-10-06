@@ -152,8 +152,9 @@ describe('skill picker helper', () => {
 		expect(mvAt(skill.hits[0], 99)).toBe(100);
 	});
 	it('label stat skala mengikuti hit', () => {
-		expect(scalingFieldLabel(scalingOf(skill.hits[3]))).toBe('Stat skala (HP)');
-		expect(scalingFieldLabel(scalingOf(skill.hits[0]))).toBe('Stat skala (ATK)');
+		const tr = (key: string, params?: Record<string, string | number>) => `${key}:${params?.stat}`;
+		expect(scalingFieldLabel(scalingOf(skill.hits[3]), tr)).toBe('calc.inputs.scalingField:HP');
+		expect(scalingFieldLabel(scalingOf(skill.hits[0]), tr)).toBe('calc.inputs.scalingField:ATK');
 		expect(scalingOf({ ...skill.hits[0], scaling: 'Energy Regen' })).toBe('ATK');
 	});
 	it('heal dan Energy Regen bukan damage', () => {

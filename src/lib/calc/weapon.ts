@@ -1,7 +1,8 @@
 // Kontribusi efek pasif senjata yang terpicu saat tempur (fungsi murni, tanpa Svelte).
 // Efek permanen sudah ada di halaman atribut (Rule 2), jadi tidak pernah dihitung ulang di sini.
 import type { GameCharacter, GameWeapon, WeaponEffect } from '#lib/data/game/types.ts';
-import type { ScalingStat } from './skills.ts';
+import type { ScalingStat, Translate } from './skills.ts';
+import type { DictKey, Params } from '#lib/i18n/index.svelte.ts';
 
 export interface WeaponToggle {
 	on: boolean;
@@ -28,8 +29,8 @@ export interface EffectResult {
 	stacks: number;
 	/** Efek berlaku untuk hit ini (scope, stat skala, data karakter) */
 	applies: boolean;
-	/** Alasan tidak berlaku, dalam bahasa Indonesia */
-	reason: string | null;
+	/** Alasan tidak berlaku, berupa kunci kamus (diterjemahkan saat render) */
+	reason: { key: DictKey; params?: Params } | null;
 	/** Nilai persen setelah dikali stack (satuan persen) */
 	valuePct: number;
 	/** Tambahan stat skala (ATK/HP/DEF datar) untuk atkPct/hpPct/defPct, selain itu 0 */
@@ -117,22 +118,25 @@ export function weaponContribution(
 		const s = effect.stat;
 		if (s === 'energyRegen') {
 			r.applies = false;
-			r.reason = 'Energy Regen tidak memengaruhi damage';
+			r.reason = { key: 'calc.weapon.reasonEnergyRegen' };
 		} else if (s === 'atkPct' || s === 'hpPct' || s === 'defPct') {
 			const want = statOfScaling[build.scalingType];
 			if (s !== want.stat) {
 				r.applies = false;
-				r.reason = `Hit ini berskala ${want.label}, efek ini menambah ${s === 'atkPct' ? 'ATK' : s === 'hpPct' ? 'HP' : 'DEF'}`;
+				r.reason = {
+					key: 'calc.weapon.reasonScaling',
+					params: { want: want.label, got: s === 'atkPct' ? 'ATK' : s === 'hpPct' ? 'HP' : 'DEF' }
+				};
 			} else if (!character) {
 				r.applies = false;
-				r.reason = 'Pilih karakter untuk menghitung stat dasar';
+				r.reason = { key: 'calc.weapon.reasonNeedCharacter' };
 			} else {
 				const base = s === 'atkPct' ? character.base.atk + weapon.atk90 : s === 'hpPct' ? character.base.hp : character.base.def;
 				r.flat = (base * valuePct) / 100;
 			}
 		} else if (!scopeMatches(effect.scope, build)) {
 			r.applies = false;
-			r.reason = 'Tidak berlaku untuk hit ini';
+			r.reason = { key: 'calc.weapon.reasonNotApplicable' };
 		}
 
 		r.contributes = r.on && r.applies;
@@ -168,7 +172,6 @@ export function weaponContribution(
 }
 
 const scopeLabels: Record<string, string> = {
-	all: 'semua',
 	basic: 'Basic Attack',
 	heavy: 'Heavy Attack',
 	skill: 'Resonance Skill',
@@ -185,11 +188,12 @@ const scopeLabels: Record<string, string> = {
 	havoc: 'Havoc'
 };
 
-export const scopeLabel = (scope: WeaponEffect['scope']): string => (scope ? (scopeLabels[scope] ?? scope) : '');
+export const scopeLabel = (scope: WeaponEffect['scope'], tr: Translate): string =>
+	scope === 'all' ? tr('calc.weapon.allScope') : scope ? (scopeLabels[scope] ?? scope) : '';
 
 /** Nama stat efek untuk tampilan, mis. "Heavy Attack DMG Bonus" atau "Amplify Echo Skill". */
-export function effectStatLabel(e: WeaponEffect): string {
-	const sc = scopeLabel(e.scope);
+export function effectStatLabel(e: WeaponEffect, tr: Translate): string {
+	const sc = scopeLabel(e.scope, tr);
 	switch (e.stat) {
 		case 'atkPct':
 			return 'ATK';
@@ -202,7 +206,7 @@ export function effectStatLabel(e: WeaponEffect): string {
 		case 'critDmg':
 			return 'Crit DMG';
 		case 'dmgBonus':
-			return e.scope === 'all' ? 'Bonus DMG (semua)' : `${sc} DMG Bonus`;
+			return e.scope === 'all' ? tr('calc.weapon.dmgBonusAll') : `${sc} DMG Bonus`;
 		case 'amplify':
 			return e.scope === 'all' || !sc ? 'Amplify' : `Amplify ${sc}`;
 		case 'defIgnore':
@@ -217,8 +221,8 @@ export function effectStatLabel(e: WeaponEffect): string {
 }
 
 /** Ringkasan kontribusi satu efek, mis. "+48% Heavy Attack DMG Bonus" atau "+180 ATK". */
-export function effectAmountLabel(r: EffectResult, fmt: (n: number) => string): string {
+export function effectAmountLabel(r: EffectResult, fmt: (n: number) => string, tr: Translate): string {
 	const s = r.effect.stat;
-	if (s === 'atkPct' || s === 'hpPct' || s === 'defPct') return `+${fmt(r.flat)} ${effectStatLabel(r.effect)} (+${fmt(r.valuePct)}%)`;
-	return `+${fmt(r.valuePct)}% ${effectStatLabel(r.effect)}`;
+	if (s === 'atkPct' || s === 'hpPct' || s === 'defPct') return `+${fmt(r.flat)} ${effectStatLabel(r.effect, tr)} (+${fmt(r.valuePct)}%)`;
+	return `+${fmt(r.valuePct)}% ${effectStatLabel(r.effect, tr)}`;
 }

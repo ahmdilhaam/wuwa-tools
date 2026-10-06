@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatNumber, t } from '#lib/i18n/index.svelte.ts';
 	import type { DamageBreakdown } from './damage.ts';
 	import type { WeaponContribution } from './weapon.ts';
 
@@ -6,9 +7,9 @@
 	let { r, wc = null }: { r: DamageBreakdown; wc?: WeaponContribution | null } = $props();
 
 	const CAP = Math.log(4); // bar penuh = ×4 atau ×0,25
-	const nf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
-	const mf = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-	const pf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
+	const nf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 0 }) };
+	const mf = { format: (n: number) => formatNumber(n, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) };
+	const pf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };
 
 	const steps = $derived.by(() => {
 		const pct = (n: number) => `+${pf.format(n)}%`;
@@ -17,20 +18,32 @@
 			wc && wc.critDmgPct ? `${pct(wc.critDmgPct)} Crit DMG` : ''
 		].filter(Boolean);
 		const defs: { label: string; m: number; note: string }[] = [
-			{ label: 'Bonus DMG', m: r.bonusPool, note: wc?.dmgBonusPct ? `${pct(wc.dmgBonusPct)} dari senjata` : '' },
-			{ label: 'Amplify', m: r.amplifyMultiplier, note: wc?.amplifyPct ? `${pct(wc.amplifyPct)} dari senjata` : '' },
-			{ label: 'Special DMG', m: r.specialMultiplier, note: '' },
 			{
-				label: 'Pertahanan musuh',
+				label: t('calc.chain.bonus'),
+				m: r.bonusPool,
+				note: wc?.dmgBonusPct ? t('calc.chain.fromWeapon', { amount: pct(wc.dmgBonusPct) }) : ''
+			},
+			{
+				label: t('calc.chain.amplify'),
+				m: r.amplifyMultiplier,
+				note: wc?.amplifyPct ? t('calc.chain.fromWeapon', { amount: pct(wc.amplifyPct) }) : ''
+			},
+			{ label: t('calc.chain.special'), m: r.specialMultiplier, note: '' },
+			{
+				label: t('calc.chain.def'),
 				m: r.defFactor,
-				note: wc?.defIgnorePct ? `${pct(wc.defIgnorePct)} DEF Ignore dari senjata` : ''
+				note: wc?.defIgnorePct ? t('calc.chain.defIgnoreFromWeapon', { amount: pct(wc.defIgnorePct) }) : ''
 			},
 			{
-				label: 'Resistansi musuh',
+				label: t('calc.chain.res'),
 				m: r.resFactor,
-				note: wc?.resShredPct ? `${pct(wc.resShredPct)} RES Shred dari senjata` : ''
+				note: wc?.resShredPct ? t('calc.chain.resShredFromWeapon', { amount: pct(wc.resShredPct) }) : ''
 			},
-			{ label: 'Peluang crit', m: r.avgCritMultiplier, note: crit.length ? `${crit.join(', ')} dari senjata` : '' }
+			{
+				label: t('calc.chain.crit'),
+				m: r.avgCritMultiplier,
+				note: crit.length ? t('calc.chain.fromWeapon', { amount: crit.join(', ') }) : ''
+			}
 		];
 		let total = r.baseDmg;
 		return defs.map((d) => {
@@ -42,9 +55,9 @@
 	});
 </script>
 
-<ol class="chain" aria-label="Langkah perhitungan damage">
-	<li class="step base" aria-label={`Damage dasar ${nf.format(r.baseDmg)}`}>
-		<span class="name">Damage dasar</span>
+<ol class="chain" aria-label={t('calc.chain.label')}>
+	<li class="step base" aria-label={t('calc.chain.baseAria', { value: nf.format(r.baseDmg) })}>
+		<span class="name">{t('calc.chain.base')}</span>
 		<span class="val">{nf.format(r.baseDmg)}</span>
 		<span class="track" aria-hidden="true"></span>
 		<span class="run">{nf.format(r.baseDmg)}</span>
@@ -53,7 +66,8 @@
 		<li
 			class="step"
 			class:dim={s.neutral}
-			aria-label={`${s.label} ×${mf.format(s.m)}, hasil sementara ${nf.format(s.total)}${s.note ? `, ${s.note}` : ''}`}
+			aria-label={t('calc.chain.stepAria', { label: s.label, mult: mf.format(s.m), total: nf.format(s.total) }) +
+				(s.note ? `, ${s.note}` : '')}
 		>
 			<span class="name">{s.label}</span>
 			<span class="val">×{mf.format(s.m)}</span>
@@ -64,8 +78,8 @@
 			{#if s.note}<span class="sub">{s.note}</span>{/if}
 		</li>
 	{/each}
-	<li class="step final" aria-label={`Damage rata-rata ${nf.format(r.avgDamage)}`}>
-		<span class="name">Damage rata-rata</span>
+	<li class="step final" aria-label={t('calc.chain.averageAria', { value: nf.format(r.avgDamage) })}>
+		<span class="name">{t('calc.chain.average')}</span>
 		<span class="val"></span>
 		<span class="track" aria-hidden="true"></span>
 		<span class="run">{nf.format(r.avgDamage)}</span>

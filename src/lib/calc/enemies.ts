@@ -4,6 +4,7 @@
 // sehingga Physical tidak bisa dipilih sebagai elemen penyerang.
 import monsters from '#lib/data/game/monsters.json';
 import type { GameMonster, MonsterClass } from '#lib/data/game/types.ts';
+import type { DictKey } from '#lib/i18n/index.svelte.ts';
 
 export const elements = ['aero', 'glacio', 'fusion', 'electro', 'spectro', 'havoc'] as const;
 export type Element = (typeof elements)[number];
@@ -19,11 +20,12 @@ export const elementLabels: Record<Element, string> = {
 
 export type EnemyElement = Element | 'physical';
 
-export const rarityLabels: Record<MonsterClass, string> = {
-	standard: 'Standar',
-	elite: 'Elite',
-	overlord: 'Overlord',
-	calamity: 'Calamity'
+/** Kunci kamus label rarity; terjemahkan saat render lewat t(). */
+export const rarityKeys: Record<MonsterClass, DictKey> = {
+	standard: 'calc.rarity.standard',
+	elite: 'calc.rarity.elite',
+	overlord: 'calc.rarity.overlord',
+	calamity: 'calc.rarity.calamity'
 };
 
 export interface EnemyPreset {

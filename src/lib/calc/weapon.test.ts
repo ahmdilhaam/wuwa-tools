@@ -81,7 +81,7 @@ describe('weaponContribution', () => {
 		const c = weaponContribution(build({ weaponToggles: { 0: { on: true, stacks: 1 } } }), w, jiyan);
 		expect(c.dmgBonusPct).toBe(0);
 		expect(c.effects[0].applies).toBe(false);
-		expect(c.effects[0].reason).toBe('Tidak berlaku untuk hit ini');
+		expect(c.effects[0].reason?.key).toBe('calc.weapon.reasonNotApplicable');
 	});
 
 	it('scope elemen cocok dengan elemen build; all selalu berlaku', () => {
@@ -105,14 +105,17 @@ describe('weaponContribution', () => {
 		expect(weaponContribution(build({ weaponToggles: t, scalingType: 'DEF' }), w, jiyan).scalingStat).toBeCloseTo(100, 6);
 		const atk = weaponContribution(build({ weaponToggles: t, scalingType: 'ATK' }), w, jiyan);
 		expect(atk.scalingStat).toBe(0);
-		expect(atk.effects[0].reason).toContain('berskala ATK');
+		expect(atk.effects[0].reason).toEqual({
+			key: 'calc.weapon.reasonScaling',
+			params: { want: 'ATK', got: 'HP' }
+		});
 	});
 
 	it('ATK% tanpa karakter terpilih: tidak berlaku dengan alasan', () => {
 		const w = weapon([eff({ stat: 'atkPct' })]);
 		const c = weaponContribution(build({ weaponToggles: { 0: { on: true, stacks: 1 } } }), w, null);
 		expect(c.scalingStat).toBe(0);
-		expect(c.effects[0].reason).toBe('Pilih karakter untuk menghitung stat dasar');
+		expect(c.effects[0].reason?.key).toBe('calc.weapon.reasonNeedCharacter');
 	});
 
 	it('efek permanen dan teks-saja tidak pernah dihitung (Rule 2)', () => {

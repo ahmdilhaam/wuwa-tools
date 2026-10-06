@@ -6,6 +6,7 @@
 	import SignalChain from '#lib/calc/SignalChain.svelte';
 	import { calculateDamage } from '#lib/calc/damage.ts';
 	import { elementLabels } from '#lib/calc/enemies.ts';
+	import { formatNumber, t, type DictKey } from '#lib/i18n/index.svelte.ts';
 
 	let mode = $state<'single' | 'compare'>('single');
 
@@ -36,149 +37,122 @@
 		resultA.avgDamage > 0 ? (resultB.avgDamage / resultA.avgDamage - 1) * 100 : null
 	);
 
-	const intFmt = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
-	const fmt = (n: number) => intFmt.format(Math.round(n));
-	const pf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
-	const mult = (n: number) => n.toFixed(4);
-	const pct = (n: number) => `${(n * 100).toFixed(2)}%`;
+	const fmt = (n: number) => formatNumber(Math.round(n), { maximumFractionDigits: 0 });
+	const pf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };
+	const fixed = (n: number, d: number) => formatNumber(n, { minimumFractionDigits: d, maximumFractionDigits: d });
+	const mult = (n: number) => fixed(n, 4);
+	const pct = (n: number) => `${fixed(n * 100, 2)}%`;
 
-	const checklist = [
-		'CR terkonfirmasi: cek main stat senjata (Crit Rate vs Crit DMG mengubah rasio)',
-		'Tipe damage terverifikasi: Basic / Heavy / Skill / Lib / Intro, dari kit, bukan dari nama kategori skill',
-		'Pool DMG Bonus terkonfirmasi: Ele% dan Type% mana yang berlaku untuk hit ini?',
-		'Amplify/Deepen terkonfirmasi: buff mana yang aktif, permanen atau terpicu saat tempur?',
-		'Tidak ada double-count: tidak ada nilai halaman stat yang ditambahkan lagi',
-		'Level musuh sudah diatur (Lv90 = 50,13%, Lv100 = 48,84%, Lv120 = 46,45% DEF% pada penyerang Lv90)',
-		'Untuk DPS rotasi: MV per hit dan jumlah hit sudah dikonfirmasi dari kartu skill Lv10 atau wiki'
+	const checklist: DictKey[] = [
+		'calc.rules.c1',
+		'calc.rules.c2',
+		'calc.rules.c3',
+		'calc.rules.c4',
+		'calc.rules.c5',
+		'calc.rules.c6',
+		'calc.rules.c7'
 	];
 	let checked = $state<boolean[]>(checklist.map(() => false));
 
-	const rules = [
-		{
-			title: 'Rule 1: Verifikasi klasifikasi tipe damage',
-			text: 'Jangan asumsikan tipe damage sama dengan nama kategori skill. Banyak skill Liberation yang secara internal tergolong Resonance Skill DMG. Cek deskripsi skill atau wiki sebelum memilih pool bonus tipe.'
-		},
-		{
-			title: 'Rule 2: Halaman stat sudah final',
-			text: 'Halaman atribut in-game sudah mencakup pasif senjata, inherent skill permanen, dan bonus 2pc echo set. Jangan ditambahkan lagi. Tambahkan terpisah hanya buff yang terpicu saat tempur (mis. 5pc on-field, stack Searing Feather).'
-		},
-		{
-			title: 'Rule 3: RES dasar musuh',
-			text: 'RES dasar 10% untuk semua elemen dan 40% untuk elemen milik musuh itu sendiri. Jangan pernah mengasumsikan 0%.'
-		},
-		{
-			title: 'Rule 4: DEF Ignore',
-			text: 'DEF Ignore mengurangi DEF musuh sebelum rumus, bukan kontribusi level penyerang. DEF Reduction (debuff pada musuh) diterapkan lebih dulu daripada DEF Ignore.'
-		},
-		{
-			title: 'Rule 5: Stack Forte yang menganggur',
-			text: 'Stack Forte yang diam tidak memberi efek pasif pada Liberation (terkonfirmasi pada Changli). Stack hanya berguna untuk mengaktifkan Flaming Sacrifice.'
-		},
-		{
-			title: 'Rule 6: Enhancement Inherent Skill pada Liberation',
-			text: 'Peningkatan ini bersifat khusus per hit dan tidak tampil di halaman stat. Contoh Changli Inherent Skill 2: +20% Fusion DMG masuk ke kolom Bonus saat tempur, +15% DEF Ignore masuk ke kolom DEF Ignore.'
-		}
+	const rules: { title: DictKey; text: DictKey }[] = [
+		{ title: 'calc.rules.r1Title', text: 'calc.rules.r1Text' },
+		{ title: 'calc.rules.r2Title', text: 'calc.rules.r2Text' },
+		{ title: 'calc.rules.r3Title', text: 'calc.rules.r3Text' },
+		{ title: 'calc.rules.r4Title', text: 'calc.rules.r4Text' },
+		{ title: 'calc.rules.r5Title', text: 'calc.rules.r5Text' },
+		{ title: 'calc.rules.r6Title', text: 'calc.rules.r6Text' }
 	];
 
-	const classifications = [
+	// Sel tabel: teks literal (istilah game, tidak diterjemahkan) atau kunci kamus.
+	type Cell = string | { key: DictKey };
+	const k = (key: DictKey): Cell => ({ key });
+	const correct = k('calc.classes.correct');
+	const classifications: Cell[][] = [
 		['Carlotta', 'Era of New Wave (Liberation)', 'Resonance Skill DMG', 'Liberation DMG'],
 		['Carlotta', 'Death Knell × 4 (Liberation)', 'Resonance Skill DMG', 'Liberation DMG'],
 		['Carlotta', 'Fatal Finale (Liberation)', 'Resonance Skill DMG', 'Liberation DMG'],
-		['Jinhsi', 'Incarnation Basic ATKs (state Liberation)', 'Resonance Skill DMG', 'Basic ATK DMG'],
+		['Jinhsi', k('calc.classes.jinhsiIncarnation'), 'Resonance Skill DMG', 'Basic ATK DMG'],
 		['Changli', 'True Sight: Conquest (Forte Heavy)', 'Resonance Skill DMG', 'Heavy ATK DMG'],
 		['Changli', 'True Sight: Charge (Forte)', 'Resonance Skill DMG', 'Heavy ATK DMG'],
 		['Changli', 'Flaming Sacrifice (Forte)', 'Resonance Skill DMG', 'Skill DMG'],
-		['Changli', 'Radiance of Fealty (Liberation)', 'Resonance Liberation DMG', '— (sudah benar)'],
+		['Changli', 'Radiance of Fealty (Liberation)', 'Resonance Liberation DMG', correct],
 		['Camellya', 'Enhanced Basic ATKs (Forte)', 'Basic ATK DMG', '—'],
-		[
-			'Camellya',
-			'Liberation initial hit',
-			'Liberation DMG, juga menerima Basic ATK DMG Bonus',
-			'—'
-		],
-		[
-			'Jiyan',
-			'Lance of Qingloong (Heavy ATK state Liberation)',
-			'Heavy ATK DMG',
-			'Basic ATK atau Liberation'
-		],
-		['Jiyan', 'Windqueller di Qingloong Mode', 'Heavy ATK DMG', 'Resonance Skill DMG'],
-		['Xiangli Yao', 'Liberation', 'Resonance Liberation DMG', '— (sudah benar)']
+		['Camellya', 'Liberation initial hit', k('calc.classes.camellyaLibActual'), '—'],
+		['Jiyan', k('calc.classes.jiyanLance'), 'Heavy ATK DMG', k('calc.classes.jiyanBasicOrLib')],
+		['Jiyan', k('calc.classes.jiyanWindqueller'), 'Heavy ATK DMG', 'Resonance Skill DMG'],
+		['Xiangli Yao', 'Liberation', 'Resonance Liberation DMG', correct]
 	];
 </script>
 
 <svelte:head>
-	<title>Kalkulator damage - WuWa Tools</title>
+	<title>{t('calc.page.metaTitle')}</title>
 </svelte:head>
 
 <header class="page-head">
-	<h1>Kalkulator damage</h1>
-	<p>Hitung damage satu hit dari skill, stat, dan musuh. Hasil diperbarui otomatis saat input berubah.</p>
+	<h1>{t('calc.page.title')}</h1>
+	<p>{t('calc.page.intro')}</p>
 </header>
 
-<div class="segmented tabs" role="tablist" aria-label="Mode kalkulator">
+<div class="segmented tabs" role="tablist" aria-label={t('calc.page.modeLabel')}>
 	<button role="tab" aria-selected={mode === 'single'} onclick={() => (mode = 'single')}>
-		Satu hit
+		{t('calc.page.modeSingle')}
 	</button>
 	<button role="tab" aria-selected={mode === 'compare'} onclick={() => (mode = 'compare')}>
-		Bandingkan build
+		{t('calc.page.modeCompare')}
 	</button>
 </div>
 
 {#snippet resultPanel(c: Computed, element: keyof typeof elementLabels)}
 	{@const r = c.r}
-	<section class="panel-cut result" aria-label="Hasil damage">
+	<section class="panel-cut result" aria-label={t('calc.result.label')}>
 		<div class="result-top">
-			<span class="label">Rata-rata</span>
+			<span class="label">{t('calc.result.average')}</span>
 			<span class={`el el-${element}`}>{elementLabels[element]}</span>
 		</div>
 		<div class="hero">{fmt(r.avgDamage)}</div>
 		{#if c.weapon && c.wc.active}
-			<p class="weapon-note">Termasuk pasif senjata: {c.weapon.name} R{c.refine}</p>
+			<p class="weapon-note">{t('calc.result.weaponNote', { weapon: c.weapon.name, refine: c.refine })}</p>
 		{/if}
 		<div class="pair">
 			<div>
-				<span class="label">Crit</span>
+				<span class="label">{t('calc.result.crit')}</span>
 				<span class="pv crit">{fmt(r.critDamage)}</span>
 			</div>
 			<div>
-				<span class="label">Non-crit</span>
+				<span class="label">{t('calc.result.nonCrit')}</span>
 				<span class="pv">{fmt(r.nonCritDamage)}</span>
 			</div>
 		</div>
-		<h3 class="chain-title">Cara damage ini dihitung</h3>
-			<p class="chain-help">
-				Dimulai dari damage dasar, lalu tiap baris mengalikan hasil sebelumnya. Batang emas menaikkan
-				damage, batang merah menurunkannya.
-			</p>
+		<h3 class="chain-title">{t('calc.result.chainTitle')}</h3>
+		<p class="chain-help">{t('calc.result.chainHelp')}</p>
 		<SignalChain {r} wc={c.wc.active ? c.wc : null} />
 		<details class="full">
-			<summary>Nilai lengkap</summary>
+			<summary>{t('calc.result.fullValues')}</summary>
 			<div class="table-wrap">
 				<table>
 					<tbody>
 						<tr><th>Base DMG</th><td class="num">{r.baseDmg.toFixed(2)}</td></tr>
-						<tr><th>Pool DMG Bonus</th><td class="num">×{mult(r.bonusPool)}</td></tr>
+						<tr><th>{t('calc.result.poolBonus')}</th><td class="num">×{mult(r.bonusPool)}</td></tr>
 						<tr><th>Amplify</th><td class="num">×{mult(r.amplifyMultiplier)}</td></tr>
 						<tr><th>Special DMG</th><td class="num">×{mult(r.specialMultiplier)}</td></tr>
-						<tr><th>DEF musuh (dasar)</th><td class="num">{r.enemyDef.toFixed(2)}</td></tr>
-						<tr><th>DEF musuh (setelah modifikasi)</th><td class="num">{r.modifiedDef.toFixed(2)}</td></tr>
-						<tr><th>Suku level penyerang</th><td class="num">{r.attackerDefTerm}</td></tr>
+						<tr><th>{t('calc.result.enemyDefBase')}</th><td class="num">{r.enemyDef.toFixed(2)}</td></tr>
+						<tr><th>{t('calc.result.enemyDefModified')}</th><td class="num">{r.modifiedDef.toFixed(2)}</td></tr>
+						<tr><th>{t('calc.result.attackerTerm')}</th><td class="num">{r.attackerDefTerm}</td></tr>
 						<tr><th>DEF%</th><td class="num">×{mult(r.defFactor)} ({pct(r.defFactor)})</td></tr>
-						<tr><th>RES efektif</th><td class="num">{pct(r.effectiveRes)}</td></tr>
-						<tr><th>Faktor RES</th><td class="num">×{mult(r.resFactor)}</td></tr>
-						<tr><th>Pengali Crit</th><td class="num">×{mult(r.critMultiplier)}</td></tr>
-						<tr><th>Pengali Non-crit</th><td class="num">×{mult(r.nonCritMultiplier)}</td></tr>
-						<tr><th>Pengali Rata-rata</th><td class="num">×{mult(r.avgCritMultiplier)}</td></tr>
+						<tr><th>{t('calc.result.effectiveRes')}</th><td class="num">{pct(r.effectiveRes)}</td></tr>
+						<tr><th>{t('calc.result.resFactor')}</th><td class="num">×{mult(r.resFactor)}</td></tr>
+						<tr><th>{t('calc.result.critMult')}</th><td class="num">×{mult(r.critMultiplier)}</td></tr>
+						<tr><th>{t('calc.result.nonCritMult')}</th><td class="num">×{mult(r.nonCritMultiplier)}</td></tr>
+						<tr><th>{t('calc.result.avgMult')}</th><td class="num">×{mult(r.avgCritMultiplier)}</td></tr>
 						{#if c.weapon && c.wc.active}
 							<tr>
-								<th>Dari pasif senjata ({c.weapon.name} R{c.refine})</th>
+								<th>{t('calc.result.fromWeapon', { weapon: c.weapon.name, refine: c.refine })}</th>
 								<td class="num weapon-rows">
 									{#each c.wc.effects.filter((e) => e.contributes) as e (e.index)}
 										<span>
 											{e.effect.stat === 'atkPct' || e.effect.stat === 'hpPct' || e.effect.stat === 'defPct'
-												? `+${fmt(e.flat)} ${effectStatLabel(e.effect)}`
-												: `+${pf.format(e.valuePct)}% ${effectStatLabel(e.effect)}`}
+												? `+${fmt(e.flat)} ${effectStatLabel(e.effect, t)}`
+												: `+${pf.format(e.valuePct)}% ${effectStatLabel(e.effect, t)}`}
 										</span>
 									{/each}
 								</td>
@@ -205,32 +179,32 @@
 {:else}
 	<div class="diff panel-cut" aria-live="polite">
 		<div class="dcell">
-			<span class="label">Build A</span>
+			<span class="label">{t('calc.page.buildA')}</span>
 			<span class="dv">{fmt(resultA.avgDamage)}</span>
 		</div>
 		<div class="dcell">
-			<span class="label">Build B</span>
+			<span class="label">{t('calc.page.buildB')}</span>
 			<span class="dv">{fmt(resultB.avgDamage)}</span>
 		</div>
 		<div class="dcell delta">
-			<span class="label">Selisih B terhadap A</span>
+			<span class="label">{t('calc.page.diffLabel')}</span>
 			{#if diffPct === null}
 				<span class="dp">-</span>
 			{:else}
 				<span class="dp" class:neg={diffPct < 0}>
-					{diffPct >= 0 ? '+' : '−'}{Math.abs(diffPct).toFixed(2).replace('.', ',')}%
+					{diffPct >= 0 ? '+' : '−'}{fixed(Math.abs(diffPct), 2)}%
 				</span>
 			{/if}
 		</div>
 	</div>
 	<div class="compare">
-		<section aria-label="Build A">
-			<h2>Build A</h2>
+		<section aria-label={t('calc.page.buildA')}>
+			<h2>{t('calc.page.buildA')}</h2>
 			<BuildInputs bind:build={buildA} />
 			{@render resultPanel(calcA, buildA.element)}
 		</section>
-		<section aria-label="Build B">
-			<h2>Build B</h2>
+		<section aria-label={t('calc.page.buildB')}>
+			<h2>{t('calc.page.buildB')}</h2>
 			<BuildInputs bind:build={buildB} />
 			{@render resultPanel(calcB, buildB.element)}
 		</section>
@@ -238,26 +212,26 @@
 {/if}
 
 <section class="rules">
-	<h2>Aturan dan pengecekan</h2>
+	<h2>{t('calc.rules.heading')}</h2>
 	<div class="rules-grid">
 		<div>
-			<h3>Aturan</h3>
+			<h3>{t('calc.rules.rulesTitle')}</h3>
 			<dl>
 				{#each rules as rule (rule.title)}
 					<div>
-						<dt>{rule.title}</dt>
-						<dd>{rule.text}</dd>
+						<dt>{t(rule.title)}</dt>
+						<dd>{t(rule.text)}</dd>
 					</div>
 				{/each}
 			</dl>
 		</div>
 		<div>
-			<h3>Checklist sebelum menghitung</h3>
+			<h3>{t('calc.rules.checklistTitle')}</h3>
 			<div class="checklist">
 				{#each checklist as item, i (i)}
 					<label>
 						<input type="checkbox" bind:checked={checked[i]} />
-						<span>{item}</span>
+						<span>{t(item)}</span>
 					</label>
 				{/each}
 			</div>
@@ -265,21 +239,21 @@
 	</div>
 
 	<details class="class-table">
-		<summary>Klasifikasi tipe damage karakter (terkonfirmasi)</summary>
+		<summary>{t('calc.classes.summary')}</summary>
 		<div class="table-wrap">
 			<table>
 				<thead>
 					<tr>
-						<th>Karakter</th>
-						<th>Skill</th>
-						<th>Tipe DMG sebenarnya</th>
-						<th>Asumsi yang sering keliru</th>
+						<th>{t('calc.classes.character')}</th>
+						<th>{t('calc.classes.skill')}</th>
+						<th>{t('calc.classes.actual')}</th>
+						<th>{t('calc.classes.assumed')}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each classifications as row, i (i)}
 						<tr>
-							{#each row as cell, j (j)}<td>{cell}</td>{/each}
+							{#each row as cell, j (j)}<td>{typeof cell === 'string' ? cell : t(cell.key)}</td>{/each}
 						</tr>
 					{/each}
 				</tbody>

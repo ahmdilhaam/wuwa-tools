@@ -1,5 +1,9 @@
 // Helper murni untuk skill picker: pemetaan tipe DMG, label stat skala, dan penjumlahan MV.
 import type { GameSkill, SkillHit } from '#lib/data/game/types.ts';
+import type { DictKey, Params } from '#lib/i18n/index.svelte.ts';
+
+/** Fungsi terjemah (t dari i18n) yang disuntikkan agar modul ini tetap murni. */
+export type Translate = (key: DictKey, params?: Params) => string;
 
 export type ScalingStat = 'ATK' | 'HP' | 'DEF';
 
@@ -34,8 +38,8 @@ export const scalingLabels: Record<ScalingStat, string> = {
 	DEF: 'DEF'
 };
 
-export function scalingFieldLabel(stat: ScalingStat): string {
-	return `Stat skala (${scalingLabels[stat]})`;
+export function scalingFieldLabel(stat: ScalingStat, tr: Translate): string {
+	return tr('calc.inputs.scalingField', { stat: scalingLabels[stat] });
 }
 
 /** MV hit pada level skill 1..10 (di luar rentang dijepit). */

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import characters from '#lib/data/game/characters.json';
+	import { formatNumber, getLocale, t } from '#lib/i18n/index.svelte.ts';
 	import type { CharacterSkills, GameCharacter, MonsterClass, WeaponEffect } from '#lib/data/game/types.ts';
 	import {
 		CUSTOM_ENEMY_ID,
@@ -7,7 +8,7 @@
 		elements,
 		enemyPresets,
 		filterPresets,
-		rarityLabels,
+		rarityKeys,
 		type Element
 	} from './enemies';
 	import { baseResOf, damageTypes, num, type BuildState } from './build';
@@ -46,7 +47,7 @@
 	const level = $derived(Math.min(Math.max(Math.round(num(build.pickLevel)) || 10, 1), 10));
 	const mvEdited = $derived(build.pickedMv !== null && num(build.mvPct) !== build.pickedMv);
 	const sumMv = $derived(skill ? sumSkillMv(skill, level) : 0);
-	const scalingLabel = $derived(scalingFieldLabel(build.scalingType));
+	const scalingLabel = $derived(scalingFieldLabel(build.scalingType, t));
 
 	// Muat data skill saat karakter terpilih (termasuk dari state awal)
 	$effect(() => {
@@ -104,8 +105,10 @@
 		return weapon && !list.includes(weapon) ? [weapon, ...list] : list;
 	});
 	const contrib = $derived(weaponContribution(build, weapon, pickedChar));
-	const nf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
+	const nf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };
 	const fmt = (n: number) => nf.format(Math.round(n * 100) / 100);
+	// Kalimat efek dari data game dua bahasa: Indonesia memakai terjemahan bila ada.
+	const sentenceOf = (e: WeaponEffect) => (getLocale() === 'id' ? (e.sentenceId ?? e.sentence) : e.sentence);
 	const refine = $derived(clampRefine(build.pickRefine));
 	const secondaryUnit = (name: string) =>
 		name.endsWith('%') || name.startsWith('Crit') || name === 'Energy Regen' ? '%' : '';
@@ -120,10 +123,10 @@
 
 <div class="inputs">
 	<fieldset class="primary">
-		<legend>Pilih skill (opsional)</legend>
+		<legend>{t('calc.inputs.pickLegend')}</legend>
 		<div class="grid">
 			<label>
-				Karakter
+				{t('calc.inputs.character')}
 				<span class="picker">
 					{#if pickedChar}
 						<img
@@ -136,7 +139,7 @@
 						/>
 					{/if}
 					<select bind:value={build.pickCharacter} onchange={onCharacter}>
-						<option value="">Manual (tanpa picker)</option>
+						<option value="">{t('calc.inputs.manual')}</option>
 						{#each chars as c (c.slug)}
 							<option value={c.slug}>{c.name}</option>
 						{/each}
@@ -145,9 +148,9 @@
 			</label>
 			{#if build.pickCharacter}
 				<label>
-					Skill
+					{t('calc.inputs.skill')}
 					<select bind:value={build.pickSkill} onchange={onSkill} disabled={!charSkills}>
-						<option value="">{loadingSkills ? 'Memuat…' : 'Pilih skill'}</option>
+						<option value="">{loadingSkills ? t('calc.inputs.loading') : t('calc.inputs.pickSkill')}</option>
 						{#each charSkills?.skills ?? [] as s, i (i)}
 							<option value={String(i)}>{s.name} ({s.type})</option>
 						{/each}
@@ -156,19 +159,25 @@
 			{/if}
 			{#if skill}
 				<label>
-					Hit
+					{t('calc.inputs.hit')}
 					<select bind:value={build.pickHit} onchange={applyPick}>
-						<option value="">Pilih hit</option>
-						<option value="all">Jumlahkan semua hit di skill ini</option>
+						<option value="">{t('calc.inputs.pickHit')}</option>
+						<option value="all">{t('calc.inputs.sumAllHits')}</option>
 						{#each skill.hits as h, i (h.id)}
 							<option value={String(h.id)} disabled={!isDamageHit(h)}>
-								#{i + 1} {h.damageType || 'Lainnya'}{h.condition ? `, ${h.condition}` : ''}{isDamageHit(h) ? `: ${nf.format(mvAt(h, level))}% ${h.scaling}` : ': bukan damage'}
+								{t(isDamageHit(h) ? 'calc.inputs.hitDamage' : 'calc.inputs.hitNotDamage', {
+									n: i + 1,
+									type: h.damageType || t('calc.inputs.otherType'),
+									cond: h.condition ? `, ${h.condition}` : '',
+									mv: nf.format(mvAt(h, level)),
+									scaling: h.scaling
+								})}
 							</option>
 						{/each}
 					</select>
 				</label>
 				<label>
-					Level skill (1–10)
+					{t('calc.inputs.skillLevel')}
 					<input
 						type="number"
 						min="1"
@@ -178,73 +187,72 @@
 						onchange={applyPick}
 						aria-describedby="{uid}-skill-level"
 					/>
-				<span class="hint" id="{uid}-skill-level">Level skill di forte tree. MV naik sesuai level.</span>
+				<span class="hint" id="{uid}-skill-level">{t('calc.inputs.skillLevelHint')}</span>
 				</label>
 			{/if}
 		</div>
 		{#if build.pickHit === 'all'}
 			<p class="note">
-				Total MV semua hit damage berskala ATK di skill ini: {nf.format(sumMv)}%. Jumlah hit per
-				cast dalam rotasi tidak dimodelkan.
+				{t('calc.inputs.sumNote', { mv: nf.format(sumMv) })}
 			</p>
 		{/if}
-		{#if mvEdited}<p class="note warn">MV diubah manual (nilai picker: {nf.format(build.pickedMv ?? 0)}%).</p>{/if}
+		{#if mvEdited}<p class="note warn">{t('calc.inputs.mvEdited', { mv: nf.format(build.pickedMv ?? 0) })}</p>{/if}
 	</fieldset>
 
 	<fieldset>
-		<legend>Penyerang</legend>
+		<legend>{t('calc.inputs.attackerLegend')}</legend>
 		<div class="grid">
 			<label>
-				Level penyerang
+				{t('calc.inputs.attackerLevel')}
 				<input type="number" step="1" bind:value={build.attackerLevel} aria-describedby="{uid}-atk-level" />
-				<span class="hint" id="{uid}-atk-level">Level resonator. Makin tinggi, makin kecil pengaruh DEF musuh.</span>
+				<span class="hint" id="{uid}-atk-level">{t('calc.inputs.attackerLevelHint')}</span>
 			</label>
 			<label>
 				{scalingLabel}
 				<input type="number" step="any" bind:value={build.scalingStat} aria-describedby="{uid}-scaling" />
-				<span class="hint" id="{uid}-scaling">Total ATK (atau HP/DEF) dari halaman atribut, sudah termasuk senjata dan echo.</span>
+				<span class="hint" id="{uid}-scaling">{t('calc.inputs.scalingHint')}</span>
 			</label>
 			<label>
-				Crit Rate (%)
+				{t('calc.inputs.critRate')}
 				<input type="number" step="any" bind:value={build.critRatePct} aria-describedby="{uid}-cr" />
-				<span class="hint" id="{uid}-cr">Peluang hit menjadi crit. Dipakai untuk damage rata-rata.</span>
+				<span class="hint" id="{uid}-cr">{t('calc.inputs.critRateHint')}</span>
 			</label>
 			<label>
-				Crit DMG (%)
+				{t('calc.inputs.critDmg')}
 				<input type="number" step="any" bind:value={build.critDmgPct} aria-describedby="{uid}-cd" />
-				<span class="hint" id="{uid}-cd">Pengali saat crit. 250% = damage crit 2,5× damage non-crit.</span>
+				<span class="hint" id="{uid}-cd">{t('calc.inputs.critDmgHint')}</span>
 			</label>
 			<label>
-				Motion Value (%)
+				{t('calc.inputs.mv')}
 				<input type="number" step="any" bind:value={build.mvPct} aria-describedby="{uid}-mv" />
-				<span class="hint" id="{uid}-mv">Kekuatan skill. 200% = damage dasar 2× stat skala.</span>
+				<span class="hint" id="{uid}-mv">{t('calc.inputs.mvHint')}</span>
 			</label>
 			<label>
-				DMG tetap (flat)
+				{t('calc.inputs.flat')}
 				<input type="number" step="any" bind:value={build.flatDmg} aria-describedby="{uid}-flat" />
-				<span class="hint" id="{uid}-flat">Damage tambahan di luar MV. Biasanya 0.</span>
+				<span class="hint" id="{uid}-flat">{t('calc.inputs.flatHint')}</span>
 			</label>
 		</div>
 	</fieldset>
 
 	<fieldset>
-		<legend>Senjata</legend>
+		<legend>{t('calc.weapon.legend')}</legend>
 		<div class="grid">
 			<label>
-				Senjata
+				{t('calc.weapon.label')}
 				<select bind:value={build.pickWeapon} onchange={onWeapon} aria-describedby="{uid}-weapon">
-					<option value="">Tidak dipilih</option>
+					<option value="">{t('calc.weapon.none')}</option>
 					{#each weaponChoices as w (w.id)}
 						<option value={String(w.id)}>{w.name} ({w.type})</option>
 					{/each}
 					{#if !weaponStore.list && build.pickWeapon}
-						<option value={build.pickWeapon}>Memuat…</option>
+						<option value={build.pickWeapon}>{t('calc.inputs.loading')}</option>
 					{/if}
 				</select>
-				<span class="hint" id="{uid}-weapon">Pilih senjata untuk mengaktifkan efek pasif yang terpicu saat tempur.</span>
+				<span class="hint" id="{uid}-weapon">{t('calc.weapon.hint')}</span>
 			</label>
 			<div class="field">
-				<span class="field-label" id="{uid}-refine-label">Refinement</span>
+				<span class="field-label" id="{uid}-refine-label">{t('calc.weapon.refinement')}</span>
 				<div class="segmented" role="group" aria-labelledby="{uid}-refine-label">
 					{#each [1, 2, 3, 4, 5] as n (n)}
 						<button type="button" aria-pressed={refine === n} onclick={() => (build.pickRefine = n)}>R{n}</button>
@@ -255,18 +263,23 @@
 		{#if pickedChar}
 			<label class="check">
 				<input type="checkbox" bind:checked={showAllWeapons} />
-				<span>Tampilkan semua tipe senjata (karakter ini memakai {pickedChar.weaponType})</span>
+				<span>{t('calc.weapon.showAll', { type: pickedChar.weaponType })}</span>
 			</label>
 		{/if}
 		{#if weapon}
 			<p class="note">
-				ATK Lv90: {nf.format(weapon.atk90)}. Sekunder: {weapon.secondary.name}
-				{nf.format(weapon.secondary.value90)}{secondaryUnit(weapon.secondary.name)}. Pasif: {weapon.passive.name}.
+				{t('calc.weapon.info', {
+					atk: nf.format(weapon.atk90),
+					secondary: weapon.secondary.name,
+					value: nf.format(weapon.secondary.value90),
+					unit: secondaryUnit(weapon.secondary.name),
+					passive: weapon.passive.name
+				})}
 			</p>
 			{#if weapon.passive.effects.length === 0}
-				<p class="note">Pasif senjata ini tidak punya efek yang memengaruhi damage.</p>
+				<p class="note">{t('calc.weapon.noEffects')}</p>
 			{:else}
-				<ul class="effects" aria-label="Efek pasif {weapon.name}">
+				<ul class="effects" aria-label={t('calc.weapon.effectsLabel', { weapon: weapon.name })}>
 					{#each contrib.effects as r (r.index)}
 						<li class="effect" class:muted={r.kind !== 'toggle'} class:inactive={r.kind === 'toggle' && !r.applies}>
 							{#if r.kind === 'toggle'}
@@ -276,14 +289,14 @@
 										checked={r.on}
 										onchange={(ev) => setToggle(r.index, r.effect, { on: ev.currentTarget.checked })}
 									/>
-									<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
+									<span>{sentenceOf(r.effect)}</span>
 								</label>
 								{#if r.effect.team}
-									<span class="tag">Buff rekan tim. Aktifkan bila penyerang adalah penerima buff.</span>
+									<span class="tag">{t('calc.weapon.teamBuff')}</span>
 								{/if}
 								{#if r.effect.maxStacks && r.effect.maxStacks > 1}
 									<label class="stacks">
-										Stack (1–{r.effect.maxStacks})
+										{t('calc.weapon.stacks', { max: r.effect.maxStacks })}
 										<input
 											type="number"
 											min="1"
@@ -295,15 +308,15 @@
 									</label>
 								{/if}
 								{#if !r.applies}
-									<span class="result none">{r.reason}</span>
+									<span class="result none">{r.reason ? t(r.reason.key, r.reason.params) : ''}</span>
 								{:else if r.on}
-									<span class="result">{effectAmountLabel(r, fmt)}</span>
+									<span class="result">{effectAmountLabel(r, fmt, t)}</span>
 								{/if}
 							{:else if r.kind === 'permanent'}
-								<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
-								<span class="tag">Sudah termasuk di halaman atribut</span>
+								<span>{sentenceOf(r.effect)}</span>
+								<span class="tag">{t('calc.weapon.permanent')}</span>
 							{:else}
-								<span>{r.effect.sentenceId ?? r.effect.sentence}</span>
+								<span>{sentenceOf(r.effect)}</span>
 							{/if}
 						</li>
 					{/each}
@@ -313,117 +326,117 @@
 	</fieldset>
 
 	<fieldset>
-		<legend>Bonus DMG</legend>
+		<legend>{t('calc.inputs.bonusLegend')}</legend>
 		<div class="grid">
 			<label>
-				Elemen
+				{t('calc.inputs.element')}
 				<select bind:value={build.element} aria-describedby="{uid}-element">
 					{#each elements as el (el)}
 						<option value={el}>{elementLabels[el]}</option>
 					{/each}
 				</select>
-				<span class="hint" id="{uid}-element">Elemen hit ini. Menentukan RES musuh yang dipakai.</span>
+				<span class="hint" id="{uid}-element">{t('calc.inputs.elementHint')}</span>
 			</label>
 			<label>
-				Ele DMG (%)
+				{t('calc.inputs.eleDmg')}
 				<input type="number" step="any" bind:value={build.elementBonusPct} aria-describedby="{uid}-ele-dmg" />
-				<span class="hint" id="{uid}-ele-dmg">Bonus DMG elemen dari halaman atribut, mis. Aero DMG Bonus.</span>
+				<span class="hint" id="{uid}-ele-dmg">{t('calc.inputs.eleDmgHint')}</span>
 			</label>
 			<label>
-				Tipe DMG
+				{t('calc.inputs.damageType')}
 				<select bind:value={build.damageType} aria-describedby="{uid}-type">
 					{#each damageTypes as t (t.id)}
 						<option value={t.id}>{t.label}</option>
 					{/each}
 				</select>
-				<span class="hint" id="{uid}-type">Jenis damage hit ini. Tidak selalu sama dengan nama skill; cek tabel klasifikasi.</span>
+				<span class="hint" id="{uid}-type">{t('calc.inputs.damageTypeHint')}</span>
 			</label>
 			<label>
-				Tipe DMG (%)
+				{t('calc.inputs.typeDmg')}
 				<input type="number" step="any" bind:value={build.typeBonusPct} aria-describedby="{uid}-type-dmg" />
-				<span class="hint" id="{uid}-type-dmg">Bonus untuk jenis damage itu, mis. Resonance Skill DMG Bonus.</span>
+				<span class="hint" id="{uid}-type-dmg">{t('calc.inputs.typeDmgHint')}</span>
 			</label>
 			<label>
-				General DMG (%)
+				{t('calc.inputs.generalDmg')}
 				<input type="number" step="any" bind:value={build.generalBonusPct} aria-describedby="{uid}-general" />
-				<span class="hint" id="{uid}-general">Bonus DMG yang berlaku ke semua serangan.</span>
+				<span class="hint" id="{uid}-general">{t('calc.inputs.generalDmgHint')}</span>
 			</label>
 			<label>
-				Bonus saat tempur (%)
+				{t('calc.inputs.combat')}
 				<input type="number" step="any" bind:value={build.combatBonusPct} aria-describedby="{uid}-combat" />
-				<span class="hint" id="{uid}-combat">Buff aktif yang tidak tampil di halaman atribut, mis. 5pc echo set atau buff tim.</span>
+				<span class="hint" id="{uid}-combat">{t('calc.inputs.combatHint')}</span>
 			</label>
 			<label>
-				Amplify (%)
+				{t('calc.inputs.amplify')}
 				<input type="number" step="any" bind:value={build.amplifyPct} aria-describedby="{uid}-amplify" />
-				<span class="hint" id="{uid}-amplify">Penguatan DMG (Amplify/Deepen). Dihitung terpisah dari bonus DMG.</span>
+				<span class="hint" id="{uid}-amplify">{t('calc.inputs.amplifyHint')}</span>
 			</label>
 			<label>
-				Special DMG (%)
+				{t('calc.inputs.special')}
 				<input type="number" step="any" bind:value={build.specialPct} aria-describedby="{uid}-special" />
-				<span class="hint" id="{uid}-special">Pengali khusus yang jarang ada. Biasanya 0.</span>
+				<span class="hint" id="{uid}-special">{t('calc.inputs.specialHint')}</span>
 			</label>
 		</div>
 	</fieldset>
 
 	<fieldset>
-		<legend>Musuh</legend>
+		<legend>{t('calc.inputs.enemyLegend')}</legend>
 		<div class="grid">
 			<label>
-				Cari musuh
-				<input type="search" placeholder="Ketik nama…" bind:value={enemyQuery} />
+				{t('calc.inputs.enemySearch')}
+				<input type="search" placeholder={t('calc.inputs.enemySearchPlaceholder')} bind:value={enemyQuery} />
 			</label>
 			<label>
-				Rarity
+				{t('calc.inputs.rarity')}
 				<select bind:value={rarityFilter}>
-					<option value="all">Semua</option>
+					<option value="all">{t('calc.inputs.rarityAll')}</option>
 					{#each ['elite', 'overlord', 'calamity'] as const as r (r)}
-						<option value={r}>{rarityLabels[r]}</option>
+						<option value={r}>{t(rarityKeys[r])}</option>
 					{/each}
 				</select>
 			</label>
 			<label>
-				Preset musuh
+				{t('calc.inputs.enemyPreset')}
 				<select bind:value={build.enemyId} aria-describedby="{uid}-enemy">
 					{#each filteredPresets as p (p.id)}
-						<option value={p.id}>{p.name}, {rarityLabels[p.rarity]} ({p.element})</option>
+						<option value={p.id}>{p.name}, {t(rarityKeys[p.rarity])} ({p.element})</option>
 					{/each}
-					<option value={CUSTOM_ENEMY_ID}>Custom (RES manual)</option>
+					<option value={CUSTOM_ENEMY_ID}>{t('calc.inputs.enemyCustom')}</option>
 				</select>
-				<span class="hint" id="{uid}-enemy">Musuh yang diserang. RES diisi otomatis sesuai elemen.</span>
+				<span class="hint" id="{uid}-enemy">{t('calc.inputs.enemyHint')}</span>
 			</label>
 			<label>
-				Level musuh
+				{t('calc.inputs.enemyLevel')}
 				<input type="number" step="1" bind:value={build.enemyLevel} aria-describedby="{uid}-enemy-level" />
-				<span class="hint" id="{uid}-enemy-level">Makin tinggi level musuh, makin besar DEF-nya.</span>
+				<span class="hint" id="{uid}-enemy-level">{t('calc.inputs.enemyLevelHint')}</span>
 			</label>
 			{#if isCustom}
 				<label>
-					RES dasar (%)
+					{t('calc.inputs.baseRes')}
 					<input type="number" step="any" bind:value={build.customResPct} aria-describedby="{uid}-res" />
-					<span class="hint" id="{uid}-res">Resistansi musuh terhadap elemen ini. Umumnya 10%, atau 40% untuk elemen yang sama.</span>
+					<span class="hint" id="{uid}-res">{t('calc.inputs.baseResHint')}</span>
 				</label>
 			{:else}
 				<label>
-					RES dasar (%), otomatis
+					{t('calc.inputs.baseResAuto')}
 					<input type="number" value={presetRes} disabled aria-describedby="{uid}-res" />
-					<span class="hint" id="{uid}-res">Resistansi musuh terhadap elemen ini. Umumnya 10%, atau 40% untuk elemen yang sama.</span>
+					<span class="hint" id="{uid}-res">{t('calc.inputs.baseResHint')}</span>
 				</label>
 			{/if}
 			<label>
-				DEF Reduction (%)
+				{t('calc.inputs.defReduction')}
 				<input type="number" step="any" bind:value={build.defReductionPct} aria-describedby="{uid}-def-red" />
-				<span class="hint" id="{uid}-def-red">Debuff yang menurunkan DEF musuh.</span>
+				<span class="hint" id="{uid}-def-red">{t('calc.inputs.defReductionHint')}</span>
 			</label>
 			<label>
-				DEF Ignore (%)
+				{t('calc.inputs.defIgnore')}
 				<input type="number" step="any" bind:value={build.defIgnorePct} aria-describedby="{uid}-def-ign" />
-				<span class="hint" id="{uid}-def-ign">Efek yang mengabaikan sebagian DEF musuh, mis. dari inherent skill.</span>
+				<span class="hint" id="{uid}-def-ign">{t('calc.inputs.defIgnoreHint')}</span>
 			</label>
 			<label>
-				RES Shred (%)
+				{t('calc.inputs.resShred')}
 				<input type="number" step="any" bind:value={build.resShredPct} aria-describedby="{uid}-res-shred" />
-				<span class="hint" id="{uid}-res-shred">Debuff yang menurunkan RES musuh, mis. dari Outro skill support.</span>
+				<span class="hint" id="{uid}-res-shred">{t('calc.inputs.resShredHint')}</span>
 			</label>
 		</div>
 	</fieldset>
