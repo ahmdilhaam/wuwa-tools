@@ -9,7 +9,7 @@ export interface MechanicBlock {
 export const mechanicBlocks: MechanicBlock[] = [
 	{
 		id: 'ele-vs-atk',
-		title: 'ELE+ELE vs ELE+ATK pada Echo 3-Cost',
+		title: 'ELE+ELE vs ELE+ATK pada echo 3-cost',
 		paragraphs: [
 			'Selisih memakai dua DMG Bonus elemen dibanding satu elemen + satu ATK% pada echo 3-cost hanya 1–3%.',
 			'Aturan praktis: pilih kombinasi dengan substat yang lebih baik. Jangan mengorbankan substat bagus demi main stat "yang benar" bila selisihnya sekecil ini.',
@@ -18,7 +18,7 @@ export const mechanicBlocks: MechanicBlock[] = [
 	},
 	{
 		id: 'echo-config',
-		title: 'Konfigurasi Echo: 43311 vs 44111',
+		title: 'Konfigurasi echo: 43311 vs 44111',
 		paragraphs: [
 			'43311 lebih unggul dari 44111 pada kebanyakan kasus.',
 			'44111 baru lebih baik bila karakter punya banyak sequence/dupe — slot 4-cost tambahan lebih bernilai saat multiplier sudah tinggi.',
@@ -27,7 +27,7 @@ export const mechanicBlocks: MechanicBlock[] = [
 	},
 	{
 		id: 'sig-weapon',
-		title: 'Nilai Senjata Signature',
+		title: 'Nilai senjata signature',
 		paragraphs: [
 			'Senjata signature rata-rata memberi 10–20% DMG lebih tinggi dibanding alternatif F2P terbaik.',
 			'Main DPS: layak ditarik. Support/Sub-DPS: bersifat kemewahan — biasanya ada opsi F2P yang kuat.'
@@ -35,7 +35,7 @@ export const mechanicBlocks: MechanicBlock[] = [
 	},
 	{
 		id: 'er-threshold',
-		title: 'Ambang Energy Recharge',
+		title: 'Ambang Energy Regen',
 		paragraphs: [
 			'Ambang ER berbeda per karakter dan tim. Aturan utama:',
 			'Karakter dengan set Tidebreaking Courage (mis. Brant) butuh minimal ambang ER agar bonus 5pc aktif.',
@@ -45,7 +45,7 @@ export const mechanicBlocks: MechanicBlock[] = [
 	},
 	{
 		id: 'off-element',
-		title: 'Catatan Set Beda Elemen',
+		title: 'Catatan set beda elemen',
 		paragraphs: [
 			'Sebagian karakter memakai set beda elemen demi bonus 2pc-nya (mis. Moonlit Clouds untuk buff ATK saat Outro). Selalu cek rekomendasi set pada karakter — bisa jadi bukan set elemen aslinya.'
 		]

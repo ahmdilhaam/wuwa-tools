@@ -107,7 +107,7 @@
 		max-width: 56rem;
 	}
 	.warn {
-		color: var(--danger);
+		color: var(--text-muted);
 		font-size: var(--fs-sm);
 		margin-top: 0.6rem;
 	}
