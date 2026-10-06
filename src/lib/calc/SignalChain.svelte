@@ -1,20 +1,36 @@
 <script lang="ts">
 	import type { DamageBreakdown } from './damage.ts';
+	import type { WeaponContribution } from './weapon.ts';
 
-	let { r }: { r: DamageBreakdown } = $props();
+	// wc: kontribusi pasif senjata (opsional); dipakai untuk sub-baris "dari senjata"
+	let { r, wc = null }: { r: DamageBreakdown; wc?: WeaponContribution | null } = $props();
 
 	const CAP = Math.log(4); // bar penuh = ×4 atau ×0,25
 	const nf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
 	const mf = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+	const pf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
 
 	const steps = $derived.by(() => {
-		const defs = [
-			{ label: 'Bonus DMG', m: r.bonusPool },
-			{ label: 'Amplify', m: r.amplifyMultiplier },
-			{ label: 'Special DMG', m: r.specialMultiplier },
-			{ label: 'Pertahanan musuh', m: r.defFactor },
-			{ label: 'Resistansi musuh', m: r.resFactor },
-			{ label: 'Peluang crit', m: r.avgCritMultiplier }
+		const pct = (n: number) => `+${pf.format(n)}%`;
+		const crit = [
+			wc && wc.critRatePct ? `${pct(wc.critRatePct)} Crit Rate` : '',
+			wc && wc.critDmgPct ? `${pct(wc.critDmgPct)} Crit DMG` : ''
+		].filter(Boolean);
+		const defs: { label: string; m: number; note: string }[] = [
+			{ label: 'Bonus DMG', m: r.bonusPool, note: wc?.dmgBonusPct ? `${pct(wc.dmgBonusPct)} dari senjata` : '' },
+			{ label: 'Amplify', m: r.amplifyMultiplier, note: wc?.amplifyPct ? `${pct(wc.amplifyPct)} dari senjata` : '' },
+			{ label: 'Special DMG', m: r.specialMultiplier, note: '' },
+			{
+				label: 'Pertahanan musuh',
+				m: r.defFactor,
+				note: wc?.defIgnorePct ? `${pct(wc.defIgnorePct)} DEF Ignore dari senjata` : ''
+			},
+			{
+				label: 'Resistansi musuh',
+				m: r.resFactor,
+				note: wc?.resShredPct ? `${pct(wc.resShredPct)} RES Shred dari senjata` : ''
+			},
+			{ label: 'Peluang crit', m: r.avgCritMultiplier, note: crit.length ? `${crit.join(', ')} dari senjata` : '' }
 		];
 		let total = r.baseDmg;
 		return defs.map((d) => {
@@ -37,7 +53,7 @@
 		<li
 			class="step"
 			class:dim={s.neutral}
-			aria-label={`${s.label} ×${mf.format(s.m)}, hasil sementara ${nf.format(s.total)}`}
+			aria-label={`${s.label} ×${mf.format(s.m)}, hasil sementara ${nf.format(s.total)}${s.note ? `, ${s.note}` : ''}`}
 		>
 			<span class="name">{s.label}</span>
 			<span class="val">×{mf.format(s.m)}</span>
@@ -45,6 +61,7 @@
 				<span class="bar {s.dir}" style={`width:${s.w}%`}></span>
 			</span>
 			<span class="run">{nf.format(s.total)}</span>
+			{#if s.note}<span class="sub">{s.note}</span>{/if}
 		</li>
 	{/each}
 	<li class="step final" aria-label={`Damage rata-rata ${nf.format(r.avgDamage)}`}>
@@ -78,6 +95,12 @@
 		text-align: right;
 		font-variant-numeric: tabular-nums;
 		font-weight: 600;
+	}
+	.sub {
+		grid-column: 1 / -1;
+		margin-top: -0.2rem;
+		font-size: var(--fs-xs);
+		color: var(--gold);
 	}
 	.run {
 		text-align: right;

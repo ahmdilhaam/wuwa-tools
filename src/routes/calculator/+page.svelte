@@ -1,8 +1,10 @@
 <script lang="ts">
 	import BuildInputs from '#lib/calc/BuildInputs.svelte';
-	import { defaultBuild, toDamageInput } from '#lib/calc/build.ts';
+	import { clampRefine, weaponContribution, effectStatLabel } from '#lib/calc/weapon.ts';
+	import { findCharacter, weaponStore } from '#lib/calc/weaponStore.svelte.ts';
+	import { defaultBuild, toDamageInput, type BuildState } from '#lib/calc/build.ts';
 	import SignalChain from '#lib/calc/SignalChain.svelte';
-	import { calculateDamage, type DamageBreakdown } from '#lib/calc/damage.ts';
+	import { calculateDamage } from '#lib/calc/damage.ts';
 	import { elementLabels } from '#lib/calc/enemies.ts';
 
 	let mode = $state<'single' | 'compare'>('single');
@@ -11,9 +13,23 @@
 	let buildA = $state(defaultBuild());
 	let buildB = $state(defaultBuild());
 
-	const singleResult = $derived(calculateDamage(toDamageInput(single)));
-	const resultA = $derived(calculateDamage(toDamageInput(buildA)));
-	const resultB = $derived(calculateDamage(toDamageInput(buildB)));
+	// Hasil + kontribusi pasif senjata (senjata dimuat malas lewat weaponStore)
+	function compute(b: BuildState) {
+		const weapon = weaponStore.find(b.pickWeapon);
+		const character = findCharacter(b.pickCharacter);
+		return {
+			r: calculateDamage(toDamageInput(b, weapon, character)),
+			wc: weaponContribution(b, weapon, character),
+			weapon,
+			refine: clampRefine(b.pickRefine)
+		};
+	}
+	type Computed = ReturnType<typeof compute>;
+	const singleCalc = $derived(compute(single));
+	const calcA = $derived(compute(buildA));
+	const calcB = $derived(compute(buildB));
+	const resultA = $derived(calcA.r);
+	const resultB = $derived(calcB.r);
 
 	// Selisih rata-rata B terhadap A, dalam persen
 	const diffPct = $derived(
@@ -22,6 +38,7 @@
 
 	const intFmt = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
 	const fmt = (n: number) => intFmt.format(Math.round(n));
+	const pf = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
 	const mult = (n: number) => n.toFixed(4);
 	const pct = (n: number) => `${(n * 100).toFixed(2)}%`;
 
@@ -108,13 +125,17 @@
 	</button>
 </div>
 
-{#snippet resultPanel(r: DamageBreakdown, element: keyof typeof elementLabels)}
+{#snippet resultPanel(c: Computed, element: keyof typeof elementLabels)}
+	{@const r = c.r}
 	<section class="panel-cut result" aria-label="Hasil damage">
 		<div class="result-top">
 			<span class="label">Rata-rata</span>
 			<span class={`el el-${element}`}>{elementLabels[element]}</span>
 		</div>
 		<div class="hero">{fmt(r.avgDamage)}</div>
+		{#if c.weapon && c.wc.active}
+			<p class="weapon-note">Termasuk pasif senjata: {c.weapon.name} R{c.refine}</p>
+		{/if}
 		<div class="pair">
 			<div>
 				<span class="label">Crit</span>
@@ -130,7 +151,7 @@
 				Dimulai dari damage dasar, lalu tiap baris mengalikan hasil sebelumnya. Batang emas menaikkan
 				damage, batang merah menurunkannya.
 			</p>
-		<SignalChain {r} />
+		<SignalChain {r} wc={c.wc.active ? c.wc : null} />
 		<details class="full">
 			<summary>Nilai lengkap</summary>
 			<div class="table-wrap">
@@ -149,6 +170,20 @@
 						<tr><th>Pengali Crit</th><td class="num">×{mult(r.critMultiplier)}</td></tr>
 						<tr><th>Pengali Non-crit</th><td class="num">×{mult(r.nonCritMultiplier)}</td></tr>
 						<tr><th>Pengali Rata-rata</th><td class="num">×{mult(r.avgCritMultiplier)}</td></tr>
+						{#if c.weapon && c.wc.active}
+							<tr>
+								<th>Dari pasif senjata ({c.weapon.name} R{c.refine})</th>
+								<td class="num weapon-rows">
+									{#each c.wc.effects.filter((e) => e.contributes) as e (e.index)}
+										<span>
+											{e.effect.stat === 'atkPct' || e.effect.stat === 'hpPct' || e.effect.stat === 'defPct'
+												? `+${fmt(e.flat)} ${effectStatLabel(e.effect)}`
+												: `+${pf.format(e.valuePct)}% ${effectStatLabel(e.effect)}`}
+										</span>
+									{/each}
+								</td>
+							</tr>
+						{/if}
 					</tbody>
 				</table>
 			</div>
@@ -163,7 +198,7 @@
 		</div>
 		<div class="right">
 			<div class="sticky">
-				{@render resultPanel(singleResult, single.element)}
+				{@render resultPanel(singleCalc, single.element)}
 			</div>
 		</div>
 	</div>
@@ -192,12 +227,12 @@
 		<section aria-label="Build A">
 			<h2>Build A</h2>
 			<BuildInputs bind:build={buildA} />
-			{@render resultPanel(resultA, buildA.element)}
+			{@render resultPanel(calcA, buildA.element)}
 		</section>
 		<section aria-label="Build B">
 			<h2>Build B</h2>
 			<BuildInputs bind:build={buildB} />
-			{@render resultPanel(resultB, buildB.element)}
+			{@render resultPanel(calcB, buildB.element)}
 		</section>
 	</div>
 {/if}
@@ -318,6 +353,15 @@
 		font-variant-numeric: tabular-nums;
 		margin: 0.2rem 0 1rem;
 		overflow-wrap: anywhere;
+	}
+	.weapon-note {
+		margin: -0.6rem 0 1rem;
+		font-size: var(--fs-xs);
+		color: var(--gold);
+	}
+	.weapon-rows {
+		display: grid;
+		gap: 0.15rem;
 	}
 	.pair {
 		display: grid;
