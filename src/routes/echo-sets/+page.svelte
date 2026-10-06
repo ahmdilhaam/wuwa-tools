@@ -43,23 +43,29 @@
 </script>
 
 <svelte:head>
-	<title>Echo Set — WuWa Tools</title>
+	<title>Echo set — WuWa Tools</title>
 </svelte:head>
 
-<h1>Echo Set</h1>
-<p class="muted">
-	{rows.length} set Sonata dari data game. Teks dari game (bahasa Inggris); singkatan dan catatan ditulis tangan.
-</p>
+<div class="page-head">
+	<h1>Echo set</h1>
+	<p>{rows.length} set Sonata. Teks bonus dari game (bahasa Inggris); singkatan dan catatan ditulis tangan.</p>
+</div>
 
-<input type="search" placeholder="Cari set atau singkatan…" bind:value={query} aria-label="Cari set" />
+<div class="filters">
+	<label>
+		<span class="visually-hidden">Cari set</span>
+		<input type="search" placeholder="Cari set atau singkatan" bind:value={query} />
+	</label>
+	<span class="muted count">{filtered.length} set</span>
+</div>
 
-<div class="table-wrap card">
+<div class="table-wrap">
 	<table>
 		<thead>
 			<tr>
 				<th>Set</th>
 				<th>Singkatan</th>
-				<th>Echo</th>
+				<th class="num">Echo</th>
 				<th>2pc</th>
 				<th>3pc</th>
 				<th>5pc</th>
@@ -69,18 +75,18 @@
 			{#each filtered as r (r.id)}
 				<tr>
 					<td class="name">
-						<img src={r.icon} alt="" loading="lazy" width="28" height="28" />
-						<strong>{r.name}</strong>
+						<span class="nm">
+							{#if r.icon}<img src={r.icon} alt="" loading="lazy" width="28" height="28" />{/if}
+							<strong>{r.name}</strong>
+						</span>
+						{#if r.note}<div class="muted small">{r.note}</div>{/if}
 					</td>
-					<td>{r.abbrev.join(' / ') || '—'}</td>
-					<td>{r.echoCount}</td>
-					<td>{r.two}</td>
-					<td>{r.three ?? '—'}</td>
-					<td>{r.five}</td>
+					<td class="muted">{r.abbrev.join(', ') || '—'}</td>
+					<td class="num">{r.echoCount}</td>
+					<td class="txt">{r.two}</td>
+					<td class="txt">{r.three ?? '—'}</td>
+					<td class="txt">{r.five}</td>
 				</tr>
-				{#if r.note}
-					<tr class="note-row"><td colspan="6">Catatan: {r.note}</td></tr>
-				{/if}
 			{:else}
 				<tr><td colspan="6" class="muted">Tidak ada set yang cocok.</td></tr>
 			{/each}
@@ -88,45 +94,57 @@
 	</table>
 </div>
 
-<section>
-	<h2>Kombinasi 3pc + 2pc Umum</h2>
-	<div class="card">
-		<ul>
-			{#each comboNotes as n (n)}<li>{n}</li>{/each}
-		</ul>
-	</div>
+<section class="combo">
+	<h2>Kombinasi 3pc + 2pc umum</h2>
+	<ul>
+		{#each comboNotes as n (n)}<li>{n}</li>{/each}
+	</ul>
 </section>
 
 <style>
-	section {
-		margin: 1.5rem 0;
+	.filters {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1rem;
 	}
-	h2 {
-		font-size: 1.15rem;
-		margin-bottom: 0.4rem;
+	.filters label {
+		flex: 0 1 22rem;
 	}
-	.muted {
-		color: var(--text-muted);
+	.count {
+		font-size: var(--fs-sm);
 	}
-	input[type='search'] {
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		padding: 0.45rem 0.7rem;
-		width: 100%;
-		margin: 0.5rem 0 1rem;
+	.nm {
+		display: flex;
+		gap: 0.6rem;
+		align-items: center;
+		min-width: 11rem;
+	}
+	.nm img {
+		border-radius: var(--radius-sm);
+		flex: none;
 	}
 	.name {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
+		min-width: 12rem;
 	}
-	.note-row td {
-		color: var(--text-muted);
-		font-size: 0.85rem;
+	.txt {
+		max-width: 48ch;
+		min-width: 16rem;
 	}
-	ul {
+	.small {
+		font-size: var(--fs-xs);
+		margin-top: 0.25rem;
+		max-width: 40ch;
+	}
+	.combo {
+		margin-top: 2.5rem;
+		max-width: 72ch;
+	}
+	.combo ul {
 		margin: 0;
 		padding-left: 1.2rem;
+	}
+	.combo li {
+		margin: 0.3rem 0;
 	}
 </style>

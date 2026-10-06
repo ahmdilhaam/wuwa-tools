@@ -4,6 +4,7 @@
 	import { weaponTypes } from '#lib/data/characters.ts';
 	import { weapons as handWeapons, weaponNotes } from '#lib/data/weapons.ts';
 	import { normalizeName } from '#lib/data/merged.ts';
+	import Rarity from '#lib/ui/Rarity.svelte';
 
 	const list = gameWeapons as GameWeapon[];
 	const usersByName = new Map(handWeapons.map((w) => [normalizeName(w.name), w]));
@@ -33,54 +34,71 @@
 	<title>Senjata — WuWa Tools</title>
 </svelte:head>
 
-<h1>Senjata</h1>
-<p class="muted">{list.length} senjata dari data game. Teks pasif dari game (bahasa Inggris); kolom Pengguna ditulis tangan.</p>
+<div class="page-head">
+	<h1>Senjata</h1>
+	<p>{list.length} senjata. Teks pasif dari game (bahasa Inggris); kolom pengguna ditulis tangan.</p>
+</div>
 
-<div class="filters card">
-	<input type="search" placeholder="Cari senjata…" bind:value={query} aria-label="Cari senjata" />
-	<label>Tipe
+<div class="filters">
+	<label class="grow">
+		<span class="visually-hidden">Cari senjata</span>
+		<input type="search" placeholder="Cari senjata" bind:value={query} />
+	</label>
+	<label>
+		Tipe
 		<select bind:value={type}>
 			<option value="">Semua tipe</option>
 			{#each weaponTypes as t (t)}<option value={t}>{t}</option>{/each}
 		</select>
 	</label>
-	<label>Rarity
+	<label>
+		Rarity
 		<select bind:value={rarity}>
 			<option value={0}>Semua</option>
-			{#each rarities as r (r)}<option value={r}>{r}★</option>{/each}
+			{#each rarities as r (r)}<option value={r}>{r} bintang</option>{/each}
 		</select>
 	</label>
 </div>
 
-<p class="muted">{filtered.length} dari {list.length} senjata</p>
+<p class="muted count">{filtered.length} senjata</p>
 
-<div class="table-wrap card">
+<div class="table-wrap">
 	<table>
 		<thead>
-			<tr><th>Senjata</th><th>Tipe</th><th>Rarity</th><th>ATK Lv90</th><th>Stat sekunder</th><th>Pengguna</th><th>Pasif</th></tr>
+			<tr>
+				<th>Senjata</th>
+				<th>Tipe</th>
+				<th>Rarity</th>
+				<th class="num">ATK Lv90</th>
+				<th class="num">Stat sekunder</th>
+				<th>Pengguna</th>
+				<th>Pasif</th>
+			</tr>
 		</thead>
 		<tbody>
 			{#each filtered as w (w.id)}
 				{@const hand = usersByName.get(normalizeName(w.name))}
 				{@const r = refine[w.id] ?? 1}
 				<tr>
-					<td class="name">
-						<img src={w.icon} alt="" loading="lazy" width="36" height="36" />
-						<strong>{w.name}</strong>
+					<td>
+						<span class="nm">
+							<img src={w.icon} alt="" loading="lazy" width="36" height="36" />
+							<strong>{w.name}</strong>
+						</span>
 					</td>
 					<td>{w.type}</td>
-					<td>{'★'.repeat(w.rarity)}</td>
-					<td>{w.atk90}</td>
-					<td>{w.secondary.name} {w.secondary.value90}{secondaryUnit(w.secondary.name)}</td>
-					<td>{hand?.users.join(', ') ?? '—'}</td>
-					<td>
+					<td><Rarity rarity={w.rarity} /></td>
+					<td class="num">{w.atk90}</td>
+					<td class="num"><span class="muted">{w.secondary.name}</span> {w.secondary.value90}{secondaryUnit(w.secondary.name)}</td>
+					<td class="users">{hand?.users.join(', ') ?? '—'}</td>
+					<td class="passive">
 						<details>
 							<summary>{w.passive.name}</summary>
-							<label class="ref">Refinement
-								<select value={r} onchange={(e) => (refine[w.id] = Number(e.currentTarget.value))}>
-									{#each [1, 2, 3, 4, 5] as n (n)}<option value={n}>R{n}</option>{/each}
-								</select>
-							</label>
+							<div class="segmented" role="group" aria-label="Refinement {w.name}">
+								{#each [1, 2, 3, 4, 5] as n (n)}
+									<button type="button" aria-pressed={r === n} onclick={() => (refine[w.id] = n)}>R{n}</button>
+								{/each}
+							</div>
 							<p class="desc">{passiveText(w, r)}</p>
 						</details>
 					</td>
@@ -92,59 +110,70 @@
 	</table>
 </div>
 
-<h2>Catatan Umum</h2>
-<div class="card">
+<section class="notes">
+	<h2>Catatan umum</h2>
 	<ul>
 		{#each weaponNotes as n (n)}<li>{n}</li>{/each}
 	</ul>
-</div>
+</section>
 
 <style>
-	.muted {
-		color: var(--text-muted);
-	}
-	h2 {
-		font-size: 1.15rem;
-		margin: 1.5rem 0 0.4rem;
-	}
 	.filters {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.75rem;
 		align-items: end;
 	}
-	.filters input {
-		flex: 2 1 220px;
+	.filters label {
+		flex: 0 1 11rem;
 	}
-	.filters label,
-	.ref {
+	.filters .grow {
+		flex: 1 1 14rem;
+	}
+	.count {
+		margin: 1rem 0 0.75rem;
+		font-size: var(--fs-sm);
+	}
+	.nm {
 		display: flex;
-		flex-direction: column;
-		font-size: 0.8rem;
-		color: var(--text-muted);
-		gap: 0.2rem;
-		flex: 1 1 140px;
-	}
-	input[type='search'],
-	select {
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		padding: 0.45rem 0.7rem;
-		color: var(--text);
-	}
-	.name {
-		display: flex;
-		gap: 0.5rem;
+		gap: 0.6rem;
 		align-items: center;
+		min-width: 11rem;
+	}
+	.nm img {
+		border-radius: var(--radius-sm);
+		background: var(--surface-2);
+		flex: none;
+	}
+	.users {
+		max-width: 24ch;
+		min-width: 10rem;
+	}
+	.passive {
+		min-width: 16rem;
+		max-width: 48ch;
+	}
+	.passive .segmented {
+		margin: 0.5rem 0;
+	}
+	.passive .segmented button {
+		padding: 0.25rem 0.6rem;
 	}
 	.desc {
 		white-space: pre-line;
 		color: var(--text-muted);
 		max-width: 48ch;
+		margin: 0;
 	}
-	ul {
+	.notes {
+		margin-top: 2.5rem;
+		max-width: 72ch;
+	}
+	.notes ul {
 		margin: 0;
 		padding-left: 1.2rem;
+	}
+	.notes li {
+		margin: 0.3rem 0;
 	}
 </style>
