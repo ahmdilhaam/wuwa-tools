@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
 	basisPointsToFraction,
@@ -11,7 +13,11 @@ import {
 	classifyEffectStat,
 	renderRefinement,
 	secondaryName,
-	stripRichText
+	stripRichText,
+	toNumberTemplate,
+	fromNumberTemplate,
+	toIdDecimal,
+	applyWeaponI18n
 } from './encore-helpers';
 
 describe('stripRichText', () => {
@@ -183,5 +189,68 @@ describe('parseWeaponEffects', () => {
 
 	it('classifyEffectStat mengembalikan null untuk konteks tak dikenal', () => {
 		expect(classifyEffectStat('Providing Healing increases ', ' of something')).toBeNull();
+	});
+});
+
+describe('templat angka (i18n)', () => {
+	it('mengubah titik desimal menjadi koma untuk teks Indonesia', () => {
+		expect(toIdDecimal('12.8')).toBe('12,8');
+		expect(toIdDecimal('14')).toBe('14');
+		expect(fromNumberTemplate('sebesar {0}% selama {1} dtk', ['12.8', '14'].map(toIdDecimal))).toBe(
+			'sebesar 12,8% selama 14 dtk'
+		);
+	});
+
+	it('mengganti angka desimal dan persen dengan placeholder', () => {
+		const { template, nums } = toNumberTemplate('Increases by 12.8%, lasting for 14s.');
+		expect(template).toBe('Increases by {0}%, lasting for {1}s.');
+		expect(nums).toEqual(['12.8', '14']);
+		expect(fromNumberTemplate(template, nums)).toBe('Increases by 12.8%, lasting for 14s.');
+	});
+
+	it('teks tanpa angka tidak berubah', () => {
+		expect(toNumberTemplate('Hello')).toEqual({ template: 'Hello', nums: [] });
+	});
+
+	it('round-trip tepat untuk semua teks pasif dan kalimat efek di weapons.json', () => {
+		const weapons = JSON.parse(readFileSync(resolve(__dirname, '../src/lib/data/game/weapons.json'), 'utf8'));
+		let n = 0;
+		for (const w of weapons) {
+			const texts: string[] = [
+				...(['r1', 'r2', 'r3', 'r4', 'r5'] as const).map((k) => w.passive[k].en),
+				...w.passive.effects.map((e: { sentence: string }) => e.sentence)
+			];
+			for (const t of texts) {
+				const { template, nums } = toNumberTemplate(t);
+				expect(fromNumberTemplate(template, nums)).toBe(t);
+				n++;
+			}
+		}
+		expect(n).toBeGreaterThan(500);
+	});
+
+	it('applyWeaponI18n: terjemahan valid dipakai, placeholder salah dilaporkan, kunci basi dicatat', () => {
+		const mk = () => ({
+			name: 'X',
+			passive: {
+				r1: { en: 'Up by 5%.', id: 'Up by 5%.' },
+				r2: { en: 'Up by 6%.', id: 'Up by 6%.' },
+				r3: { en: 'Up by 7%.', id: 'Up by 7%.' },
+				r4: { en: 'Up by 8%.', id: 'Up by 8%.' },
+				r5: { en: 'Up by 9%.', id: 'Up by 9%.' },
+				effects: [{ sentence: 'Up by 5%.' } as { sentence: string; sentenceId?: string }]
+			}
+		});
+		const w = mk();
+		const ok = applyWeaponI18n([w], { 'Up by {0}%.': 'Naik {0}%.', 'Lama {0}': 'x' });
+		expect(w.passive.r3.id).toBe('Naik 7%.');
+		expect(w.passive.effects[0].sentenceId).toBe('Naik 5%.');
+		expect(ok.missing).toEqual([]);
+		expect(ok.stale).toEqual(['Lama {0}']);
+		const w2 = mk();
+		const bad = applyWeaponI18n([w2], { 'Up by {0}%.': 'Naik {0} {1}%.' });
+		expect(bad.invalid).toHaveLength(1);
+		expect(w2.passive.r1.id).toBe('Up by 5%.');
+		expect(applyWeaponI18n([mk()], {}).missing).toEqual(['Up by {0}%.']);
 	});
 });

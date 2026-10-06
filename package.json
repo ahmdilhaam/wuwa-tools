@@ -11,7 +11,9 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "test": "vitest run",
-    "sync": "bun scripts/sync-encore.ts"
+    "sync": "bun scripts/sync-encore.ts",
+		"i18n:extract": "bun scripts/extract-weapon-i18n.ts",
+		"i18n:apply": "bun scripts/apply-weapon-i18n.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^4.0.0",

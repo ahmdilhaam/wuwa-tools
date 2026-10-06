@@ -1,5 +1,6 @@
 // Sinkronisasi data game dari api-v2.encore.moe -> src/lib/data/game/*.json
 // Jalankan: bun scripts/sync-encore.ts [--no-cache]
+import { applyWeaponI18nFromFile } from './apply-weapon-i18n';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -424,6 +425,7 @@ async function main() {
 	const { monsters, breakdown } = await syncMonsters();
 
 	await writeJson('characters.json', chars);
+	await applyWeaponI18nFromFile(weapons);
 	await writeJson('weapons.json', weapons);
 	await writeJson('sonata-sets.json', sets);
 	await writeJson('monsters.json', monsters);

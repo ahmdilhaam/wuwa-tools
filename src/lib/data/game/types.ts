@@ -97,6 +97,8 @@ export interface WeaponEffect {
 	team: boolean;
 	/** Kalimat sumber dengan nilai R1 untuk ditampilkan */
 	sentence: string;
+	/** Terjemahan Indonesia dari sentence (overlay i18n); sama dengan sentence bila belum diterjemahkan */
+	sentenceId?: string;
 }
 
 export interface WeaponPassive {

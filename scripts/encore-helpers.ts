@@ -323,3 +323,92 @@ export function parseWeaponEffects(desc: string, params: ParamArray[] = []): Wea
 	}
 	return effects;
 }
+
+// ---------- templat angka untuk overlay terjemahan ----------
+
+const NUMBER_RE = /\d+(?:\.\d+)?/g;
+
+/** Ganti tiap angka (termasuk desimal) dengan {0}, {1}, ... sesuai urutan. Tanda % / satuan tetap di luar placeholder. */
+export function toNumberTemplate(text: string): { template: string; nums: string[] } {
+	const nums: string[] = [];
+	const template = text.replace(NUMBER_RE, (m) => `{${nums.push(m) - 1}}`);
+	return { template, nums };
+}
+
+/** Kebalikan toNumberTemplate: isi {n} dengan nums[n]. */
+/** "12.8" → "12,8"; bilangan bulat tidak berubah. */
+export function toIdDecimal(num: string): string {
+	return num.replace(/^(\d+)\.(\d+)$/, '$1,$2');
+}
+
+export function fromNumberTemplate(template: string, nums: string[]): string {
+	return template.replace(/\{(\d+)\}/g, (m, i) => nums[Number(i)] ?? m);
+}
+
+/** Placeholder {n} dalam templat, terurut (multiset) untuk validasi terjemahan. */
+export function placeholderMultiset(template: string): string[] {
+	return (template.match(/\{\d+\}/g) ?? []).sort();
+}
+
+/** Bagian templat/angka dari tiap teks pasif dan kalimat efek, untuk ekstraksi + penerapan. */
+export interface WeaponI18nWeapon {
+	name: string;
+	passive: {
+		r1: { en: string; id: string };
+		r2: { en: string; id: string };
+		r3: { en: string; id: string };
+		r4: { en: string; id: string };
+		r5: { en: string; id: string };
+		effects: { sentence: string; sentenceId?: string }[];
+	};
+}
+
+/** Semua templat sumber (unik, terurut) dari daftar senjata. */
+export function collectWeaponTemplates(weapons: WeaponI18nWeapon[]): string[] {
+	const set = new Set<string>();
+	for (const w of weapons) {
+		for (const k of ['r1', 'r2', 'r3', 'r4', 'r5'] as const) set.add(toNumberTemplate(w.passive[k].en).template);
+		for (const e of w.passive.effects) set.add(toNumberTemplate(e.sentence).template);
+	}
+	return [...set].sort();
+}
+
+export interface ApplyWeaponI18nResult {
+	missing: string[];
+	invalid: { template: string; translation: string; expected: string[]; got: string[] }[];
+	stale: string[];
+}
+
+/** Terapkan overlay: isi passive.rN.id dan effects[i].sentenceId (mutasi in-place). Tanpa terjemahan -> id = en. */
+export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<string, string>): ApplyWeaponI18nResult {
+	const missing = new Set<string>();
+	const invalid: ApplyWeaponI18nResult['invalid'] = [];
+	const bad = new Set<string>();
+	const used = new Set<string>();
+
+	const translate = (en: string): string => {
+		const { template, nums } = toNumberTemplate(en);
+		used.add(template);
+		const tr = overlay[template];
+		if (tr === undefined || tr.trim() === '') {
+			missing.add(template);
+			return en;
+		}
+		const expected = placeholderMultiset(template);
+		const got = placeholderMultiset(tr);
+		if (expected.join() !== got.join()) {
+			if (!bad.has(template)) invalid.push({ template, translation: tr, expected, got });
+			bad.add(template);
+			return en;
+		}
+		// Teks Indonesia memakai koma desimal (12,8%), sama dengan format angka di kalkulator.
+		return fromNumberTemplate(tr, nums.map(toIdDecimal));
+	};
+
+	for (const w of weapons) {
+		for (const k of ['r1', 'r2', 'r3', 'r4', 'r5'] as const) w.passive[k].id = translate(w.passive[k].en);
+		for (const e of w.passive.effects) e.sentenceId = translate(e.sentence);
+	}
+	const stale = Object.keys(overlay).filter((k) => !used.has(k)).sort();
+	return { missing: [...missing].sort(), invalid, stale };
+}
