@@ -182,7 +182,11 @@
 			<label>{scalingLabel}<input type="number" step="any" bind:value={build.scalingStat} /></label>
 			<label>Crit Rate (%)<input type="number" step="any" bind:value={build.critRatePct} /></label>
 			<label>Crit DMG (%)<input type="number" step="any" bind:value={build.critDmgPct} /></label>
-			<label>Motion Value (%)<input type="number" step="any" bind:value={build.mvPct} /></label>
+			<label>
+				Motion Value (%)
+				<input type="number" step="any" bind:value={build.mvPct} aria-describedby="mv-help" />
+				<span class="hint" id="mv-help">Kekuatan skill. 200% = damage dasar 2× stat skala.</span>
+			</label>
 			<label>DMG tetap (flat)<input type="number" step="any" bind:value={build.flatDmg} /></label>
 			<label>
 				Senjata (petunjuk)
@@ -313,6 +317,10 @@
 		grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
 		gap: 0.9rem 0.85rem;
 	}
+	/* Petunjuk di bawah satu isian tidak boleh meregangkan isian lain di baris yang sama. */
+	.grid > label {
+		align-content: start;
+	}
 	.picker {
 		display: flex;
 		align-items: center;
@@ -332,6 +340,11 @@
 	}
 	.warn {
 		color: var(--gold);
+	}
+	.hint {
+		font-size: var(--fs-xs);
+		color: var(--text-faint);
+		line-height: 1.35;
 	}
 	input:disabled,
 	select:disabled {

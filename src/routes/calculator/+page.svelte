@@ -125,7 +125,11 @@
 				<span class="pv">{fmt(r.nonCritDamage)}</span>
 			</div>
 		</div>
-		<h3 class="chain-title">Rantai pengali</h3>
+		<h3 class="chain-title">Cara damage ini dihitung</h3>
+			<p class="chain-help">
+				Dimulai dari damage dasar, lalu tiap baris mengalikan hasil sebelumnya. Batang emas menaikkan
+				damage, batang merah menurunkannya.
+			</p>
 		<SignalChain {r} />
 		<details class="full">
 			<summary>Nilai lengkap</summary>
@@ -336,8 +340,13 @@
 	.chain-title {
 		margin: 1rem 0 0.25rem;
 		font-size: var(--fs-sm);
-		color: var(--text-muted);
+		color: var(--text);
 		font-weight: 600;
+	}
+	.chain-help {
+		margin: 0 0 0.5rem;
+		font-size: var(--fs-xs);
+		color: var(--text-muted);
 	}
 	.full {
 		margin-top: 1rem;

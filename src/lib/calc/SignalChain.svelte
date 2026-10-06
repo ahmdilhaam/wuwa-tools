@@ -11,10 +11,10 @@
 		const defs = [
 			{ label: 'Bonus DMG', m: r.bonusPool },
 			{ label: 'Amplify', m: r.amplifyMultiplier },
-			{ label: 'Special', m: r.specialMultiplier },
-			{ label: 'DEF musuh', m: r.defFactor },
-			{ label: 'RES musuh', m: r.resFactor },
-			{ label: 'Crit rata-rata', m: r.avgCritMultiplier }
+			{ label: 'Special DMG', m: r.specialMultiplier },
+			{ label: 'Pertahanan musuh', m: r.defFactor },
+			{ label: 'Resistansi musuh', m: r.resFactor },
+			{ label: 'Peluang crit', m: r.avgCritMultiplier }
 		];
 		let total = r.baseDmg;
 		return defs.map((d) => {
@@ -26,9 +26,9 @@
 	});
 </script>
 
-<ol class="chain" aria-label="Rantai pengali damage">
-	<li class="step base" aria-label={`Base DMG ${nf.format(r.baseDmg)}`}>
-		<span class="name">Base DMG</span>
+<ol class="chain" aria-label="Langkah perhitungan damage">
+	<li class="step base" aria-label={`Damage dasar ${nf.format(r.baseDmg)}`}>
+		<span class="name">Damage dasar</span>
 		<span class="val">{nf.format(r.baseDmg)}</span>
 		<span class="track" aria-hidden="true"></span>
 		<span class="run">{nf.format(r.baseDmg)}</span>
@@ -37,7 +37,7 @@
 		<li
 			class="step"
 			class:dim={s.neutral}
-			aria-label={`${s.label} ×${mf.format(s.m)}, total berjalan ${nf.format(s.total)}`}
+			aria-label={`${s.label} ×${mf.format(s.m)}, hasil sementara ${nf.format(s.total)}`}
 		>
 			<span class="name">{s.label}</span>
 			<span class="val">×{mf.format(s.m)}</span>
@@ -47,8 +47,8 @@
 			<span class="run">{nf.format(s.total)}</span>
 		</li>
 	{/each}
-	<li class="step final" aria-label={`Rata-rata damage ${nf.format(r.avgDamage)}`}>
-		<span class="name">Rata-rata damage</span>
+	<li class="step final" aria-label={`Damage rata-rata ${nf.format(r.avgDamage)}`}>
+		<span class="name">Damage rata-rata</span>
 		<span class="val"></span>
 		<span class="track" aria-hidden="true"></span>
 		<span class="run">{nf.format(r.avgDamage)}</span>
@@ -64,7 +64,7 @@
 	}
 	.step {
 		display: grid;
-		grid-template-columns: minmax(5.6rem, 7.5rem) 3.6rem minmax(2rem, 1fr) minmax(3.2rem, auto);
+		grid-template-columns: minmax(6.5rem, 8.75rem) 3.6rem minmax(2rem, 1fr) minmax(3.2rem, auto);
 		align-items: center;
 		gap: 0.6rem;
 		padding: 0.4rem 0;
