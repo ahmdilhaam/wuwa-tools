@@ -1,7 +1,8 @@
 <script lang="ts">
 	import BuildInputs from '#lib/calc/BuildInputs.svelte';
 	import { defaultBuild, toDamageInput } from '#lib/calc/build.ts';
-	import { calculateDamage } from '#lib/calc/damage.ts';
+	import SignalChain from '#lib/calc/SignalChain.svelte';
+	import { calculateDamage, type DamageBreakdown } from '#lib/calc/damage.ts';
 	import { elementLabels } from '#lib/calc/enemies.ts';
 
 	let mode = $state<'single' | 'compare'>('single');
@@ -90,13 +91,15 @@
 </script>
 
 <svelte:head>
-	<title>Kalkulator Damage · WuWa Tools</title>
+	<title>Kalkulator damage - WuWa Tools</title>
 </svelte:head>
 
-<h1>Kalkulator Damage</h1>
-<p class="muted">Kalkulator damage satu hit. Hasil dihitung ulang otomatis saat input berubah.</p>
+<header class="page-head">
+	<h1>Kalkulator damage</h1>
+	<p>Hitung damage satu hit dari skill, stat, dan musuh. Hasil diperbarui otomatis saat input berubah.</p>
+</header>
 
-<div class="tabs" role="tablist">
+<div class="segmented tabs" role="tablist" aria-label="Mode kalkulator">
 	<button role="tab" aria-selected={mode === 'single'} onclick={() => (mode = 'single')}>
 		Satu hit
 	</button>
@@ -105,46 +108,48 @@
 	</button>
 </div>
 
-{#snippet breakdown(r: ReturnType<typeof calculateDamage>)}
-	<details>
-		<summary>Rincian langkah demi langkah</summary>
-		<div class="table-wrap">
-			<table>
-				<tbody>
-					<tr><th>Base DMG</th><td>{r.baseDmg.toFixed(2)}</td></tr>
-					<tr><th>Pool DMG Bonus</th><td>×{mult(r.bonusPool)}</td></tr>
-					<tr><th>Amplify</th><td>×{mult(r.amplifyMultiplier)}</td></tr>
-					<tr><th>Special DMG</th><td>×{mult(r.specialMultiplier)}</td></tr>
-					<tr><th>DEF musuh (dasar)</th><td>{r.enemyDef.toFixed(2)}</td></tr>
-					<tr><th>DEF musuh (setelah modifikasi)</th><td>{r.modifiedDef.toFixed(2)}</td></tr>
-					<tr><th>Suku level penyerang</th><td>{r.attackerDefTerm}</td></tr>
-					<tr><th>DEF%</th><td>×{mult(r.defFactor)} ({pct(r.defFactor)})</td></tr>
-					<tr><th>RES efektif</th><td>{pct(r.effectiveRes)}</td></tr>
-					<tr><th>Faktor RES</th><td>×{mult(r.resFactor)}</td></tr>
-					<tr><th>Pengali Crit</th><td>×{mult(r.critMultiplier)}</td></tr>
-					<tr><th>Pengali Non-crit</th><td>×{mult(r.nonCritMultiplier)}</td></tr>
-					<tr><th>Pengali Rata-rata</th><td>×{mult(r.avgCritMultiplier)}</td></tr>
-				</tbody>
-			</table>
-		</div>
-	</details>
-{/snippet}
-
-{#snippet bigNumbers(r: ReturnType<typeof calculateDamage>)}
-	<div class="big">
-		<div class="stat crit">
-			<span class="label">Crit</span>
-			<span class="value">{fmt(r.critDamage)}</span>
-		</div>
-		<div class="stat">
-			<span class="label">Non-crit</span>
-			<span class="value">{fmt(r.nonCritDamage)}</span>
-		</div>
-		<div class="stat avg">
+{#snippet resultPanel(r: DamageBreakdown, element: keyof typeof elementLabels)}
+	<section class="panel-cut result" aria-label="Hasil damage">
+		<div class="result-top">
 			<span class="label">Rata-rata</span>
-			<span class="value">{fmt(r.avgDamage)}</span>
+			<span class={`el el-${element}`}>{elementLabels[element]}</span>
 		</div>
-	</div>
+		<div class="hero">{fmt(r.avgDamage)}</div>
+		<div class="pair">
+			<div>
+				<span class="label">Crit</span>
+				<span class="pv crit">{fmt(r.critDamage)}</span>
+			</div>
+			<div>
+				<span class="label">Non-crit</span>
+				<span class="pv">{fmt(r.nonCritDamage)}</span>
+			</div>
+		</div>
+		<h3 class="chain-title">Rantai pengali</h3>
+		<SignalChain {r} />
+		<details class="full">
+			<summary>Nilai lengkap</summary>
+			<div class="table-wrap">
+				<table>
+					<tbody>
+						<tr><th>Base DMG</th><td class="num">{r.baseDmg.toFixed(2)}</td></tr>
+						<tr><th>Pool DMG Bonus</th><td class="num">×{mult(r.bonusPool)}</td></tr>
+						<tr><th>Amplify</th><td class="num">×{mult(r.amplifyMultiplier)}</td></tr>
+						<tr><th>Special DMG</th><td class="num">×{mult(r.specialMultiplier)}</td></tr>
+						<tr><th>DEF musuh (dasar)</th><td class="num">{r.enemyDef.toFixed(2)}</td></tr>
+						<tr><th>DEF musuh (setelah modifikasi)</th><td class="num">{r.modifiedDef.toFixed(2)}</td></tr>
+						<tr><th>Suku level penyerang</th><td class="num">{r.attackerDefTerm}</td></tr>
+						<tr><th>DEF%</th><td class="num">×{mult(r.defFactor)} ({pct(r.defFactor)})</td></tr>
+						<tr><th>RES efektif</th><td class="num">{pct(r.effectiveRes)}</td></tr>
+						<tr><th>Faktor RES</th><td class="num">×{mult(r.resFactor)}</td></tr>
+						<tr><th>Pengali Crit</th><td class="num">×{mult(r.critMultiplier)}</td></tr>
+						<tr><th>Pengali Non-crit</th><td class="num">×{mult(r.nonCritMultiplier)}</td></tr>
+						<tr><th>Pengali Rata-rata</th><td class="num">×{mult(r.avgCritMultiplier)}</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</details>
+	</section>
 {/snippet}
 
 {#if mode === 'single'}
@@ -153,245 +158,283 @@
 			<BuildInputs bind:build={single} />
 		</div>
 		<div class="right">
-			<div class="card sticky">
-				<h2>Hasil · {elementLabels[single.element]}</h2>
-				{@render bigNumbers(singleResult)}
-				{@render breakdown(singleResult)}
+			<div class="sticky">
+				{@render resultPanel(singleResult, single.element)}
 			</div>
 		</div>
 	</div>
 {:else}
-	<div class="card diff">
-		<span class="label">Selisih rata-rata, Build B terhadap Build A</span>
-		{#if diffPct === null}
-			<span class="value">–</span>
-		{:else}
-			<span class="value" class:neg={diffPct < 0}>
-				{diffPct >= 0 ? '+' : ''}{diffPct.toFixed(2).replace('.', ',')}%
-			</span>
-		{/if}
+	<div class="diff panel-cut" aria-live="polite">
+		<div class="dcell">
+			<span class="label">Build A</span>
+			<span class="dv">{fmt(resultA.avgDamage)}</span>
+		</div>
+		<div class="dcell">
+			<span class="label">Build B</span>
+			<span class="dv">{fmt(resultB.avgDamage)}</span>
+		</div>
+		<div class="dcell delta">
+			<span class="label">Selisih B terhadap A</span>
+			{#if diffPct === null}
+				<span class="dp">-</span>
+			{:else}
+				<span class="dp" class:neg={diffPct < 0}>
+					{diffPct >= 0 ? '+' : '−'}{Math.abs(diffPct).toFixed(2).replace('.', ',')}%
+				</span>
+			{/if}
+		</div>
 	</div>
 	<div class="compare">
-		<section>
+		<section aria-label="Build A">
 			<h2>Build A</h2>
-			<div class="card">
-				{@render bigNumbers(resultA)}
-				{@render breakdown(resultA)}
-			</div>
 			<BuildInputs bind:build={buildA} />
+			{@render resultPanel(resultA, buildA.element)}
 		</section>
-		<section>
+		<section aria-label="Build B">
 			<h2>Build B</h2>
-			<div class="card">
-				{@render bigNumbers(resultB)}
-				{@render breakdown(resultB)}
-			</div>
 			<BuildInputs bind:build={buildB} />
+			{@render resultPanel(resultB, buildB.element)}
 		</section>
 	</div>
 {/if}
 
 <section class="rules">
-	<h2>Aturan</h2>
-	<div class="rule-grid">
-		{#each rules as rule (rule.title)}
-			<div class="card">
-				<h3>{rule.title}</h3>
-				<p>{rule.text}</p>
-			</div>
-		{/each}
-	</div>
-
-	<h3>Klasifikasi tipe damage karakter (terkonfirmasi)</h3>
-	<div class="table-wrap">
-		<table>
-			<thead>
-				<tr>
-					<th>Karakter</th>
-					<th>Skill</th>
-					<th>Tipe DMG sebenarnya</th>
-					<th>Asumsi yang sering keliru</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each classifications as row, i (i)}
-					<tr>
-						{#each row as cell, j (j)}<td>{cell}</td>{/each}
-					</tr>
+	<h2>Aturan dan pengecekan</h2>
+	<div class="rules-grid">
+		<div>
+			<h3>Aturan</h3>
+			<dl>
+				{#each rules as rule (rule.title)}
+					<div>
+						<dt>{rule.title}</dt>
+						<dd>{rule.text}</dd>
+					</div>
 				{/each}
-			</tbody>
-		</table>
+			</dl>
+		</div>
+		<div>
+			<h3>Checklist sebelum menghitung</h3>
+			<div class="checklist">
+				{#each checklist as item, i (i)}
+					<label>
+						<input type="checkbox" bind:checked={checked[i]} />
+						<span>{item}</span>
+					</label>
+				{/each}
+			</div>
+		</div>
 	</div>
 
-	<h3>Checklist sebelum menghitung</h3>
-	<div class="card checklist">
-		{#each checklist as item, i (i)}
-			<label>
-				<input type="checkbox" bind:checked={checked[i]} />
-				<span>{item}</span>
-			</label>
-		{/each}
-	</div>
+	<details class="class-table">
+		<summary>Klasifikasi tipe damage karakter (terkonfirmasi)</summary>
+		<div class="table-wrap">
+			<table>
+				<thead>
+					<tr>
+						<th>Karakter</th>
+						<th>Skill</th>
+						<th>Tipe DMG sebenarnya</th>
+						<th>Asumsi yang sering keliru</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each classifications as row, i (i)}
+						<tr>
+							{#each row as cell, j (j)}<td>{cell}</td>{/each}
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</details>
 </section>
 
 <style>
-	.muted {
-		color: var(--text-muted);
-	}
 	.tabs {
-		display: flex;
-		gap: 0.5rem;
-		margin: 1rem 0;
-	}
-	.tabs button {
-		background: var(--surface-2);
-		color: var(--text-muted);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-		padding: 0.5rem 1rem;
-		font: inherit;
-		cursor: pointer;
-	}
-	.tabs button[aria-selected='true'] {
-		background: var(--accent-soft);
-		color: var(--accent);
-		border-color: var(--accent);
+		margin-bottom: 1.5rem;
 	}
 	.cols {
 		display: grid;
-		grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-		gap: 1.25rem;
+		grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		gap: 2rem;
 		align-items: start;
 	}
 	.compare {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 1.25rem;
+		gap: 2rem;
 		align-items: start;
 	}
 	.compare section {
 		display: grid;
-		gap: 1rem;
+		gap: 1.5rem;
+		min-width: 0;
+	}
+	.compare h2 {
+		margin: 0;
 	}
 	.sticky {
 		position: sticky;
-		top: 1rem;
+		top: 4.5rem;
 	}
-	@media (max-width: 799px) {
-		.cols,
-		.compare {
+	@media (max-width: 899px) {
+		.cols {
 			grid-template-columns: minmax(0, 1fr);
 		}
 		.sticky {
 			position: static;
 		}
-		.right {
-			order: -1;
+	}
+	@media (max-width: 719px) {
+		.compare {
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
-	.big {
-		display: grid;
-		gap: 0.6rem;
-		margin: 0.75rem 0;
-	}
-	.stat {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		padding: 0.6rem 0.8rem;
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-	}
-	.stat .label,
-	.diff .label {
+
+	.label {
 		color: var(--text-muted);
-		font-size: 0.85rem;
+		font-size: var(--fs-sm);
 	}
-	.stat .value {
-		font-size: 1.7rem;
-		font-weight: 700;
-		font-variant-numeric: tabular-nums;
+	.result {
+		padding: 1.25rem;
 	}
-	.stat.crit .value {
-		color: var(--el-spectro);
-	}
-	.stat.avg {
-		border-color: var(--accent);
-		background: var(--accent-soft);
-	}
-	.stat.avg .value {
-		color: var(--accent);
-		font-size: 2rem;
-	}
-	.diff {
+	.result-top {
 		display: flex;
 		justify-content: space-between;
-		align-items: baseline;
-		margin-bottom: 1rem;
+		align-items: center;
+		gap: 0.5rem;
+		padding-right: 0.8rem;
 	}
-	.diff .value {
-		font-size: 1.8rem;
-		font-weight: 700;
-		color: var(--accent);
+	.hero {
+		font-family: var(--font-display);
+		font-size: clamp(2.4rem, 4vw, 3.2rem);
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		font-variant-numeric: tabular-nums;
+		margin: 0.2rem 0 1rem;
+		overflow-wrap: anywhere;
 	}
-	.diff .value.neg {
-		color: var(--danger);
-	}
-	details summary {
-		cursor: pointer;
-		color: var(--accent);
-		font-size: 0.9rem;
-		margin-top: 0.5rem;
-	}
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.88rem;
-	}
-	th,
-	td {
-		text-align: left;
-		padding: 0.4rem 0.6rem;
+	.pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		padding-bottom: 1rem;
 		border-bottom: 1px solid var(--border);
 	}
-	tbody th {
+	.pair > div {
+		display: grid;
+	}
+	.pv {
+		font-size: var(--fs-xl);
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.pv.crit {
+		color: var(--gold);
+	}
+	.chain-title {
+		margin: 1rem 0 0.25rem;
+		font-size: var(--fs-sm);
+		color: var(--text-muted);
+		font-weight: 600;
+	}
+	.full {
+		margin-top: 1rem;
+	}
+	.full summary {
+		margin-bottom: 0.5rem;
+	}
+	.full th {
 		font-weight: 500;
 		color: var(--text-muted);
 	}
-	td {
+
+	.diff {
+		position: sticky;
+		top: 4.5rem;
+		z-index: 5;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1.3fr;
+		gap: 1rem;
+		padding: 0.75rem 1.25rem;
+		margin-bottom: 1.5rem;
+		background-color: var(--surface);
+	}
+	.dcell {
+		display: grid;
+		min-width: 0;
+	}
+	.dv {
+		font-size: var(--fs-lg);
+		font-weight: 600;
 		font-variant-numeric: tabular-nums;
 	}
-	.rules {
-		margin-top: 2.5rem;
+	.dp {
+		font-family: var(--font-display);
+		font-size: var(--fs-xl);
+		font-weight: 600;
+		color: var(--ok);
+		font-variant-numeric: tabular-nums;
 	}
-	.rule-grid {
+	.dp.neg {
+		color: var(--danger);
+	}
+	@media (max-width: 480px) {
+		.diff {
+			grid-template-columns: 1fr 1fr;
+			padding-right: 1.5rem;
+		}
+		.delta {
+			grid-column: 1 / -1;
+		}
+	}
+
+	.rules {
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+	}
+	.rules-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-		gap: 0.75rem;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2rem;
 		margin-bottom: 1.5rem;
 	}
-	.rule-grid h3 {
-		margin: 0 0 0.4rem;
-		font-size: 0.95rem;
+	@media (max-width: 799px) {
+		.rules-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
 	}
-	.rule-grid p {
+	dl {
 		margin: 0;
+		display: grid;
+		gap: 0.9rem;
+	}
+	dt {
+		font-weight: 600;
+		font-size: var(--fs-sm);
+	}
+	dd {
+		margin: 0.15rem 0 0;
 		color: var(--text-muted);
-		font-size: 0.88rem;
+		font-size: var(--fs-sm);
 	}
 	.checklist {
 		display: grid;
-		gap: 0.5rem;
+		gap: 0.6rem;
 	}
 	.checklist label {
 		display: flex;
 		gap: 0.6rem;
 		align-items: flex-start;
-		font-size: 0.9rem;
+		color: var(--text);
 	}
 	.checklist input {
-		margin-top: 0.2rem;
-		accent-color: var(--accent);
+		margin-top: 0.15rem;
+		flex: none;
+	}
+	.class-table summary {
+		margin-bottom: 0.75rem;
 	}
 </style>

@@ -23,6 +23,7 @@
 
 	const chars = characters as GameCharacter[];
 	const isCustom = $derived(build.enemyId === CUSTOM_ENEMY_ID);
+	const pickedChar = $derived(chars.find((x) => x.slug === build.pickCharacter) ?? null);
 	const presetRes = $derived(Math.round(baseResOf(build) * 10000) / 100);
 
 	// Filter preset musuh
@@ -104,17 +105,29 @@
 </script>
 
 <div class="inputs">
-	<fieldset>
+	<fieldset class="primary">
 		<legend>Pilih skill (opsional)</legend>
 		<div class="grid">
 			<label>
 				Karakter
-				<select bind:value={build.pickCharacter} onchange={onCharacter}>
-					<option value="">Manual (tanpa picker)</option>
-					{#each chars as c (c.slug)}
-						<option value={c.slug}>{c.name}</option>
-					{/each}
-				</select>
+				<span class="picker">
+					{#if pickedChar}
+						<img
+							src={pickedChar.icon}
+							width="40"
+							height="40"
+							loading="lazy"
+							alt=""
+							style={`--c: var(--el-${pickedChar.element})`}
+						/>
+					{/if}
+					<select bind:value={build.pickCharacter} onchange={onCharacter}>
+						<option value="">Manual (tanpa picker)</option>
+						{#each chars as c (c.slug)}
+							<option value={c.slug}>{c.name}</option>
+						{/each}
+					</select>
+				</span>
 			</label>
 			{#if build.pickCharacter}
 				<label>
@@ -135,8 +148,7 @@
 						<option value="all">Jumlahkan semua hit di skill ini</option>
 						{#each skill.hits as h, i (h.id)}
 							<option value={String(h.id)} disabled={!isDamageHit(h)}>
-								#{i + 1} {h.damageType || 'Lainnya'}{h.condition ? ` · ${h.condition}` : ''}
-								{isDamageHit(h) ? `· ${nf.format(mvAt(h, level))}% ${h.scaling}` : '· bukan damage'}
+								#{i + 1} {h.damageType || 'Lainnya'}{h.condition ? `, ${h.condition}` : ''}{isDamageHit(h) ? `: ${nf.format(mvAt(h, level))}% ${h.scaling}` : ': bukan damage'}
 							</option>
 						{/each}
 					</select>
@@ -245,7 +257,7 @@
 				Preset musuh
 				<select bind:value={build.enemyId}>
 					{#each filteredPresets as p (p.id)}
-						<option value={p.id}>{p.name} · {rarityLabels[p.rarity]} ({p.element})</option>
+						<option value={p.id}>{p.name}, {rarityLabels[p.rarity]} ({p.element})</option>
 					{/each}
 					<option value={CUSTOM_ENEMY_ID}>Custom (RES manual)</option>
 				</select>
@@ -255,7 +267,7 @@
 				<label>RES dasar (%)<input type="number" step="any" bind:value={build.customResPct} /></label>
 			{:else}
 				<label>
-					RES dasar (%) · otomatis
+					RES dasar (%), otomatis
 					<input type="number" value={presetRes} disabled />
 				</label>
 			{/if}
@@ -269,57 +281,57 @@
 <style>
 	.inputs {
 		display: grid;
-		gap: 1rem;
+		gap: 1.75rem;
 	}
 	fieldset {
-		border: 1px solid var(--border);
-		border-radius: 10px;
-		padding: 0.75rem 1rem 1rem;
+		border: 0;
+		border-top: 1px solid var(--border);
+		padding: 0.25rem 0 0;
 		margin: 0;
-		background: var(--surface);
+		min-width: 0;
 	}
 	legend {
-		padding: 0 0.4rem;
-		color: var(--accent);
+		padding: 0 0.6rem 0 0;
+		color: var(--text);
 		font-weight: 600;
-		font-size: 0.9rem;
+		font-size: var(--fs-sm);
+	}
+	fieldset > .grid {
+		margin-top: 0.75rem;
+	}
+	fieldset.primary {
+		background: var(--surface-2);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 0.75rem 1rem 1rem;
+	}
+	fieldset.primary legend {
+		padding: 0 0.4rem;
 	}
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		gap: 0.75rem;
+		grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+		gap: 0.9rem 0.85rem;
+	}
+	.picker {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.picker img {
+		flex: none;
+		border-radius: var(--radius-sm);
+		border: 2px solid var(--c, var(--border));
+		background: var(--bg-deep);
+		object-fit: cover;
 	}
 	.note {
 		margin: 0.75rem 0 0;
-		font-size: 0.8rem;
+		font-size: var(--fs-xs);
 		color: var(--text-muted);
 	}
 	.warn {
-		color: var(--accent);
-	}
-	label {
-		display: grid;
-		gap: 0.25rem;
-		font-size: 0.8rem;
-		color: var(--text-muted);
-	}
-	input,
-	select {
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		color: var(--text);
-		border-radius: 6px;
-		padding: 0.45rem 0.55rem;
-		font: inherit;
-		font-size: 0.95rem;
-		min-width: 0;
-		width: 100%;
-		box-sizing: border-box;
-	}
-	input:focus,
-	select:focus {
-		outline: 2px solid var(--accent);
-		outline-offset: 0;
+		color: var(--gold);
 	}
 	input:disabled,
 	select:disabled {
