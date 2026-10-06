@@ -1,28 +1,30 @@
 # WuWa Tools
 
-Kalkulator damage dan pustaka build untuk Wuthering Waves. Situs statis (SvelteKit + adapter-static).
+Damage calculator and build library for Wuthering Waves. Static site built with SvelteKit + adapter-static. The UI is in Indonesian.
 
-## Fitur
+## Features
 
-- **Kalkulator damage** — satu hit dan perbandingan build A vs B, dengan pemilih karakter → skill → hit (MV resmi dari data game) dan preset RES dari 159 musuh.
-- **Karakter** — 60 resonator: data build (echo, senjata, stat, tim, rotasi), tabel Motion Value per level, dan sequence S1–S6.
-- **Echo set, senjata, mekanik** — bonus sonata, stat Lv90 + pasif R1–R5, aturan umum dan rentang roll substat.
+- **Damage calculator** — single hit and build A vs B comparison, with a resonator → skill → hit picker (official MVs from game data), RES presets for 159 enemies, and a multiplier chain chart showing how each factor affects the result.
+- **Resonators** — 60 characters: build data (echoes, weapons, stats, teams, rotation), Motion Value tables per skill level, and sequences S1–S6.
+- **Echo sets, weapons, mechanics** — sonata bonuses, Lv90 weapon stats with R1–R5 passives, general build rules, and substat roll ranges.
 
-## Sumber data
+## Data sources
 
-| Data | Sumber | Pembaruan |
+| Data | Source | Update |
 |---|---|---|
-| Fakta game (skill, MV, senjata, sonata, RES musuh) | [api-v2.encore.moe](https://api-v2.encore.moe) → `src/lib/data/game/` | `bun run sync` |
-| Saran build (echo, tim, prioritas substat) | `reference/wuwa-core/` → `src/lib/data/characters.json` | `bun scripts/convert-characters.ts` |
+| Game facts (skills, MVs, weapons, sonata sets, enemy RES) | [api-v2.encore.moe](https://api-v2.encore.moe) → `src/lib/data/game/` | `bun run sync` |
+| Build advice (echoes, teams, substat priority) | `reference/wuwa-core/` → `src/lib/data/characters.json` | `bun scripts/convert-characters.ts` |
 
-## Pengembangan
+## Development
 
 ```sh
 bun install
-bun run dev      # server dev
+bun run dev      # dev server
 bun run test     # vitest
 bun run check    # svelte-check
-bun run build    # output statis ke build/
+bun run build    # static output in build/
 ```
 
-Catatan: SvelteKit 3 tidak lagi menyediakan `$lib`; impor memakai `#lib/...` dengan ekstensi eksplisit (mis. `#lib/calc/damage.ts`).
+Note: SvelteKit 3 no longer provides `$lib`; import with `#lib/...` and an explicit file extension (e.g. `#lib/calc/damage.ts`).
+
+Fan project, not affiliated with Kuro Games.
