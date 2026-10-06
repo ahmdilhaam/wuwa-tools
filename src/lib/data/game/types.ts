@@ -20,6 +20,8 @@ export interface GameCharacter {
 	rarity: 4 | 5;
 	weaponType: WeaponType;
 	icon: string;
+	/** Stat dasar karakter di Lv90 (tanpa senjata/echo); dipakai mengonversi ATK%/HP%/DEF% ke angka */
+	base: { atk: number; hp: number; def: number };
 }
 
 export interface SkillAttribute {
@@ -64,6 +66,39 @@ export interface CharacterSkills {
 	sequences: Sequence[];
 }
 
+/** Id tipe DMG kalkulator (lihat damageTypes di calc/build.ts) */
+export type DamageTypeId = 'basic' | 'heavy' | 'skill' | 'liberation' | 'intro' | 'outro' | 'echo' | 'tuneRupture';
+
+export type WeaponEffectStat =
+	| 'atkPct'
+	| 'hpPct'
+	| 'defPct'
+	| 'critRate'
+	| 'critDmg'
+	| 'dmgBonus'
+	| 'amplify'
+	| 'defIgnore'
+	| 'resShred'
+	| 'energyRegen'
+	| 'other';
+
+/** Satu efek pasif senjata yang diturunkan dari teks template (lihat parseWeaponEffects). */
+export interface WeaponEffect {
+	stat: WeaponEffectStat;
+	/** 'all' = semua DMG (mis. Attribute DMG Bonus); null = tanpa cakupan (ATK%, Crit, dst.) */
+	scope: 'all' | Element | DamageTypeId | null;
+	/** Nilai R1..R5 dalam satuan persen (12 = 12%) */
+	values: number[];
+	/** "stacking up to N times"; null bila tidak bertumpuk */
+	maxStacks: number | null;
+	/** Heuristik: kalimat punya syarat (when/after/stack/...); false = permanen, sudah ada di halaman atribut */
+	triggered: boolean;
+	/** Efek untuk rekan tim / resonator lain, bukan pemegang senjata */
+	team: boolean;
+	/** Kalimat sumber dengan nilai R1 untuk ditampilkan */
+	sentence: string;
+}
+
 export interface WeaponPassive {
 	name: string;
 	r1: Localized;
@@ -71,6 +106,7 @@ export interface WeaponPassive {
 	r3: Localized;
 	r4: Localized;
 	r5: Localized;
+	effects: WeaponEffect[];
 }
 
 export interface GameWeapon {

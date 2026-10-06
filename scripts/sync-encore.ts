@@ -11,6 +11,7 @@ import {
 	hasPlaceholder,
 	renderedSonataText,
 	parseNumber,
+	parseWeaponEffects,
 	renderRefinement,
 	secondaryName,
 	stripRichText
@@ -177,6 +178,14 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 	let warnPlaceholder = 0;
 	await mapPool(chars, async (c) => {
 		const en = need<any>(await api('en', `character/${c.id}`), `character/${c.id}`);
+		// Stat dasar Lv90 (tanpa senjata/echo)
+		const base90 = (name: string) => {
+			const p = (en.Properties ?? []).find((x: any) => x.Name === name);
+			const v = p?.GrowthValues?.find((g: any) => g.level === 90 || g.Level === 90)?.value;
+			if (typeof v !== 'number') fail(`character/${c.id} (${c.name}) tanpa ${name} Lv90`);
+			return Math.round(v * 100) / 100;
+		};
+		c.base = { atk: base90('ATK'), hp: base90('HP'), def: base90('DEF') };
 		const id = idOk ? await api('id', `character/${c.id}`) : null;
 		const skills = nonEmpty(en.Skills, `character/${c.id} Skills`);
 		const out: GameSkill[] = skills.map((s: any, i: number) => {
@@ -270,7 +279,15 @@ async function syncWeapons(): Promise<{ weapons: GameWeapon[]; idOk: boolean }> 
 			icon: need<string>(w.Icon, `weapon ${w.Id} Icon`),
 			atk90,
 			secondary: { name: secondaryName(String(p2?.Name ?? ''), !!d.SecondPropId?.IsRatio), value90: sec90 },
-			passive: { name: String(d.ResonName ?? ''), r1: r(1), r2: r(2), r3: r(3), r4: r(4), r5: r(5) }
+			passive: {
+					name: String(d.ResonName ?? ''),
+					r1: r(1),
+					r2: r(2),
+					r3: r(3),
+					r4: r(4),
+					r5: r(5),
+					effects: parseWeaponEffects(String(d.Desc ?? ''), params)
+				}
 		};
 	});
 	weapons.sort((a, b) => a.name.localeCompare(b.name) || a.id - b.id);

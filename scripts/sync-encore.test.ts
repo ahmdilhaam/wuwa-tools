@@ -7,6 +7,8 @@ import {
 	renderedSonataText,
 	kebab,
 	parseMultiplier,
+	parseWeaponEffects,
+	classifyEffectStat,
 	renderRefinement,
 	secondaryName,
 	stripRichText
@@ -101,5 +103,85 @@ describe('sonata: placeholder & teks terender', () => {
 		expect(renderedSonataText(details, 'Frosty Resolve', 5)).toBe('b');
 		expect(renderedSonataText(details, 'Nope', 2)).toBeNull();
 		expect(renderedSonataText(undefined, 'Nope', 2)).toBeNull();
+	});
+});
+
+describe('parseWeaponEffects', () => {
+	const verdant =
+		'Increases Attribute DMG Bonus by 12%/15%/18%/21%/24%. Every time Intro Skill or Resonance Liberation is cast, increases Heavy Attack DMG Bonus by 24%/30%/36%/42%/48%, stacking up to 2/2/2/2/2 time(s). This effect lasts for 14/14/14/14/14s.';
+
+	it('Verdant Summit: Attribute DMG permanen + Heavy Attack DMG terpicu bertumpuk 2', () => {
+		const e = parseWeaponEffects(verdant);
+		expect(e).toHaveLength(2);
+		expect(e[0]).toMatchObject({ stat: 'dmgBonus', scope: 'all', values: [12, 15, 18, 21, 24], triggered: false, maxStacks: null });
+		expect(e[1]).toMatchObject({ stat: 'dmgBonus', scope: 'heavy', values: [24, 30, 36, 42, 48], triggered: true, maxStacks: 2 });
+		expect(e[1].sentence).toContain('by 24%');
+	});
+
+	it('Stringmaster: ATK% bertumpuk, ATK% tambahan saat off-field, Attribute DMG permanen', () => {
+		const e = parseWeaponEffects(
+			'Grants 12%/15%/18%/21%/24% Attribute DMG Bonus. When dealing Resonance Skill DMG, increases ATK by 12%/15%/18%/21%/24%, stacking up to 2/2/2/2/2 times. This effect lasts for 5/5/5/5/5s. When the wielder is not on the field, increases their ATK by an additional 12%/15%/18%/21%/24%.'
+		);
+		expect(e.map((x) => [x.stat, x.scope, x.triggered, x.maxStacks])).toEqual([
+			['dmgBonus', 'all', false, null],
+			['atkPct', null, true, 2],
+			['atkPct', null, true, null]
+		]);
+	});
+
+	it('Blazing Brilliance: ATK% permanen + Skill DMG per stack (maks 14)', () => {
+		const e = parseWeaponEffects(
+			'ATK increased by 12%/15%/18%/21%/24%. The wielder gains 1 stack of Searing Feather upon dealing damage, which can be triggered once every 0.5s, and gains 5 stacks of the same effect upon casting Resonance Skill. Each stack of Searing Feather gives 4%/5%/6%/7%/8% additional Resonance Skill DMG Bonus for up to 14 stacks. After reaching the max stacks, all stacks will be removed in 12/12/12/12/12s.'
+		);
+		expect(e.map((x) => [x.stat, x.scope, x.triggered, x.maxStacks])).toEqual([
+			['atkPct', null, false, null],
+			['dmgBonus', 'skill', true, 14]
+		]);
+		expect(e[1].values).toEqual([4, 5, 6, 7, 8]);
+	});
+
+	it('Static Mist: Energy Regen permanen + ATK% rekan tim (stack 1 = null)', () => {
+		const e = parseWeaponEffects(
+			"Increases Energy Regen by 12.8%/16%/19.2%/22.4%/25.6%. Incoming Resonator's ATK is increased by 10%/12.5%/15%/17.5%/20% for 14/14/14/14/14s, stackable for up to 1/1/1/1/1 times after the wielder casts Outro Skill."
+		);
+		expect(e[0]).toMatchObject({ stat: 'energyRegen', triggered: false });
+		expect(e[1]).toMatchObject({ stat: 'atkPct', scope: null, triggered: true, maxStacks: null, team: true });
+	});
+
+	it('memecah satu angka ke beberapa scope dan mengenali DEF ignore, RES shred, Crit', () => {
+		const lum = parseWeaponEffects(
+			'When Resonance Skill is cast, increases Basic Attack DMG Bonus and Heavy Attack DMG Bonus by 20%/31%/42%/53%/64%, stacking up to 1/1/1/1/1 time(s).'
+		);
+		expect(lum.map((x) => x.scope)).toEqual(['basic', 'heavy']);
+		const ev = parseWeaponEffects(
+			"When inflicting Tune Rupture - Shifting, the wielder's Resonance Liberation DMG ignores 32%/40%/48%/56%/64% DEF and 10%/15%/20%/25%/30% Fusion RES on targets for 8/8/8/8/8s."
+		);
+		expect(ev.map((x) => [x.stat, x.scope])).toEqual([
+			['defIgnore', 'liberation'],
+			['resShred', 'fusion']
+		]);
+		const cr = parseWeaponEffects('Increase Crit. Rate by 8%/10%/12%/14%/16%. Casting Resonance Liberation gives 24%/30%/36%/42%/48% Basic Attack DMG Bonus for 10/10/10/10/10s.');
+		expect(cr[0]).toMatchObject({ stat: 'critRate', triggered: false });
+		expect(cr[1]).toMatchObject({ stat: 'dmgBonus', scope: 'basic', triggered: true });
+	});
+
+	it('Amplify, ambang HP, dan penyembuhan', () => {
+		const e = parseWeaponEffects(
+			"When the Resonator's HP is above 80%/80%/80%/80%/80%, increases ATK by 12%/15%/18%/21%/24%. When Resonance Skill is cast, heals 3%/3.75%/4.5%/5.25%/6% of the Resonator's Max HP. Resonance Skill DMG is Amplified by 36%/45%/54%/63%/72%."
+		);
+		expect(e.map((x) => [x.stat, x.scope])).toEqual([
+			['atkPct', null],
+			['other', null],
+			['amplify', 'skill']
+		]);
+	});
+
+	it('placeholder {i} dari DescParams ikut diurai', () => {
+		const e = parseWeaponEffects('Increases ATK by {0}.', [{ ArrayString: ['4%', '5%', '6%', '7%', '8%'] }]);
+		expect(e[0]).toMatchObject({ stat: 'atkPct', values: [4, 5, 6, 7, 8], triggered: false });
+	});
+
+	it('classifyEffectStat mengembalikan null untuk konteks tak dikenal', () => {
+		expect(classifyEffectStat('Providing Healing increases ', ' of something')).toBeNull();
 	});
 });
