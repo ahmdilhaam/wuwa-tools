@@ -1,45 +1,95 @@
-/* Token warna global — dipakai semua halaman. Tema gelap default, terang via prefers-color-scheme. */
+/*
+ * Sistem desain "Resonance readout".
+ * - Warna elemen hanya untuk informasi elemen, bukan dekorasi.
+ * - Emas = 5★ dan aksi utama; ungu = 4★.
+ * - Sudut terpotong (.panel-cut) hanya untuk panel "instrumen" utama.
+ * Tema mengikuti sistem; bisa dipaksa via <html data-theme="light|dark">.
+ */
 :root {
-	--bg: #0f1115;
-	--surface: #161a21;
-	--surface-2: #1e232c;
-	--border: #2a303b;
-	--text: #e7eaf0;
-	--text-muted: #9aa3b2;
-	--accent: #5fd0c4;
-	--accent-soft: rgba(95, 208, 196, 0.14);
-	--danger: #f2777a;
+	/* Tema gelap (default) */
+	--bg: #161e36;
+	--bg-deep: #10172b;
+	--surface: #1d2642;
+	--surface-2: #26304f;
+	--surface-3: #303b5e;
+	--border: #33406a;
+	--border-strong: #4a5888;
+	--text: #e8ecf5;
+	--text-muted: #9ba6c3;
+	--text-faint: #6f7a99;
 
-	--el-aero: #55d6a0;
-	--el-glacio: #7cc4ff;
-	--el-fusion: #ff8a5b;
-	--el-electro: #b88cff;
-	--el-spectro: #f5d66b;
-	--el-havoc: #d46ab5;
+	--gold: #d4af5a;
+	--gold-strong: #e6c475;
+	--gold-soft: rgba(212, 175, 90, 0.14);
+	--violet: #9b82e0;
+	--violet-soft: rgba(155, 130, 224, 0.16);
+
+	/* Alias lama — dipakai komponen yang belum dimigrasi */
+	--accent: var(--gold);
+	--accent-soft: var(--gold-soft);
+	--danger: #ef8a8a;
+	--danger-soft: rgba(239, 138, 138, 0.14);
+	--ok: #7fd4a8;
+
+	--el-aero: #5fd6a4;
+	--el-glacio: #7fc6ff;
+	--el-fusion: #ff8f5e;
+	--el-electro: #b994ff;
+	--el-spectro: #f2d46b;
+	--el-havoc: #e07bc0;
+	--el-physical: #b5bccd;
+
+	--font-display: 'Unbounded', 'Segoe UI', system-ui, sans-serif;
+	--font-body: 'Onest', 'Segoe UI', system-ui, sans-serif;
+
+	/* Skala tipe (rasio ~1.25) */
+	--fs-xs: 0.78rem;
+	--fs-sm: 0.875rem;
+	--fs-md: 1rem;
+	--fs-lg: 1.25rem;
+	--fs-xl: 1.6rem;
+	--fs-2xl: 2.1rem;
+	--fs-3xl: clamp(2.2rem, 5vw, 3.4rem);
+
+	--radius-sm: 6px;
+	--radius: 10px;
+	--cut: 14px;
+	--shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 30px -18px rgba(5, 9, 25, 0.8);
 
 	color-scheme: dark;
-	font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 @media (prefers-color-scheme: light) {
-	:root {
-		--bg: #f6f7f9;
+	:root:not([data-theme='dark']) {
+		--bg: #e9eef5;
+		--bg-deep: #dde4ee;
 		--surface: #ffffff;
-		--surface-2: #eef0f4;
-		--border: #d9dde4;
-		--text: #171a20;
-		--text-muted: #5b6474;
-		--accent: #0f8f83;
-		--accent-soft: rgba(15, 143, 131, 0.12);
-		--danger: #c43d40;
+		--surface-2: #f1f4f9;
+		--surface-3: #e4e9f2;
+		--border: #d3dae6;
+		--border-strong: #aab5ca;
+		--text: #161e36;
+		--text-muted: #55607d;
+		--text-faint: #848da6;
 
-		--el-aero: #1d9b67;
-		--el-glacio: #2a83c9;
-		--el-fusion: #d65a2a;
-		--el-electro: #7a4fd1;
-		--el-spectro: #a88a12;
-		--el-havoc: #a83d8a;
+		--gold: #a87d1e;
+		--gold-strong: #8c6612;
+		--gold-soft: rgba(168, 125, 30, 0.12);
+		--violet: #6b4fc4;
+		--violet-soft: rgba(107, 79, 196, 0.1);
+		--danger: #c24646;
+		--danger-soft: rgba(194, 70, 70, 0.1);
+		--ok: #1f8a57;
 
+		--el-aero: #12895a;
+		--el-glacio: #1f78bf;
+		--el-fusion: #cc5022;
+		--el-electro: #7449d1;
+		--el-spectro: #9a7a00;
+		--el-havoc: #a83585;
+		--el-physical: #6b7388;
+
+		--shadow: 0 1px 2px rgba(22, 30, 54, 0.06), 0 12px 28px -20px rgba(22, 30, 54, 0.35);
 		color-scheme: light;
 	}
 }
@@ -48,56 +98,320 @@
 	box-sizing: border-box;
 }
 
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
 body {
 	margin: 0;
 	background: var(--bg);
 	color: var(--text);
-	line-height: 1.5;
-}
-
-a {
-	color: var(--accent);
+	font-family: var(--font-body);
+	font-size: var(--fs-md);
+	line-height: 1.55;
+	font-feature-settings: 'tnum' 1;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
+h3,
+h4 {
+	line-height: 1.2;
+	margin: 0 0 0.5em;
+	font-weight: 600;
+	text-wrap: balance;
+}
+
+h1 {
+	font-family: var(--font-display);
+	font-size: var(--fs-2xl);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+
+h2 {
+	font-family: var(--font-display);
+	font-size: var(--fs-lg);
+	font-weight: 500;
+	letter-spacing: -0.01em;
+}
+
 h3 {
-	line-height: 1.25;
+	font-size: var(--fs-md);
+	font-weight: 600;
+}
+
+p {
+	margin: 0 0 0.75em;
+	max-width: 72ch;
+}
+
+a {
+	color: var(--gold);
+	text-underline-offset: 0.2em;
 }
 
 input,
 select,
-button {
+button,
+textarea {
 	font: inherit;
 	color: inherit;
 }
 
+:focus-visible {
+	outline: 2px solid var(--gold);
+	outline-offset: 2px;
+}
+
+/* ---------- Kontrol form ---------- */
+input[type='text'],
+input[type='search'],
+input[type='number'],
+select {
+	width: 100%;
+	padding: 0.5rem 0.65rem;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	min-height: 2.4rem;
+	transition: border-color 0.15s;
+}
+
+input:hover,
+select:hover {
+	border-color: var(--border-strong);
+}
+
+input:focus-visible,
+select:focus-visible {
+	outline: none;
+	border-color: var(--gold);
+	box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+input[readonly] {
+	color: var(--text-muted);
+	background: transparent;
+	border-style: dashed;
+}
+
+input[type='checkbox'] {
+	accent-color: var(--gold);
+	width: 1rem;
+	height: 1rem;
+}
+
+label {
+	display: grid;
+	gap: 0.3rem;
+	font-size: var(--fs-sm);
+	color: var(--text-muted);
+}
+
+button {
+	cursor: pointer;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.5rem 0.95rem;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--border-strong);
+	background: var(--surface-2);
+	color: var(--text);
+	font-weight: 500;
+	font-size: var(--fs-sm);
+	text-decoration: none;
+}
+
+.btn:hover {
+	background: var(--surface-3);
+}
+
+.btn-primary {
+	background: var(--gold);
+	border-color: var(--gold);
+	color: #1a1405;
+}
+
+.btn-primary:hover {
+	background: var(--gold-strong);
+}
+
+/* Segmented control (tab, filter chip) */
+.segmented {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 2px;
+	padding: 3px;
+	background: var(--bg-deep);
+	border: 1px solid var(--border);
+	border-radius: calc(var(--radius-sm) + 3px);
+}
+
+.segmented button {
+	border: 0;
+	background: transparent;
+	color: var(--text-muted);
+	padding: 0.4rem 0.85rem;
+	border-radius: var(--radius-sm);
+	font-size: var(--fs-sm);
+	font-weight: 500;
+}
+
+.segmented button:hover {
+	color: var(--text);
+}
+
+.segmented button[aria-pressed='true'],
+.segmented button[aria-selected='true'] {
+	background: var(--surface-3);
+	color: var(--text);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+/* ---------- Permukaan ---------- */
 .card {
 	background: var(--surface);
 	border: 1px solid var(--border);
-	border-radius: 10px;
-	padding: 1rem;
+	border-radius: var(--radius);
+	padding: 1rem 1.1rem;
+}
+
+/* Panel instrumen: sudut kanan atas terpotong, khas UI Resonator. */
+.panel-cut {
+	--d: calc(var(--cut) * 0.7071);
+	position: relative;
+	/* garis diagonal 1px tepat di dalam potongan sudut, sisanya permukaan panel */
+	background: linear-gradient(
+		225deg,
+		transparent var(--d),
+		var(--gold) var(--d),
+		var(--gold) calc(var(--d) + 1.5px),
+		var(--surface) calc(var(--d) + 1.5px)
+	);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+/* ---------- Tabel ---------- */
+.table-wrap {
+	overflow-x: auto;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--surface);
 }
 
 table {
 	border-collapse: collapse;
 	width: 100%;
+	font-size: var(--fs-sm);
 }
 
 th,
 td {
 	text-align: left;
-	padding: 0.45rem 0.6rem;
+	padding: 0.6rem 0.8rem;
 	border-bottom: 1px solid var(--border);
 	vertical-align: top;
 }
 
-th {
-	color: var(--text-muted);
-	font-weight: 600;
-	font-size: 0.85rem;
+tbody tr:last-child td {
+	border-bottom: 0;
 }
 
-.table-wrap {
-	overflow-x: auto;
+thead th {
+	position: sticky;
+	top: 0;
+	background: var(--surface-2);
+	color: var(--text-muted);
+	font-weight: 600;
+	font-size: var(--fs-xs);
+	white-space: nowrap;
+}
+
+td.num,
+th.num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+/* ---------- Penanda domain ---------- */
+.el {
+	/* chip elemen: pakai style="--c: var(--el-aero)" atau kelas .el-aero */
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: var(--fs-xs);
+	font-weight: 600;
+	color: var(--c, var(--text-muted));
+}
+
+.el::before {
+	content: '';
+	width: 0.55rem;
+	height: 0.55rem;
+	transform: rotate(45deg);
+	background: var(--c, currentColor);
+	border-radius: 1px;
+}
+
+.el-aero { --c: var(--el-aero); }
+.el-glacio { --c: var(--el-glacio); }
+.el-fusion { --c: var(--el-fusion); }
+.el-electro { --c: var(--el-electro); }
+.el-spectro { --c: var(--el-spectro); }
+.el-havoc { --c: var(--el-havoc); }
+.el-physical { --c: var(--el-physical); }
+
+.r5 { --r: var(--gold); }
+.r4 { --r: var(--violet); }
+
+.muted {
+	color: var(--text-muted);
+}
+
+.page-head {
+	display: grid;
+	gap: 0.35rem;
+	margin: 0.5rem 0 1.75rem;
+}
+
+.page-head p {
+	color: var(--text-muted);
+	margin: 0;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+details > summary {
+	cursor: pointer;
+	color: var(--text-muted);
+	font-size: var(--fs-sm);
+}
+
+details > summary:hover {
+	color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
 }
