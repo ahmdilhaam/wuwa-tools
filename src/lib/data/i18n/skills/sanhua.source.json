@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nSanhua performs up to {0} consecutive attacks, dealing Glacio DMG.\n\nHeavy Attack\n\nSanhua consumes STA to launch attacks, dealing Glacio DMG.\n\nMid-air Attack\n\nSanhua consumes STA to perform a Mid-Air Plunging Attack, dealing Glacio DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Glacio DMG.",
+	"Sanhua sends an air blade to create {0} Ice Prism on the ground, dealing Glacio DMG.",
+	"Sanhua deals Glacio DMG and creates {0} Glacier.",
+	"Damage dealt by Sanhua's Resonance Skill is increased by {0}% for {1}s after casting her Intro Skill.",
+	"Damage dealt by Sanhua's Forte Circuit Ice Burst is increased by {0}% for {1}s after casting Basic Attack {2}.",
+	"Sanhua swings her blade downward and creates {0} Ice Thorn, dealing Glacio DMG.",
+	"Heavy Attack: Detonate\n\nWhen holding Basic Attack, a cursor moves back and forth on the Forte Gauge. Release Basic Attack while cursor falls in the \"Frostbite\" area, to perform Heavy Attack Detonate, dealing Glacio DMG considered as Heavy Attack DMG.\n\nIce Burst\n\nSanhua's Heavy Attack Detonate detonates all \"Ice Thorns\", \"Ice Prisms\" and \"Glaciers\" within her attack range, dealing Glacio DMG. Ice Burst deals Resonance Skill DMG.\n\nFrostbite Area\n\nThe \"Frostbite\" area expands with every {0} stack of \"Clarity\". \"Clarity\" stacks up to {1} times.\nSanhua obtains {2} stack of \"Clarity\" upon performing Basic Attack {3}.\nSanhua obtains {4} stack of \"Clarity\" upon casting Intro Skill Freezing Thorns.\nSanhua obtains {5} stack of \"Clarity\" upon casting Resonance Skill Eternal Frost.\nSanhua obtains {6} stack(s) of \"Clarity\" upon casting Resonance Liberation Glacial Gaze.\nUpon casting Heavy Attack Detonate, all \"Clarity\" is removed.",
+	"Has a chance to produce special dishes when cooking.",
+	"The incoming Resonator has their Basic Attack DMG Amplified by {0}% for {1}s or until they are switched out.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Basic Attack V increases Sanhua's Crit. Rate by {0}% for {1}s.",
+	"Heavy Attack Detonate STA cost is reduced by {0}. When Sanhua casts Resonance Skill Eternal Frost, her resistance to interruption is enhanced for {1}s.",
+	"Sanhua's damage dealt is increased by {0}% against targets with HP below {1}%.",
+	"Resonance Liberation Glacial Gaze restores {0} Resonance Energy.\nDMG of the next Heavy Attack Detonate within {1}s is increased by {2}%.",
+	"Crit. DMG of Forte Circuit Ice Burst is increased by {0}%. Ice Creations (Ice Thorn, Ice Prism, and Glacier) will explode even if they are not detonated.",
+	"After an Ice Prism or a Glacier is detonated, all team members' ATK is increased by {0}% for {1}s, stacking up to {2} times."
+]

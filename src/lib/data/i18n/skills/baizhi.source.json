@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nBaizhi instructs You'tan to perform up to {0} consecutive attacks, dealing Glacio DMG.\n\nHeavy Attack\n\nBaizhi continuously consumes STA to command You'tan to attack enemies, dealing Glacio DMG. During Heavy Attack, Baizhi can command You'tan to move.\n\nMid-air Attack\n\nBaizhi consumes STA and summons You'tan in mid-air to perform a Plunging Attack, dealing Glacio DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Glacio DMG.",
+	"Baizhi calls You'tan to attack the target, dealing Glacio DMG while immediately healing all characters on nearby teams.",
+	"Baizhi summons You'tan to heal all characters on nearby teams, generating {0} stacks of Remnant Entities.\n\nRemnant Entities\n\nRemnant Entities follow the active team members. {1} stack(s) of Remnant Entities are automatically consumed to perform Coordinated Attacks every {2}s, dealing Glacio DMG on hit while healing all characters of the team when the active character is within the range.",
+	"When Baizhi casts Resonance Skill Emergency Plan, You'tan generates a field of Euphonia that lasts for {0}s.\n\nEuphonia\n\nATK of the Resonators who pick up Euphonia is increased by {1}% for {2}s.",
+	"Baizhi's Heavy Attack on hit heals the character with the lowest HP on a nearby team by {0}% of her Max HP.",
+	"Baizhi calls You'tan to perform {0} plunging attack, dealing Glacio DMG while healing all characters on a nearby team.",
+	"You'tan\n\nA Remnant Creature that answers to Baizhi's mind and desires while sharing all her stats. You'tan goes back to Baizhi when Baizhi dodges.\n\nConcentration\n\nBaizhi consumes all \"Concentration\" when casting Heavy Attack or Resonance Skill Emergency Plan to continuously heal all Resonators on nearby teams. Each {0} \"Concentration\" consumed provides {1} healing. The healing happens every {2}s.\nWhen Baizhi consumes \"Concentration\" to cast Heavy Attack, Baizhi additionally restores Concerto Energy and Resonance Energy.\nWhen Baizhi consumes \"Concentration\" to cast Resonance Skill Emergency Plan, Baizhi additionally restores Concerto Energy.\n\nForte Gauge: Concentration\n\nBaizhi can hold up to {3} \"Concentration\".\nBaizhi obtains {4} \"Concentration\" for every Basic Attack on hit.",
+	"Has a chance to produce special dishes when cooking.",
+	"Heal the incoming Resonator by {0}% of Baizhi's max HP every {1}s for {2}s. The healed Resonator has their DMG Amplified by {3}% for {4}s.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Resonance Skill Emergency Plan additionally restores {0} Resonance Energy for every {1} Concentration consumed.",
+	"Resonance Skill Emergency Plan increases Baizhi's Glacio DMG Bonus by {0}% and her Healing by {1}% if she has {2} Concentration. These effects last for {3}s.",
+	"Intro Skill Overflowing Frost increases Baizhi's Max HP by {0}% for {1}s.",
+	"Upon casting Resonance Liberation Momentary Union, Resonance Liberation Remnant Entities gains the following enhancements:\n\n-Remnant Entities can be performed {0} more time(s);\n\n-Healing multiplier of Remnant Entities is increased by {1}%;\n\n-Remnant Entities deals additional Glacio DMG equal to {2}% of Baizhi's Max HP.",
+	"If a team member is knocked out when Baizhi is alive on the team, immediately revive them and restore {0}% of their Max HP. This effect can be triggered once every {1} minute(s).",
+	"When Euphonia is picked up, increase the Glacio DMG Bonus of all characters nearby by {0}% for {1}s."
+]

@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nDanjin performs up to {0} consecutive attacks, dealing Havoc DMG.\n\nHeavy Attack\n\nDanjin consumes STA to launch consecutive attacks, dealing Havoc DMG.\n\nMid-air Attack\n\nConsume STA to perform a Mid-air Plunging Attack, dealing Havoc DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to launch an attack, dealing Havoc DMG.\n\nDodge Counter: Ruby Shades\n\nAfter a successful Dodge Counter, Danjin can use Resonance Skill Crimson Fragment to perform Resonance Skill: Crimson Erosion.",
+	"When casting Crimson Fragment, each attack consumes {0}% of Danjin's max HP. When Danjin's HP is less than {1}%, this no longer consumes HP.\n\nCarmine Gleam\n\nDanjin attacks the target, dealing Havoc DMG.\n\nCrimson Erosion\n\nAfter Basic Attack {2}, Dodge Counter or Intro Skill Vindication, use Resonance Skill to perform up to {3} consecutive strikes, dealing Havoc DMG.\nWhen Crimson Erosion {4} hits a target, apply Incinerating Will to it.\n\nIncinerating Will\n\nDanjin's damage dealt to targets marked with Incinerating Will is increased by {5}%.\n\nSanguine Pulse\n\nUse Resonance Skill after Basic Attack {6} to perform up to {7} consecutive attacks, dealing Havoc DMG.",
+	"Danjin's anger intensifies as she frantically swings her dual blades, performing multiple rapid consecutive attacks, and {0} Scarlet Burst attack(s), dealing Havoc DMG.",
+	"Damage of Resonance Skill Crimson Erosion triggered by Dodge Counter: Ruby Shades is increased by {0}%. The HP cost and stacks of Ruby Blossom recovered are doubled.",
+	"After casting the Resonance Skill Sanguine Pulse, Danjin's Heavy Attack DMG is increased by {0}% for {1}s.",
+	"With unwavering determination, Danjin unleashes a strike, dealing Havoc DMG.",
+	"Heavy Attack: Chaoscleave\n\nAfter accumulating {0} \"Ruby Blossom\", long press Basic Attack to consume all \"Ruby Blossom\" to cast Chaoscleave, dealing Havoc DMG, considered as Heavy Attack DMG, and healing Danjin.\nIf current \"Ruby Blossom\" reaches over {1}, {2} \"Ruby Blossom\" is consumed instead to increase the DMG multiplier of Chaoscleave and Scatterbloom performed this time.\n\nHeavy Attack: Scatterbloom\n\nUse Basic Attack after Heavy Attack Chaoscleave to cast Scatterbloom to attack the target, dealing Havoc DMG, considered as Heavy Attack DMG.\n\nRuby Blossom\n\nDanjin can hold up to {3} Ruby Blossom.\nDanjin obtains \"Ruby Blossom\" when using Resonance Skill Crimson Fragment.",
+	"Has a chance to produce special dishes when cooking.",
+	"The incoming Resonator has their Havoc DMG Amplified by {0}% for {1}s or until they are switched out.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"When Danjin attacks a target with Resonance Skill's Incinerating Will, her ATK is increased by {0}% for {1}s, stacking up to {2} times. Danjin loses {3} stacks of this effect each time she takes damage.",
+	"When Danjin attacks a target with Resonance Skill's Incinerating Will, her damage dealt is increased by {0}%.",
+	"Resonance Liberation DMG Bonus is increased by {0}%.",
+	"When Danjin has more than {0} \"Ruby Blossom\", her Crit. Rate is increased by {1}%.\nThis effect lasts until the end of Heavy Attack: Scatterbloom even after all \"Ruby Blossom\" is consumed when casting Heavy Attack: Chaoscleave.",
+	"Danjin's Havoc DMG Bonus is increased by {0}%, and further increased by another {1}% when her HP is lower than {2}%.",
+	"Heavy Attack Chaoscleave increases the ATK of all team members by {0}% for {1}s."
+]

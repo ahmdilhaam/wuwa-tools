@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nPerform up to {0} consecutive attacks, dealing Aero DMG.\n\nHeavy Attack\n\nConsume STA to attack the target, dealing Aero DMG.\n- Press Normal Attack right after casting the skill to perform Basic Attack Stage {1} directly.\n\nHeavy Attack - Razor Wind\n\nHold Normal Attack after casting Basic Attack Stage {2}, Dodge Counter, or Heavy Attack to cast Heavy Attack Razor Wind. Consume STA to attack the target, dealing Aero DMG.\n\nMid-air Attack\n\nConsume STA to perform Plunging Attack, dealing Aero DMG.\n- Press Normal Attack shortly after landing to cast Basic Attack Stage {3}.\n- At max Windstrings, press Normal Attack shortly after landing to cast Resonance Skill Unbound Flow.\n\nDodge Counter\n\nPress Normal Attack right after a successful Dodge to attack the target, dealing Aero DMG.",
+	"Awakening Gale\n\nJump up into the mid-air and slash the target, dealing Aero DMG.\n\nSkyfall Severance\n\nWhile in mid-air, press Resonance Skill to deal Aero DMG, which removes all stacks of Spectro Frazzle, Havoc Bane, Fusion Burst, Glacio Chafe, and Electro Flare from the target hit and inflicts {0} stack of Aero Erosion for each stack removed.",
+	"Unleash the power of the Eye of Tempest, dealing Aero DMG and healing all nearby Resonators in the team.\nCan be cast in mid-air close to the ground.",
+	"Casting Intro Skill Relentless Squall increases ATK by {0}% for {1}s.",
+	"Increase Healing from Resonance Liberation Omega Storm by {0}%.",
+	"Deal Aero DMG.",
+	"Mid-air Attack - Cloudburst Dance\n\nPerform up to {0} consecutive attacks, dealing Aero DMG (considered Resonance Skill DMG) and healing all nearby Resonators in the team. Cast through the following {1} ways:\n- Press Normal Attack right after casting Resonance Skill Awakening Gale.\n- Press Normal Attack right after casting Intro Skill.\n- Press Normal Attack right after casting Heavy Attack Razor Wind.\nWhen casting Mid-air Attack Cloudburst Dance, hold Normal Attack to perform Mid-air Attack.\n\nResonance Skill - Unbound Flow\n\nAt max Windstrings, Resonance Skill Awakening Gale becomes Resonance Skill Unbound Flow: Perform up to {2} consecutive attacks. Each attack consumes {3} Windstrings, dealing Aero DMG, considered Resonance Skill DMG.\nSwitching to another Resonator after Stage {4} automatically triggers Stage {5} of this skill.\n\nWindstring\n\nRover can hold up to {6} Windstrings.\nEach stage of Mid-air Attack Cloudburst Dance restores {7} Windstrings on hit.\nCasting Intro Skill restores {8} Windstrings.\nHitting a target with Basic Attack Stage {9} or {10} or Dodge Counter restores {11} Windstrings.",
+	"Has a chance to produce special dishes when cooking.",
+	"Grant Aeolian Realm to all nearby Resonators in the team for {0}s. Aeolian Realm effect:\n- Upon hitting a target, increase the maximum stack of Aero Erosion the target can receive by {1} for {2}s. This effect is not stackable.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Casting Mid-air Attack Cloudburst Dance enhances Rover's resistance to interruption for {0}s.",
+	"Casting Resonance Skill Unbound Flow continuously restores HP for the Resonator on the field by {0}% of Rover's ATK every {1}s for {2}s. When the Resonator on the field has an HP lower than {3}%, immediately restore {4}% of their lost HP. This restoration effect can be triggered once every {5}s and will not be affected by any Healing Bonus.",
+	"Aero DMG Bonus is increased by {0}%.",
+	"Casting Mid-air Attack Cloudburst Dance increases Resonance Skill DMG Bonus by {0}% for {1}s.",
+	"The DMG Multiplier of Resonance Liberation Omega Storm is increased by {0}%.",
+	"The DMG Multiplier of Resonance Skill Unbound Flow is increased by {0}%."
+]

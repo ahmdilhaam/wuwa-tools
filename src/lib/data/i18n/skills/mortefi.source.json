@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nMortefi uses his dual pistols and flames to perform up to {0} consecutive shots, dealing Fusion DMG.\n\nHeavy Attack\n\nMortefi enters the aiming state for a more powerful shot.\nThe aimed shot fired after charging finishes deals Fusion DMG.\n\nMid-air Attack\n\nMortefi consumes STA to perform consecutive shots at the target in mid-air, dealing Fusion DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Fusion DMG.",
+	"Launch a flashing lightning of flames forward, dealing Fusion DMG.",
+	"Deal Fusion DMG, and apply Burning Rhapsody to all characters on the team.\n\nBurning Rhapsody\n\nWhen the active character's Basic Attack hits the target, Mortefi launches a Coordinated Attack, firing {0} Marcato.\nWhen the active character's Heavy Attack hits the target, Mortefi launches a Coordinated Attack, firing {1} Marcato.\nMortefi can launch one Coordinated Attack every {2}s.\n\nMarcato\n\nDeals Fusion DMG.",
+	"After casting Resonance Skill Passionate Variation, the damage of Resonance Skill Fury Fugue is increased by {0}% for {1}s.",
+	"During Resonance Liberation Burning Rhapsody, each hit of Resonance Liberation Marcato will increase the DMG of the next Resonance Liberation Marcato by {0}%, which can be triggered once every {1}s, stacking up to {2} times.\nThe effect will be reset after Resonance Liberation Burning Rhapsody ends.",
+	"Attack the target, dealing Fusion DMG.",
+	"Resonance Skill: Fury Fugue\n\nWhen Mortefi's Annoyance reaches {0}, his Resonance Skill is replaced with Fury Fugue.\nWhen casting Fury Fugue, Mortefi consumes all Annoyance to unleash high-speed flame lightning, dealing Fusion DMG, considered as Resonance Skill DMG.\n\nAnnoyance\n\nMortefi can hold up to {1} Annoyance and can restore Annoyance in the following ways:\n- When Normal Attack Impromptu Show hits the target\n- When Intro Skill Dissonance hits the target\n- When Resonance Skill Passionate Variation hits the target\n- Within {2}s after casting Passionate Variation, Normal Attack Impromptu Show that hits the target restores Annoyance additionally.",
+	"Has a chance to produce special dishes when cooking.",
+	"The incoming Resonator gains {0}% Heavy Attack DMG Amplification for {1}s or until they are switched out.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"During Resonance Liberation Burning Rhapsody, Mortefi launches Coordinated Attacks when the on-field character performs their Resonance Skills, firing {0} Resonance Liberation's Marcato hits, dealing Fusion DMG.",
+	"After using the Echo Skill, Mortefi restores an additional {0} Resonance Energy. This can be triggered once every {1} second.",
+	"During Resonance Liberation Burning Rhapsody, the Crit. DMG of Resonance Liberation's Marcato is increased by {0}%.",
+	"The duration of Resonance Liberation Burning Rhapsody is extended by {0}s.",
+	"When Resonance Skill Passionate Variation or Resonance Skill Fury Fugue hits a target, Coordinated Attacks will be triggered to fire {0} Resonance Liberation's Marcato hit(s), dealing Fusion Damage. DMG of Resonance Liberation's Marcato fired in this way is reduced by {1}%.",
+	"When Resonance Liberation Violent Finale is cast, ATK of all team members is increased by {0}% for {1}s."
+]

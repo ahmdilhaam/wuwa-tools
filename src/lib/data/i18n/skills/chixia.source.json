@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nChixia fires up to {0} consecutive shots, dealing Fusion DMG.\n\nHeavy Attack\n\nChixia enters the aiming state for a more powerful shot.\nThe aimed shot fired after charging finishes deals Fusion DMG.\n\nMid-air Attack\n\nChixia consumes STA to perform consecutive shots at the target in mid-air, dealing Fusion DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Fusion DMG.",
+	"Chixia unleashes a flurry of shots, dealing Fusion DMG.\n\nWhizzing Fight Spirit has {0} initial charges.",
+	"Chixia fires up fast shots at nearby enemies, dealing Fusion DMG.",
+	"Max Thermobaric Bullets is increased by {0} rounds. The damage of Resonance Skill Boom Boom is increased by {1}%.",
+	"Each Thermobaric Bullet that hits a target during Resonance Skill DAKA DAKA! increases ATK by {0}% for {1}s, stacking up to {2} times.",
+	"Chixia makes a heroic entrance and fires rapidly with her dual pistols at the target, dealing Fusion DMG.",
+	"Resonance Skill: DAKA DAKA!\n\nHold Resonance Skill Whizzing Fight Spirit to enter DAKA DAKA!. In this state:\n- Chixia continuously consumes \"Thermobaric Bullets\" to attack the target, dealing Fusion DMG, considered as Resonance Skill DMG.\n- Tap Basic Attack to cast Basic Attack {0}, dealing Fusion DMG, considered as Basic Attack DMG. Then she exits the \"DAKA DAKA!\" state.\n- If {1} \"Thermobaric Bullets\" have been fired when Basic Attack is activated, Chixia will cast Resonance Skill Boom Boom and exit \"DAKA DAKA!\" state.\n- Chixia exits the \"DAKA DAKA!\" state when all \"Thermobaric Bullets\" are consumed.\n\nResonance Skill: Boom Boom\n\nDeal Fusion DMG, considered as Resonance Skill DMG.\n\nThermobaric Bullets\n\nChixia can hold up to {2} \"Thermobaric Bullets\".\nInherent Skill Scorching Magazine increases Max \"Thermobaric Bullets\" by {3}.\nChixia obtains \"Thermobaric Bullets\" for every Normal Attack POW POW on hit.\nChixia obtains \"Thermobaric Bullets\" upon casting Intro Skill Grand Entrance and Resonance Skill Whizzing Fight Spirit.",
+	"Has a chance to produce special dishes when cooking.",
+	"Chixia releases a shock wave surrounding the target, dealing Fusion DMG equal to {0}% of Chixia's ATK to enemies within the range.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Resonance Skill Boom Boom hits will always be Critical Hits.",
+	"During Resonance Liberation Blazing Flames, for every {0} target defeated, Chixia recovers {1} Resonance Energy, up to {2} each time.",
+	"Resonance Liberation Blazing Flames deals {0}% more DMG to targets whose HP is below {1}%.",
+	"Resonance Liberation Blazing Flames grants {0} \"Thermobaric Bullets\" and immediately resets the Cooldown of Resonance Skill Whizzing Fight Spirit.",
+	"When the Inherent Skill Numbingly Spicy! reaches max stacks, ATK is additionally increased by {0}%.",
+	"Resonance Skill Boom Boom increases the Basic Attack DMG Bonus of all team members by {0}% for {1}s."
+]

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -17,7 +17,11 @@ import {
 	toNumberTemplate,
 	fromNumberTemplate,
 	toIdDecimal,
-	applyWeaponI18n
+	applyWeaponI18n,
+	applyOverlay,
+	applySkillI18n,
+	cleanGameTags,
+	collectSkillTemplates
 } from './encore-helpers';
 
 describe('stripRichText', () => {
@@ -252,5 +256,56 @@ describe('templat angka (i18n)', () => {
 		expect(bad.invalid).toHaveLength(1);
 		expect(w2.passive.r1.id).toBe('Up by 5%.');
 		expect(applyWeaponI18n([mk()], {}).missing).toEqual(['Up by {0}%.']);
+	});
+
+	it('round-trip tepat untuk semua deskripsi skill dan sequence di 60 file karakter', () => {
+		const dir = resolve(__dirname, '../src/lib/data/game/skills');
+		const files = readdirSync(dir).filter((f) => f.endsWith('.json'));
+		expect(files).toHaveLength(60);
+		let n = 0;
+		for (const f of files) {
+			const j = JSON.parse(readFileSync(resolve(dir, f), 'utf8'));
+			for (const x of [...j.skills, ...j.sequences]) {
+				const { template, nums } = toNumberTemplate(x.description.en);
+				expect(fromNumberTemplate(template, nums), f).toBe(x.description.en);
+				n++;
+			}
+		}
+		expect(n).toBeGreaterThan(900);
+	});
+
+	it('applyOverlay: baris baru dipertahankan, angka desimal berkoma, kosong/missing/invalid/stale', () => {
+		const texts = ['A 1.5s\n\nB {x} 20%', 'A 2s\n\nB {x} 30%', '', 'Z 9'];
+		const r = applyOverlay(texts, {
+			'A {0}s\n\nB {x} {1}%': 'A {0} dtk\n\nB {x} {1}%',
+			'Z {0}': 'Z {0} {1}',
+			'Basi {0}': 'x'
+		});
+		expect(r.translated).toEqual(['A 1,5 dtk\n\nB {x} 20%', 'A 2 dtk\n\nB {x} 30%', '', 'Z 9']);
+		expect(r.invalid).toHaveLength(1);
+		expect(r.invalid[0].template).toBe('Z {0}');
+		expect(r.missing).toEqual([]);
+		expect(r.stale).toEqual(['Basi {0}']);
+		expect(applyOverlay(['Hi 1'], {}).missing).toEqual(['Hi {0}']);
+	});
+
+	it('applySkillI18n mengisi id skill dan sequence; templat unik berurutan', () => {
+		const mk = () => ({
+			slug: 'x',
+			skills: [{ description: { en: 'Up 5%.', id: 'Up 5%.' } }, { description: { en: 'Up 6%.', id: 'Up 6%.' } }],
+			sequences: [{ description: { en: 'Down 7%.', id: 'Down 7%.' } }]
+		});
+		const f = mk();
+		expect(collectSkillTemplates(f)).toEqual(['Up {0}%.', 'Down {0}%.']);
+		const r = applySkillI18n(f, { 'Up {0}%.': 'Naik {0}%.' });
+		expect(f.skills[1].description.id).toBe('Naik 6%.');
+		expect(f.sequences[0].description.id).toBe('Down 7%.');
+		expect(r.missing).toEqual(['Down {0}%.']);
+	});
+
+	it('cleanGameTags: bentuk tunggal untuk 1, jamak selain itu, varian PC untuk Ipt', () => {
+		expect(cleanGameTags('gain 1 {Cus:Sap,S=stack P=stacks SapTag=A} of X')).toBe('gain 1 stack of X');
+		expect(cleanGameTags('gain 5 {Cus:Sap,S=stack P=stacks SapTag=A}')).toBe('gain 5 stacks');
+		expect(cleanGameTags('{Cus:Ipt,Touch=Tapping PC=Pressing Gamepad=Pressing} Normal Attack')).toBe('Pressing Normal Attack');
 	});
 });

@@ -335,12 +335,12 @@ export function toNumberTemplate(text: string): { template: string; nums: string
 	return { template, nums };
 }
 
-/** Kebalikan toNumberTemplate: isi {n} dengan nums[n]. */
 /** "12.8" → "12,8"; bilangan bulat tidak berubah. */
 export function toIdDecimal(num: string): string {
 	return num.replace(/^(\d+)\.(\d+)$/, '$1,$2');
 }
 
+/** Kebalikan toNumberTemplate: isi {n} dengan nums[n]. */
 export function fromNumberTemplate(template: string, nums: string[]): string {
 	return template.replace(/\{(\d+)\}/g, (m, i) => nums[Number(i)] ?? m);
 }
@@ -348,6 +348,18 @@ export function fromNumberTemplate(template: string, nums: string[]): string {
 /** Placeholder {n} dalam templat, terurut (multiset) untuk validasi terjemahan. */
 export function placeholderMultiset(template: string): string[] {
 	return (template.match(/\{\d+\}/g) ?? []).sort();
+}
+
+/**
+ * Bersihkan tag template game yang tersisa di teks skill/sequence:
+ * `{Cus:Sap,S=stack P=stacks SapTag=A}` -> bentuk tunggal bila didahului angka 1, selain itu jamak;
+ * `{Cus:Ipt,Touch=Tapping PC=Pressing Gamepad=Pressing}` -> varian PC ("Pressing").
+ */
+export function cleanGameTags(s: string): string {
+	return s
+		.replace(/(\d+(?:\.\d+)?) \{Cus:Sap,S=(.+?) P=(.+?) SapTag=\w*\}/g, (_, n, one, many) => `${n} ${n === '1' ? one : many}`)
+		.replace(/\{Cus:Sap,S=(.+?) P=(.+?) SapTag=\w*\}/g, '$2')
+		.replace(/\{Cus:Ipt,Touch=.+? PC=(.+?) Gamepad=.+?\}/g, '$1');
 }
 
 /** Bagian templat/angka dari tiap teks pasif dan kalimat efek, untuk ekstraksi + penerapan. */
@@ -363,30 +375,45 @@ export interface WeaponI18nWeapon {
 	};
 }
 
-/** Semua templat sumber (unik, terurut) dari daftar senjata. */
-export function collectWeaponTemplates(weapons: WeaponI18nWeapon[]): string[] {
+const RANKS = ['r1', 'r2', 'r3', 'r4', 'r5'] as const;
+
+/** Templat unik (urutan kemunculan) dari daftar teks Inggris. */
+export function uniqueTemplates(texts: string[]): string[] {
 	const set = new Set<string>();
-	for (const w of weapons) {
-		for (const k of ['r1', 'r2', 'r3', 'r4', 'r5'] as const) set.add(toNumberTemplate(w.passive[k].en).template);
-		for (const e of w.passive.effects) set.add(toNumberTemplate(e.sentence).template);
-	}
-	return [...set].sort();
+	for (const t of texts) if (t !== '') set.add(toNumberTemplate(t).template);
+	return [...set];
 }
 
-export interface ApplyWeaponI18nResult {
+/** Semua templat sumber (unik, terurut) dari daftar senjata. */
+export function collectWeaponTemplates(weapons: WeaponI18nWeapon[]): string[] {
+	return uniqueTemplates(weaponTexts(weapons)).sort();
+}
+
+/** Semua teks Inggris senjata, urutan tetap: r1..r5 lalu kalimat efek per senjata. */
+function weaponTexts(weapons: WeaponI18nWeapon[]): string[] {
+	return weapons.flatMap((w) => [...RANKS.map((k) => w.passive[k].en), ...w.passive.effects.map((e) => e.sentence)]);
+}
+
+export interface OverlayResult {
+	/** Terjemahan sejajar dengan `texts` (id dengan angka dipulihkan); tanpa terjemahan -> teks asli. */
+	translated: string[];
 	missing: string[];
 	invalid: { template: string; translation: string; expected: string[]; got: string[] }[];
 	stale: string[];
 }
 
-/** Terapkan overlay: isi passive.rN.id dan effects[i].sentenceId (mutasi in-place). Tanpa terjemahan -> id = en. */
-export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<string, string>): ApplyWeaponI18nResult {
+/**
+ * Terapkan overlay { templatInggris: templatIndonesia } ke daftar teks Inggris.
+ * Placeholder harus identik (multiset); angka dipulihkan dengan koma desimal.
+ */
+export function applyOverlay(texts: string[], overlay: Record<string, string>): OverlayResult {
 	const missing = new Set<string>();
-	const invalid: ApplyWeaponI18nResult['invalid'] = [];
+	const invalid: OverlayResult['invalid'] = [];
 	const bad = new Set<string>();
 	const used = new Set<string>();
 
-	const translate = (en: string): string => {
+	const translated = texts.map((en) => {
+		if (en === '') return en; // deskripsi kosong dari sumber: tidak ada yang diterjemahkan
 		const { template, nums } = toNumberTemplate(en);
 		used.add(template);
 		const tr = overlay[template];
@@ -403,12 +430,47 @@ export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<str
 		}
 		// Teks Indonesia memakai koma desimal (12,8%), sama dengan format angka di kalkulator.
 		return fromNumberTemplate(tr, nums.map(toIdDecimal));
-	};
-
-	for (const w of weapons) {
-		for (const k of ['r1', 'r2', 'r3', 'r4', 'r5'] as const) w.passive[k].id = translate(w.passive[k].en);
-		for (const e of w.passive.effects) e.sentenceId = translate(e.sentence);
-	}
+	});
 	const stale = Object.keys(overlay).filter((k) => !used.has(k)).sort();
-	return { missing: [...missing].sort(), invalid, stale };
+	return { translated, missing: [...missing].sort(), invalid, stale };
+}
+
+export type ApplyWeaponI18nResult = Omit<OverlayResult, 'translated'>;
+
+/** Terapkan overlay: isi passive.rN.id dan effects[i].sentenceId (mutasi in-place). Tanpa terjemahan -> id = en. */
+export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<string, string>): ApplyWeaponI18nResult {
+	const { translated, ...rest } = applyOverlay(weaponTexts(weapons), overlay);
+	let i = 0;
+	for (const w of weapons) {
+		for (const k of RANKS) w.passive[k].id = translated[i++];
+		for (const e of w.passive.effects) e.sentenceId = translated[i++];
+	}
+	return rest;
+}
+
+// ---------- skill & sequence karakter ----------
+
+export interface SkillI18nFile {
+	slug: string;
+	skills: { description: { en: string; id: string } }[];
+	sequences: { description: { en: string; id: string } }[];
+}
+
+/** Semua teks Inggris skill lalu sequence, sesuai urutan file. */
+export function skillTexts(file: SkillI18nFile): string[] {
+	return [...file.skills.map((s) => s.description.en), ...file.sequences.map((s) => s.description.en)];
+}
+
+/** Templat sumber unik (urutan file) untuk satu karakter. */
+export function collectSkillTemplates(file: SkillI18nFile): string[] {
+	return uniqueTemplates(skillTexts(file));
+}
+
+/** Isi description.id skill + sequence dari overlay (mutasi in-place). */
+export function applySkillI18n(file: SkillI18nFile, overlay: Record<string, string>): ApplyWeaponI18nResult {
+	const { translated, ...rest } = applyOverlay(skillTexts(file), overlay);
+	let i = 0;
+	for (const s of file.skills) s.description.id = translated[i++];
+	for (const s of file.sequences) s.description.id = translated[i++];
+	return rest;
 }

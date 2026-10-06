@@ -1,6 +1,6 @@
 // Sinkronisasi data game dari api-v2.encore.moe -> src/lib/data/game/*.json
 // Jalankan: bun scripts/sync-encore.ts [--no-cache]
-import { applyWeaponI18nFromFile } from './apply-weapon-i18n';
+import { applyWeaponI18nFromFile, applySkillI18nFromFiles } from './apply-weapon-i18n';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -15,7 +15,8 @@ import {
 	parseWeaponEffects,
 	renderRefinement,
 	secondaryName,
-	stripRichText
+	stripRichText,
+	cleanGameTags
 } from './encore-helpers';
 import type {
 	CharacterSkills,
@@ -124,6 +125,8 @@ const elementOf = (name: string): Element => {
 };
 const text = (s: unknown) => (typeof s === 'string' ? stripRichText(s) : '');
 /** Gabungkan teks en + id; id kosong -> salinan en. */
+/** Teks skill/sequence: buang rich-text lalu tag template game ({Cus:Sap..}, {Cus:Ipt..}). */
+const skillText = (s: unknown) => cleanGameTags(text(s));
 const loc = (en: string, id: string | undefined | null): Localized => ({ en, id: id ? id : en });
 
 async function writeJson(rel: string, data: unknown) {
@@ -214,12 +217,12 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 				if (d.Condition) hit.condition = text(d.Condition);
 				hits.push(hit);
 			}
-			const desc = text(s.SkillDescribe);
+			const desc = skillText(s.SkillDescribe);
 			if (/\{\d+\}/.test(desc)) warnPlaceholder++;
 			return {
 				name: String(s.SkillName || s.SkillType),
 				type: need<string>(s.SkillType, `character/${c.id} SkillType`),
-				description: loc(desc, idSkill ? text(idSkill.SkillDescribe) : ''),
+				description: loc(desc, idSkill ? skillText(idSkill.SkillDescribe) : ''),
 				attributes,
 				hits
 			};
@@ -233,9 +236,9 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 				index: n.GroupIndex ?? i + 1,
 				name: need<string>(n.NodeName, `character/${c.id} NodeName`),
 				description: loc(
-					text(fillParams(n.AttributesDescription ?? '', params)),
+					skillText(fillParams(n.AttributesDescription ?? '', params)),
 					idNode && !/_NodeName|_AttributesDescription/.test(idNode.AttributesDescription ?? '_AttributesDescription')
-						? text(fillParams(idNode.AttributesDescription ?? '', params))
+						? skillText(fillParams(idNode.AttributesDescription ?? '', params))
 						: ''
 				)
 			};
@@ -429,6 +432,7 @@ async function main() {
 	await writeJson('weapons.json', weapons);
 	await writeJson('sonata-sets.json', sets);
 	await writeJson('monsters.json', monsters);
+	await applySkillI18nFromFiles();
 
 	const counts = {
 		characters: chars.length,

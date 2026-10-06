@@ -45,6 +45,15 @@
 					...c.other.map((s) => ({ title: 'Lainnya', s }))
 				].filter(Boolean) as { title: string; s: CharacterSection }[])
 	);
+
+	// Teks Indonesia (fallback Inggris); paragraf dipisah baris kosong, baris baru tunggal dijaga lewat CSS.
+	type Localized = { en: string; id: string };
+	const paragraphs = (d: Localized, showEn: boolean) => (showEn ? d.en : d.id || d.en).split(/\n{2,}/);
+	const hasTranslation = (list: { description: Localized }[]) => list.some((x) => x.description.id && x.description.id !== x.description.en);
+	let showEnSkill = $state(false);
+	let showEnSeq = $state(false);
+	const skillsTranslated = $derived(hasTranslation(skills?.skills ?? []));
+	const seqTranslated = $derived(hasTranslation(skills?.sequences ?? []));
 	const movingSkills = $derived((skills?.skills ?? []).filter((sk) => sk.hits.length > 0));
 </script>
 
@@ -105,7 +114,13 @@
 {#if skills}
 	<section id="skill" class="block">
 		<h2>Skill</h2>
-		<p class="muted note">Teks dari game, dalam bahasa Inggris.</p>
+		{#if skillsTranslated}
+			<button type="button" class="toggle" aria-pressed={showEnSkill} onclick={() => (showEnSkill = !showEnSkill)}>
+				{showEnSkill ? 'Tampilkan terjemahan (Indonesia)' : 'Tampilkan teks asli (Inggris)'}
+			</button>
+		{:else}
+			<p class="muted note">Teks dari game (bahasa Inggris)</p>
+		{/if}
 		{#each grouped as [type, list] (type)}
 			<div class="group">
 				<h3 class="group-title">{type}</h3>
@@ -114,7 +129,7 @@
 						<strong>{sk.name}</strong>
 						<details>
 							<summary>Deskripsi</summary>
-							<p class="desc">{sk.description.en}</p>
+							{#each paragraphs(sk.description, showEnSkill) as para, k (k)}<p class="desc">{para}</p>{/each}
 						</details>
 					</div>
 				{/each}
@@ -158,13 +173,18 @@
 
 	<section id="sequence" class="block">
 		<h2>Sequence</h2>
+		{#if seqTranslated}
+			<button type="button" class="toggle" aria-pressed={showEnSeq} onclick={() => (showEnSeq = !showEnSeq)}>
+				{showEnSeq ? 'Tampilkan terjemahan (Indonesia)' : 'Tampilkan teks asli (Inggris)'}
+			</button>
+		{/if}
 		<ol class="seq">
 			{#each skills.sequences as sq (sq.index)}
 				<li>
 					<span class="sn" aria-hidden="true">S{sq.index}</span>
 					<div>
 						<h3><span class="visually-hidden">S{sq.index}, </span>{sq.name}</h3>
-						<p class="desc">{sq.description.en}</p>
+						{#each paragraphs(sq.description, showEnSeq) as para, k (k)}<p class="desc">{para}</p>{/each}
 					</div>
 				</li>
 			{/each}
@@ -310,6 +330,15 @@
 		color: var(--text-muted);
 		max-width: 72ch;
 		margin: 0.4rem 0 0;
+	}
+	.toggle {
+		background: none;
+		border: 0;
+		padding: 0;
+		color: var(--text-muted);
+		font-size: var(--fs-xs);
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	.levels {
 		display: flex;

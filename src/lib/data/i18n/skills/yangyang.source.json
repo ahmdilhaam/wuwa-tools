@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nYangyang performs up to {0} consecutive attacks, dealing Aero DMG.\n\nHeavy Attack\n\nYangyang consumes STA to lunge forward, dealing Aero DMG.\n\nHeavy Attack: Zephyr Song\n\nUse Basic Attack after Heavy Attack or Dodge Counter to perform Heavy Attack Zephyr Song, dealing Aero DMG.\n\nMid-air Attack\n\nYangyang consumes STA to perform a Plunging Attack from mid-air, dealing Aero DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to thrust forward, dealing Aero DMG.",
+	"Yangyang wields her sword to create a whirling vortex of winds that pulls nearby enemies to the center, dealing Aero DMG.",
+	"Yangyang conjures a mighty Cyclone that pulls nearby enemies, dealing Aero DMG.",
+	"Yangyang recovers {0} STA after she casts a Mid-air Attack Feather Release.",
+	"Yangyang's Aero DMG Bonus is increased by {0}% for {1}s after casting Intro Skill Cerulean Song.",
+	"Yangyang sends the target into the air, dealing Aero DMG.",
+	"Heavy Attack: Stormy Strike\n\nWhen Yangyang has {0} Melodies, she can cast Stormy Strike after Heavy Attack or Dodge Counter, dealing Aero DMG.\n\nMid-air Attack: Feather Release\n\nWhen Yangyang has {1} Melodies, cast Basic Attack in mid-air to consume all Melodies and perform consecutive strikes, diving from mid-air, dealing Aero DMG. As Yangyang lands, she sheathes her sword with an attack, dealing Aero DMG, considered as Basic Attack DMG.\n\nMelody\n\nYangyang can hold up to {2} Melodies\nYangyang obtains {3} Melody with every Basic Attack {4} on hit.\nYangyang obtains {5} Melody for every Heavy Attack Zephyr Song on hit.\nYangyang obtains {6} Melody for every Resonance Skill Zephyr Domain on hit.\nYangyang obtains {7} Melody upon casting Intro Skill Cerulean Song.",
+	"Has a chance to produce special dishes when cooking.",
+	"Restore {0} Resonance Energy per second for {1}s for the incoming Resonator.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Intro Skill Cerulean Song increases Yangyang's Aero DMG Bonus by an additional {0}% for {1}s.",
+	"Heavy Attack recovers an additional {0} Resonance Energy for Yangyang when it hits a target, which can be triggered {1} time every {2}s.",
+	"Resonance Skill DMG Bonus is increased by {0}%. The Wind Field's pulling effect on surrounding targets is enhanced, and the pulling range is expanded by {1}%.",
+	"Mid-air Attack Feather Release's damage is increased by {0}%.",
+	"Resonance Liberation Wind Spirals's damage is increased by {0}%.",
+	"After casting Mid-air Attack Feather Release, the ATK of all team members is increased by {0}% for {1}s."
+]

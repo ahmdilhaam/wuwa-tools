@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nPerform up to {0} consecutive attacks, dealing Havoc DMG.\n\nHeavy Attack\n\nConsume Stamina to deal Havoc DMG.\nHold Basic Attack to enter Rocksteady Defense.\n\nRocksteady Defense\n\n- Taoqi's damage taken is reduced by {1}%;\n- When Taoqi is attacked during Rocksteady Defense, she will cast Strategic Parry;\n- Strategic Parry is automatically cast after Rocksteady Defense lasts for {2}s;\nIf Taoqi is attacked when casting Resonance Skill Fortified Defense, Strategic Parry is automatically cast.\n\nStrategic Parry\n\nAttack the target, dealing Havoc DMG.\n\nMid-Air Attack\n\nConsume Stamina to perform a Plunging Attack while in mid-air, dealing Havoc DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Havoc DMG.",
+	"Taoqi deals Havoc DMG to surrounding targets, generating {0} Rocksteady Shield and healing herself.\nIf attacked when casting Fortified Defense, Strategic Parry will be automatically cast.\n\nRocksteady Shield\n\nWhen the active character on the team is attacked, {1} Rocksteady Shield is consumed to reduce the damage taken.",
+	"Attack the target based on Taoqi's DEF, dealing Havoc DMG.",
+	"While Resonance Skill Rocksteady Shield lasts, the Character's DEF is increased by {0}%.",
+	"After Heavy Attack Strategic Parry is successfully triggered, {0} STA is recovered.",
+	"Attack the target, dealing Havoc DMG.",
+	"Timed Counters\n\nWhen carrying \"Resolving Caliber\", use Basic Attack after Heavy Attack Strategic Parry or Intro Skill Defense Formation to cast Timed Counters, performing up to {0} consecutive attacks, dealing Havoc DMG, considered as Basic Attack DMG.\nTimed Counters consume {1} \"Resolving Caliber\" upon hitting an enemy to grant a shield.\nAfter casting the Intro Skill Defense Formation, use Basic Attack to directly cast Timed Counters.\n\nResolving Caliber\n\nTaoqi can hold up to {2} Resolving Caliber.\nBasic Attack {3} will consume all of Taoqi's \"Rocksteady Shields\" to grant that many \"Resolving Caliber\".\nWhile Rocksteady Shield exists, when the active character is attacked, {4} \"Rocksteady Shield\" will be consumed to recover \"Resolving Caliber\".\nAfter Rocksteady Shield ends, all remaining \"Rocksteady Shield\" will be consumed to grant that many \"Resolving Caliber\".",
+	"Has a chance to produce special dishes when cooking.",
+	"The incoming Resonator has their Resonance Skill DMG Amplified by {0}% for {1}s or until they are switched out.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"Forte Circuit Power Shift's Shield is increased by {0}%.",
+	"The Crit. Rate and Crit. DMG of Resonance Liberation Unmovable is increased by {0}% and {1}%, respectively.",
+	"The duration of Resonance Skill Rocksteady Shield is extended to {0}s.",
+	"When Taoqi successfully triggers Heavy Attack Strategic Parry, she restores {0}% HP and increases her DEF by {1}% for {2}s. This can be triggered once every {3}s.",
+	"The damage of Forte Circuit Power Shift is increased by {0}%. When Forte Circuit Power Shift hits a target, restore {1} Resonance Energy.",
+	"The damage of Taoqi's Basic Attack and Heavy Attack is increased by {0}% while the Shield granted by Resonance Skill Rocksteady Shield holds."
+]

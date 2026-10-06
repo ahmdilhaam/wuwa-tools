@@ -1,0 +1,18 @@
+[
+	"Basic Attack\n\nAalto fires up to {0} consecutive shots, dealing Aero DMG. Basic Attack {1} will spread the Mist forward, which lasts for {2}s.\n\nHeavy Attack\n\nAalto enters the aiming state for a more powerful shot.\nThe aimed shot fired after charging finishes deals Aero DMG.\n\nMid-air Attack\n\nAalto consumes STA to perform consecutive shots at the target in mid-air, dealing Aero DMG.\n\nDodge Counter\n\nUse Basic Attack after a successful Dodge to attack the target, dealing Aero DMG.",
+	"Mist Avatar\n\nCasts Mist and {0} \"Mist Avatar(s)\" to taunt the surrounding targets. The avatars inherit a portion of Aalto's HP and generate {1} Mist Bullets around them, dealing Aero DMG.\n\nMist Bullets\n\nDeals Aero DMG, considered as Resonance Skill DMG.",
+	"Generate a Gate of Quandary in front, dealing Aero DMG. When bullets pass through the Gate of Quandary, they deal increased DMG. Gate of Quandary lasts for {0}s.",
+	"Aalto's Heavy Attack will always critically hit, triggered once every {0}s.",
+	"Aalto will continuously recover STA when he is in the Forte Circuit Mistcloak Dash state.",
+	"Aalto shows up out of thin air to perform rapid continuous shooting, dealing Aero DMG.",
+	"When Aalto passes through \"Mist\" or \"Gate of Quandary\", he enters the Mistcloak Dash.\n\nMistcloak Dash\n\n-Movement speed increased;\n-During this period, \"Mist Drops\" are continuously consumed, and for each {0} \"Mist Drop\" consumed, {1} Mist Bullet(s) is generated.\n\nMist Drops\n\nAalto can hold up to {2} \"Mist Drops\".\nWhen Basic Attack or Mid-air Attack passes through \"Mist\" and hits the target, {3} \"Mist Drop\" is recovered.",
+	"Has a chance to produce special dishes when cooking.",
+	"The incoming Resonator has their Aero DMG Amplified by {0}% for {1}s or until they are switched out.",
+	"When the target's Off-Tune Level is full, the Resonator may cast Tune Break on the target.",
+	"The cooldown of Resonance Skill Shift Trick is reduced by {0}s.",
+	"\"Mist Avatar\" inherits {0}% more HP from Aalto. When Aalto attacks targets taunted by the \"Mist Avatar(s)\", his ATK is increased by {1}%.",
+	"When Aalto's Basic Attack or Mid-air Attack passes through the Mist, {0} more bullets will be generated, dealing {1}% of the DMG of Basic Attack or Mid-air Attack.",
+	"The damage of Resonance Skill Mist Bullets is increased by {0}%; Aalto receives {1}% less DMG in his Forte Circuit Mistcloak Dash state.",
+	"In the Forte Circuit Mistcloak Dash state, Aalto's Aero DMG Bonus is increased by {0}% for {1}s.",
+	"Resonance Liberation Flower in the Mist now additionally increases Crit. Rate by {0}%. When Aalto's Heavy Attack passes through the Gate of Quandary, the damage dealt is additionally increased by {1}%."
+]
