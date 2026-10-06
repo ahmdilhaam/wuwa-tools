@@ -1,6 +1,6 @@
 # WuWa Tools
 
-Damage calculator and build library for Wuthering Waves. The site is in Indonesian.
+Damage calculator and build library for Wuthering Waves, in Indonesian and English.
 
 ## Features
 

@@ -21,7 +21,14 @@ bun run build    # static output in build/
 
 Generated JSON is committed so the build stays fully static. Raw API responses are cached in `.cache/encore/` (git-ignored).
 
-## Translations (Indonesian)
+## Languages
+
+Indonesian is the default (`/…`); English lives under `/en/…`. All routes sit in `src/routes/[[lang=lang]]/` (matcher in `src/params.ts`) and both languages are prerendered.
+
+- UI strings: typed dictionaries in `src/lib/i18n/` — `id.ts` / `en.ts` plus per-area files in `dict/` (`calc.*`, `library.*`). The English file uses `satisfies` the Indonesian shape, so a missing or extra key fails `bun run check`.
+- In components: `t('key', params)`, `localize('/path/')` for every internal link, `formatNumber()` for numbers, `gameText({ en, id })` for game text.
+
+## Translations of game text (Indonesian)
 
 The API has no Indonesian text, so translations live in overlay files that `bun run sync` never overwrites:
 
