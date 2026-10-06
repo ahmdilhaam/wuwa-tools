@@ -154,13 +154,13 @@
 		.topbar .inner {
 			padding-top: 0.5rem;
 		}
+		/* Lima tautan muat dalam dua baris; lebih rapi daripada scroll horizontal. */
 		nav {
 			width: 100%;
-			overflow-x: auto;
-			flex-wrap: nowrap;
+			gap: 0 0.1rem;
 		}
 		nav a {
-			padding: 0.6rem;
+			padding: 0.55rem 0.6rem;
 			white-space: nowrap;
 		}
 	}
