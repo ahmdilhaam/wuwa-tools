@@ -1,0 +1,103 @@
+/* Token warna global — dipakai semua halaman. Tema gelap default, terang via prefers-color-scheme. */
+:root {
+	--bg: #0f1115;
+	--surface: #161a21;
+	--surface-2: #1e232c;
+	--border: #2a303b;
+	--text: #e7eaf0;
+	--text-muted: #9aa3b2;
+	--accent: #5fd0c4;
+	--accent-soft: rgba(95, 208, 196, 0.14);
+	--danger: #f2777a;
+
+	--el-aero: #55d6a0;
+	--el-glacio: #7cc4ff;
+	--el-fusion: #ff8a5b;
+	--el-electro: #b88cff;
+	--el-spectro: #f5d66b;
+	--el-havoc: #d46ab5;
+
+	color-scheme: dark;
+	font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--bg: #f6f7f9;
+		--surface: #ffffff;
+		--surface-2: #eef0f4;
+		--border: #d9dde4;
+		--text: #171a20;
+		--text-muted: #5b6474;
+		--accent: #0f8f83;
+		--accent-soft: rgba(15, 143, 131, 0.12);
+		--danger: #c43d40;
+
+		--el-aero: #1d9b67;
+		--el-glacio: #2a83c9;
+		--el-fusion: #d65a2a;
+		--el-electro: #7a4fd1;
+		--el-spectro: #a88a12;
+		--el-havoc: #a83d8a;
+
+		color-scheme: light;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.5;
+}
+
+a {
+	color: var(--accent);
+}
+
+h1,
+h2,
+h3 {
+	line-height: 1.25;
+}
+
+input,
+select,
+button {
+	font: inherit;
+	color: inherit;
+}
+
+.card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 0.45rem 0.6rem;
+	border-bottom: 1px solid var(--border);
+	vertical-align: top;
+}
+
+th {
+	color: var(--text-muted);
+	font-weight: 600;
+	font-size: 0.85rem;
+}
+
+.table-wrap {
+	overflow-x: auto;
+}
