@@ -6,7 +6,7 @@ Status legend: ☐ not started · ◐ in progress · ☑ done
 
 ---
 
-## 1. Share calculator state via URL ☐
+## 1. Share calculator state via URL ☑
 
 **Why:** let players share an exact calculation (friends, videos, Discord). Small effort, high value.
 

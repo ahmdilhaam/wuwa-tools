@@ -11,7 +11,10 @@ export const calc_en = {
 		modeCompare: 'Compare builds',
 		buildA: 'Build A',
 		buildB: 'Build B',
-		diffLabel: 'B vs A'
+		diffLabel: 'B vs A',
+		copyLink: 'Copy link',
+		linkCopied: 'Link copied',
+		copyFailed: 'Copy failed, use the address bar'
 	},
 	result: {
 		label: 'Damage result',

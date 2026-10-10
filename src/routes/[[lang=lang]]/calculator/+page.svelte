@@ -7,12 +7,55 @@
 	import { calculateDamage } from '#lib/calc/damage.ts';
 	import { elementLabels } from '#lib/calc/enemies.ts';
 	import { formatNumber, t, type DictKey } from '#lib/i18n/index.svelte.ts';
+	import { decodeShare, encodeShare, type CalcMode } from '#lib/calc/share.ts';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { onMount } from 'svelte';
 
-	let mode = $state<'single' | 'compare'>('single');
+	let mode = $state<CalcMode>('single');
 
 	let single = $state(defaultBuild());
 	let buildA = $state(defaultBuild());
 	let buildB = $state(defaultBuild());
+
+	// State dibagikan lewat query string. Query tidak bisa dibaca saat prerender,
+	// jadi dibaca setelah mount; sebelum itu URL tidak ditulis ulang.
+	let urlReady = $state(false);
+	onMount(() => {
+		const s = decodeShare(location.search);
+		mode = s.mode;
+		single = s.single;
+		buildA = s.buildA;
+		buildB = s.buildB;
+		urlReady = true;
+	});
+
+	const query = $derived(encodeShare({ mode, single, buildA, buildB }));
+	const shareHref = (qs: string) => page.url.pathname + (qs ? `?${qs}` : '');
+
+	// Perbarui URL (tanpa entri riwayat baru) setelah input berhenti berubah sejenak.
+	$effect(() => {
+		if (!urlReady) return;
+		const qs = query;
+		if (qs === page.url.search.replace(/^\?/, '')) return;
+		const timer = setTimeout(() => {
+			goto(shareHref(qs) + page.url.hash, { shallow: true, replace: true });
+		}, 300);
+		return () => clearTimeout(timer);
+	});
+
+	let copyStatus = $state<'idle' | 'copied' | 'failed'>('idle');
+	let copyTimer: ReturnType<typeof setTimeout> | undefined;
+	async function copyLink() {
+		try {
+			await navigator.clipboard.writeText(location.origin + shareHref(query));
+			copyStatus = 'copied';
+		} catch {
+			copyStatus = 'failed';
+		}
+		clearTimeout(copyTimer);
+		copyTimer = setTimeout(() => (copyStatus = 'idle'), 2500);
+	}
 
 	// Hasil + kontribusi pasif senjata (senjata dimuat malas lewat weaponStore)
 	function compute(b: BuildState) {
@@ -93,13 +136,21 @@
 	<p>{t('calc.page.intro')}</p>
 </header>
 
-<div class="segmented tabs" role="tablist" aria-label={t('calc.page.modeLabel')}>
-	<button role="tab" aria-selected={mode === 'single'} onclick={() => (mode = 'single')}>
-		{t('calc.page.modeSingle')}
-	</button>
-	<button role="tab" aria-selected={mode === 'compare'} onclick={() => (mode = 'compare')}>
-		{t('calc.page.modeCompare')}
-	</button>
+<div class="toolbar">
+	<div class="segmented" role="tablist" aria-label={t('calc.page.modeLabel')}>
+		<button role="tab" aria-selected={mode === 'single'} onclick={() => (mode = 'single')}>
+			{t('calc.page.modeSingle')}
+		</button>
+		<button role="tab" aria-selected={mode === 'compare'} onclick={() => (mode = 'compare')}>
+			{t('calc.page.modeCompare')}
+		</button>
+	</div>
+	<div class="share">
+		<button class="btn" type="button" onclick={copyLink}>{t('calc.page.copyLink')}</button>
+		<span class="copy-status" class:failed={copyStatus === 'failed'} role="status">
+			{#if copyStatus === 'copied'}{t('calc.page.linkCopied')}{:else if copyStatus === 'failed'}{t('calc.page.copyFailed')}{/if}
+		</span>
+	</div>
 </div>
 
 {#snippet resultPanel(c: Computed, element: keyof typeof elementLabels)}
@@ -263,8 +314,25 @@
 </section>
 
 <style>
-	.tabs {
+	.toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.75rem;
 		margin-bottom: 1.5rem;
+	}
+	.share {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.copy-status {
+		font-size: var(--fs-sm);
+		color: var(--ok);
+	}
+	.copy-status.failed {
+		color: var(--danger);
 	}
 	.cols {
 		display: grid;

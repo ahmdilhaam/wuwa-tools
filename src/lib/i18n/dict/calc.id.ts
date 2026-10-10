@@ -9,7 +9,10 @@ export const calc_id = {
 		modeCompare: 'Bandingkan build',
 		buildA: 'Build A',
 		buildB: 'Build B',
-		diffLabel: 'Selisih B terhadap A'
+		diffLabel: 'Selisih B terhadap A',
+		copyLink: 'Salin tautan',
+		linkCopied: 'Tautan disalin',
+		copyFailed: 'Gagal menyalin, salin dari bilah alamat'
 	},
 	result: {
 		label: 'Hasil damage',

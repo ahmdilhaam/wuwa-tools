@@ -53,4 +53,5 @@ Build advice for a new character is separate: it stays empty ("Belum ada data bu
 
 - SvelteKit 3 no longer provides `$lib`; import with `#lib/...` and an explicit file extension (e.g. `#lib/calc/damage.ts`).
 - Identifiers are English; UI text and code comments are Indonesian.
+- Calculator state lives in the URL query (`src/lib/calc/share.ts`): only fields that differ from `defaultBuild()` are written, with short keys; compare mode uses `m=cmp` plus `a.`/`b.` prefixes. A new `BuildState` field needs a key there, or it won't survive a shared link. `replaceState` is deprecated in SvelteKit 3; use `goto(url, { shallow: true, replace: true })`.
 - `vite preview` caches the build file list — restart it after rebuilding.
