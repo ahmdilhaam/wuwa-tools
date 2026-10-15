@@ -14,6 +14,7 @@
 	import { baseResOf, damageTypes, num, type BuildState } from './build';
 	import { clampRefine, defaultToggle, effectAmountLabel, weaponContribution } from './weapon';
 	import { weaponStore } from './weaponStore.svelte';
+	import IconSelect, { type IconOption } from '#lib/ui/IconSelect.svelte';
 	import { loadCharacterSkills } from './skillLoader';
 	import { isDamageHit, mapDamageType, mvAt, scalingFieldLabel, scalingOf, sumSkillMv } from './skills';
 
@@ -104,6 +105,11 @@
 		const list = pickedChar && !showAllWeapons ? all.filter((w) => w.type === pickedChar.weaponType) : all;
 		return weapon && !list.includes(weapon) ? [weapon, ...list] : list;
 	});
+	const weaponOptions = $derived<IconOption[]>([
+		{ value: '', label: t('calc.weapon.none') },
+		...weaponChoices.map((w) => ({ value: String(w.id), label: `${w.name} (${w.type})`, icon: w.icon, rarity: w.rarity })),
+		...(!weaponStore.list && build.pickWeapon ? [{ value: build.pickWeapon, label: t('calc.inputs.loading') }] : [])
+	]);
 	const contrib = $derived(weaponContribution(build, weapon, pickedChar));
 	const nf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };
 	const fmt = (n: number) => nf.format(Math.round(n * 100) / 100);
@@ -238,19 +244,17 @@
 	<fieldset>
 		<legend>{t('calc.weapon.legend')}</legend>
 		<div class="grid">
-			<label>
-				{t('calc.weapon.label')}
-				<select bind:value={build.pickWeapon} onchange={onWeapon} aria-describedby="{uid}-weapon">
-					<option value="">{t('calc.weapon.none')}</option>
-					{#each weaponChoices as w (w.id)}
-						<option value={String(w.id)}>{w.name} ({w.type})</option>
-					{/each}
-					{#if !weaponStore.list && build.pickWeapon}
-						<option value={build.pickWeapon}>{t('calc.inputs.loading')}</option>
-					{/if}
-				</select>
+			<div class="field">
+				<span class="field-label" id="{uid}-weapon-label">{t('calc.weapon.label')}</span>
+				<IconSelect
+					bind:value={build.pickWeapon}
+					options={weaponOptions}
+					onchange={onWeapon}
+					labelledby="{uid}-weapon-label"
+					describedby="{uid}-weapon"
+				/>
 				<span class="hint" id="{uid}-weapon">{t('calc.weapon.hint')}</span>
-			</label>
+			</div>
 			<div class="field">
 				<span class="field-label" id="{uid}-refine-label">{t('calc.weapon.refinement')}</span>
 				<div class="segmented" role="group" aria-labelledby="{uid}-refine-label">
