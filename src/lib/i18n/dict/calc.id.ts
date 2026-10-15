@@ -62,6 +62,9 @@ export const calc_id = {
 		hit: 'Hit',
 		pickHit: 'Pilih hit',
 		sumAllHits: 'Jumlahkan semua hit di skill ini',
+		sumAllSkills: 'Jumlahkan semua skill',
+		allSkillsNote:
+			'Total MV semua hit damage berskala {stat} di semua skill: {mv}%. Hanya perkiraan kasar: tiap skill punya tipe DMG sendiri, sedangkan kalkulator memakai satu Tipe DMG untuk semuanya.',
 		otherType: 'Lainnya',
 		hitDamage: '#{n} {type}{cond}: {mv}% {scaling}',
 		hitNotDamage: '#{n} {type}{cond}: bukan damage',

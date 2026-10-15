@@ -58,3 +58,14 @@ export function sumSkillMv(skill: GameSkill, level: number, stat: ScalingStat = 
 		.reduce((s, h) => s + mvAt(h, level), 0);
 	return Math.round(total * 100) / 100;
 }
+
+/**
+ * Jumlah MV semua skill karakter, memakai stat skala dengan total terbesar.
+ * Perkiraan kasar: tipe DMG tiap skill berbeda, sedangkan kalkulator hanya memakai satu.
+ */
+export function sumAllSkillsMv(skills: GameSkill[], level: number): { mv: number; stat: ScalingStat } {
+	const stats = Object.keys(scalingLabels) as ScalingStat[];
+	const totals = stats.map((stat) => skills.reduce((s, sk) => s + sumSkillMv(sk, level, stat), 0));
+	const best = totals.indexOf(Math.max(...totals));
+	return { mv: Math.round(totals[best] * 100) / 100, stat: stats[best] };
+}

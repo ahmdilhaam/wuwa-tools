@@ -64,6 +64,9 @@ export const calc_en = {
 		hit: 'Hit',
 		pickHit: 'Pick a hit',
 		sumAllHits: 'Sum all hits in this skill',
+		sumAllSkills: 'Sum all skills',
+		allSkillsNote:
+			'Total MV of all {stat}-scaling damage hits across every skill: {mv}%. Rough estimate only: each skill has its own DMG type, but the calculator applies a single DMG Type to all of them.',
 		otherType: 'Other',
 		hitDamage: '#{n} {type}{cond}: {mv}% {scaling}',
 		hitNotDamage: '#{n} {type}{cond}: not damage',

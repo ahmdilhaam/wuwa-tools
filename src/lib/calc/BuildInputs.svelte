@@ -16,7 +16,7 @@
 	import { weaponStore } from './weaponStore.svelte';
 	import IconSelect, { type IconOption } from '#lib/ui/IconSelect.svelte';
 	import { loadCharacterSkills } from './skillLoader';
-	import { isDamageHit, mapDamageType, mvAt, scalingFieldLabel, scalingOf, sumSkillMv } from './skills';
+	import { isDamageHit, mapDamageType, mvAt, scalingFieldLabel, scalingOf, scalingLabels, sumAllSkillsMv, sumSkillMv } from './skills';
 
 	let { build = $bindable() }: { build: BuildState } = $props();
 	// Mode bandingkan merender dua BuildInputs: id petunjuk harus unik per instance.
@@ -52,6 +52,9 @@
 	const level = $derived(Math.min(Math.max(Math.round(num(build.pickLevel)) || 10, 1), 10));
 	const mvEdited = $derived(build.pickedMv !== null && num(build.mvPct) !== build.pickedMv);
 	const sumMv = $derived(skill ? sumSkillMv(skill, level) : 0);
+	const allSkills = $derived(
+		build.pickSkill === 'all' && charSkills ? sumAllSkillsMv(charSkills.skills, level) : null
+	);
 	const scalingLabel = $derived(scalingFieldLabel(build.scalingType, t));
 
 	// Muat data skill saat karakter terpilih (termasuk dari state awal)
@@ -80,10 +83,17 @@
 	function onSkill() {
 		build.pickHit = '';
 		build.pickedMv = null;
+		applyPick();
 	}
 
 	/** Isi MV, tipe DMG, dan stat skala dari hit/skill yang dipilih. */
 	function applyPick() {
+		// Semua skill: tipe DMG dibiarkan karena tiap skill punya tipe berbeda.
+		if (allSkills) {
+			build.mvPct = build.pickedMv = allSkills.mv;
+			build.scalingType = allSkills.stat;
+			return;
+		}
 		if (!skill || !build.pickHit) return;
 		if (build.pickHit === 'all') {
 			build.mvPct = build.pickedMv = sumSkillMv(skill, level);
@@ -149,6 +159,7 @@
 					{t('calc.inputs.skill')}
 					<select bind:value={build.pickSkill} onchange={onSkill} disabled={!charSkills}>
 						<option value="">{loadingSkills ? t('calc.inputs.loading') : t('calc.inputs.pickSkill')}</option>
+						<option value="all">{t('calc.inputs.sumAllSkills')}</option>
 						{#each charSkills?.skills ?? [] as s, i (i)}
 							<option value={String(i)}>{s.name} ({s.type})</option>
 						{/each}
@@ -174,6 +185,8 @@
 						{/each}
 					</select>
 				</label>
+			{/if}
+			{#if skill || build.pickSkill === 'all'}
 				<label>
 					{t('calc.inputs.skillLevel')}
 					<input
@@ -192,6 +205,11 @@
 		{#if build.pickHit === 'all'}
 			<p class="note">
 				{t('calc.inputs.sumNote', { mv: nf.format(sumMv) })}
+			</p>
+		{/if}
+		{#if allSkills}
+			<p class="note">
+				{t('calc.inputs.allSkillsNote', { mv: nf.format(allSkills.mv), stat: scalingLabels[allSkills.stat] })}
 			</p>
 		{/if}
 		{#if mvEdited}<p class="note warn">{t('calc.inputs.mvEdited', { mv: nf.format(build.pickedMv ?? 0) })}</p>{/if}
