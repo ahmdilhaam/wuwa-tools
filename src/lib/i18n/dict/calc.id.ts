@@ -22,7 +22,7 @@ export const calc_id = {
 		weaponNote: 'Termasuk pasif senjata: {weapon} R{refine}',
 		chainTitle: 'Cara damage ini dihitung',
 		chainHelp:
-			'Dimulai dari damage dasar, lalu tiap baris mengalikan hasil sebelumnya. Batang emas menaikkan damage, batang merah menurunkannya.',
+			'Dimulai dari damage dasar, lalu tiap baris mengalikan hasil sebelumnya. Warna emas berarti damage naik, merah berarti turun.',
 		fullValues: 'Nilai lengkap',
 		poolBonus: 'Pool DMG Bonus',
 		enemyDefBase: 'DEF musuh (dasar)',
