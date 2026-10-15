@@ -11,12 +11,17 @@
 		options,
 		labelledby,
 		describedby,
+		disabled = false,
+		glyph = false,
 		onchange
 	}: {
 		value: string;
 		options: IconOption[];
 		labelledby?: string;
 		describedby?: string;
+		disabled?: boolean;
+		/** Ikon berupa glyph putih transparan (mis. ikon skill): beri latar gelap tetap di kedua tema. */
+		glyph?: boolean;
 		onchange?: () => void;
 	} = $props();
 
@@ -68,6 +73,7 @@
 	}
 
 	function onkeydown(e: KeyboardEvent) {
+		if (disabled) return;
 		const key = e.key;
 		if (!open) {
 			if (['ArrowDown', 'ArrowUp', 'Enter', ' ', 'Home', 'End'].includes(key)) {
@@ -123,19 +129,20 @@
 	}}
 />
 
-<div class="wrap">
+<div class="wrap" class:glyph>
 	<div
 		bind:this={root}
 		class="trigger"
 		role="combobox"
-		tabindex="0"
+		tabindex={disabled ? -1 : 0}
+		aria-disabled={disabled || undefined}
 		aria-haspopup="listbox"
 		aria-expanded={open}
 		aria-controls="{uid}-list"
 		aria-labelledby={labelledby}
 		aria-describedby={describedby}
 		aria-activedescendant={open ? optId(active) : undefined}
-		onclick={() => (open ? (open = false) : show())}
+		onclick={() => (open ? (open = false) : !disabled && show())}
 		{onkeydown}
 	>
 		{#if selected?.icon}
@@ -189,6 +196,10 @@
 		cursor: pointer;
 		transition: border-color 0.15s;
 	}
+	.trigger[aria-disabled='true'] {
+		cursor: default;
+		opacity: 0.6;
+	}
 	.trigger:hover {
 		border-color: var(--border-strong);
 	}
@@ -221,12 +232,19 @@
 		background: var(--bg-deep);
 		object-fit: cover;
 	}
+	.glyph img {
+		background: #10172b;
+		padding: 2px;
+	}
 	.list {
 		position: absolute;
 		z-index: 20;
 		top: calc(100% + 4px);
 		left: 0;
-		right: 0;
+		/* Seperti <select> bawaan: daftar boleh lebih lebar dari kolomnya agar nama tidak terpotong. */
+		min-width: 100%;
+		width: max-content;
+		max-width: min(26rem, calc(100vw - 2rem));
 		max-height: min(22rem, 60vh);
 		overflow-y: auto;
 		margin: 0;

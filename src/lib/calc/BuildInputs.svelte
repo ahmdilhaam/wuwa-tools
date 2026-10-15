@@ -52,6 +52,11 @@
 	const level = $derived(Math.min(Math.max(Math.round(num(build.pickLevel)) || 10, 1), 10));
 	const mvEdited = $derived(build.pickedMv !== null && num(build.mvPct) !== build.pickedMv);
 	const sumMv = $derived(skill ? sumSkillMv(skill, level) : 0);
+	const skillOptions = $derived<IconOption[]>([
+		{ value: '', label: loadingSkills ? t('calc.inputs.loading') : t('calc.inputs.pickSkill') },
+		{ value: 'all', label: t('calc.inputs.sumAllSkills') },
+		...(charSkills?.skills ?? []).map((s, i) => ({ value: String(i), label: `${s.name} (${s.type})`, icon: s.icon }))
+	]);
 	const allSkills = $derived(
 		build.pickSkill === 'all' && charSkills ? sumAllSkillsMv(charSkills.skills, level) : null
 	);
@@ -155,16 +160,17 @@
 				/>
 			</div>
 			{#if build.pickCharacter}
-				<label>
-					{t('calc.inputs.skill')}
-					<select bind:value={build.pickSkill} onchange={onSkill} disabled={!charSkills}>
-						<option value="">{loadingSkills ? t('calc.inputs.loading') : t('calc.inputs.pickSkill')}</option>
-						<option value="all">{t('calc.inputs.sumAllSkills')}</option>
-						{#each charSkills?.skills ?? [] as s, i (i)}
-							<option value={String(i)}>{s.name} ({s.type})</option>
-						{/each}
-					</select>
-				</label>
+				<div class="field">
+					<span class="field-label" id="{uid}-skill-label">{t('calc.inputs.skill')}</span>
+					<IconSelect
+						bind:value={build.pickSkill}
+						options={skillOptions}
+						onchange={onSkill}
+						labelledby="{uid}-skill-label"
+						disabled={!charSkills}
+						glyph
+					/>
+				</div>
 			{/if}
 			{#if skill}
 				<label>

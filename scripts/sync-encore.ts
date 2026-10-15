@@ -222,6 +222,7 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 			return {
 				name: String(s.SkillName || s.SkillType),
 				type: need<string>(s.SkillType, `character/${c.id} SkillType`),
+				...(s.Icon ? { icon: String(s.Icon) } : {}),
 				description: loc(desc, idSkill ? skillText(idSkill.SkillDescribe) : ''),
 				attributes,
 				hits

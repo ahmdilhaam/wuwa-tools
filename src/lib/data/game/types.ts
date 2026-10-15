@@ -49,6 +49,8 @@ export interface SkillHit {
 export interface GameSkill {
 	name: string;
 	type: string;
+	/** URL ikon skill; tidak semua skill punya */
+	icon?: string;
 	description: Localized;
 	attributes: SkillAttribute[];
 	hits: SkillHit[];
