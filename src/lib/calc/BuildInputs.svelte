@@ -81,6 +81,9 @@
 		build.pickSkill = '';
 		build.pickHit = '';
 		build.pickedMv = null;
+		// Senjata karakter lama belum tentu cocok tipe senjatanya: kosongkan.
+		build.pickWeapon = '';
+		build.weaponToggles = {};
 		const c = chars.find((x) => x.slug === build.pickCharacter);
 		if (c && (elements as readonly string[]).includes(c.element)) build.element = c.element as Element;
 	}
