@@ -23,7 +23,11 @@
 	const uid = $props.id();
 
 	const chars = characters as GameCharacter[];
-	const isCustom = $derived(build.enemyId === CUSTOM_ENEMY_ID);
+	const characterOptions = $derived<IconOption[]>([
+		{ value: '', label: t('calc.inputs.manual') },
+		...chars.map((c) => ({ value: c.slug, label: c.name, icon: c.icon, rarity: c.rarity }))
+	]);
+	const isCustom =$derived(build.enemyId === CUSTOM_ENEMY_ID);
 	const pickedChar = $derived(chars.find((x) => x.slug === build.pickCharacter) ?? null);
 	const presetRes = $derived(Math.round(baseResOf(build) * 10000) / 100);
 
@@ -131,27 +135,15 @@
 	<fieldset class="primary">
 		<legend>{t('calc.inputs.pickLegend')}</legend>
 		<div class="grid">
-			<label>
-				{t('calc.inputs.character')}
-				<span class="picker">
-					{#if pickedChar}
-						<img
-							src={pickedChar.icon}
-							width="40"
-							height="40"
-							loading="lazy"
-							alt=""
-							style={`--c: var(--el-${pickedChar.element})`}
-						/>
-					{/if}
-					<select bind:value={build.pickCharacter} onchange={onCharacter}>
-						<option value="">{t('calc.inputs.manual')}</option>
-						{#each chars as c (c.slug)}
-							<option value={c.slug}>{c.name}</option>
-						{/each}
-					</select>
-				</span>
-			</label>
+			<div class="field">
+				<span class="field-label" id="{uid}-char-label">{t('calc.inputs.character')}</span>
+				<IconSelect
+					bind:value={build.pickCharacter}
+					options={characterOptions}
+					onchange={onCharacter}
+					labelledby="{uid}-char-label"
+				/>
+			</div>
 			{#if build.pickCharacter}
 				<label>
 					{t('calc.inputs.skill')}
@@ -485,18 +477,6 @@
 	.grid > label {
 		align-content: start;
 	}
-	.picker {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-	.picker img {
-		flex: none;
-		border-radius: var(--radius-sm);
-		border: 2px solid var(--c, var(--border));
-		background: var(--bg-deep);
-		object-fit: cover;
-	}
 	.note {
 		margin: 0.75rem 0 0;
 		font-size: var(--fs-xs);
@@ -512,11 +492,10 @@
 	}
 	.field {
 		display: grid;
-		gap: 0.4rem;
+		gap: 0.3rem;
 		align-content: start;
-	}
-	.field-label {
-		color: var(--text);
+		font-size: var(--fs-sm);
+		color: var(--text-muted);
 	}
 	.check {
 		display: flex;
