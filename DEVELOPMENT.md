@@ -16,7 +16,7 @@ bun run build    # static output in build/
 
 | Data | Source | Command |
 |---|---|---|
-| Game facts (skills, MVs, weapons, sonata sets, enemy RES) | [api-v2.encore.moe](https://api-v2.encore.moe) → `src/lib/data/game/` | `bun run sync` (`--no-cache` to refetch) |
+| Game facts (skills, MVs, weapons, sonata sets, echoes, enemy RES) | [api-v2.encore.moe](https://api-v2.encore.moe) → `src/lib/data/game/` | `bun run sync` (`--no-cache` to refetch) |
 | Build advice (echoes, teams, substat priority) | `reference/wuwa-core/` → `src/lib/data/characters.json` | `bun scripts/convert-characters.ts` |
 
 Generated JSON is committed so the build stays fully static. Raw API responses are cached in `.cache/encore/` (git-ignored).

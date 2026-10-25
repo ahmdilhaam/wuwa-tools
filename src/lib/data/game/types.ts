@@ -138,6 +138,15 @@ export interface SonataSet {
 	echoIds: number[];
 }
 
+/** Echo dari /echo (Phantom Appearance kosmetik tidak ikut). Nama bisa kembar antar-elemen, kunci = id. */
+export interface GameEcho {
+	id: number;
+	name: string;
+	element: Element | 'physical';
+	icon: string;
+	setIds: number[];
+}
+
 export type MonsterClass = 'standard' | 'elite' | 'overlord' | 'calamity';
 
 export interface Resistances {

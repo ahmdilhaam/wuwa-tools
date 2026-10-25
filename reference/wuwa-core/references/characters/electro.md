@@ -383,6 +383,7 @@
 - **Echo:** Reminiscence: Suhsin the Inevitable | Heart of Sworn Vigil (5pc) [primary — Main DPS / Seal Master]
   - Alternative (Sub-DPS for Hsin): Soulfrayer | Heart of Sworn Vigil (5pc)
   - Alternative (Basic Attack DPS): Impermanence Heron | Moonlit Clouds (5pc)
+  - Layout 4-3-3-1-1 (wutheringwavesguides.com): Formrender + Soulfrayer (3-cost), Kernel Puppet: Joy + Fog Lionarch (1-cost)
   - 4-cost main stat: CRIT DMG or CRIT Rate
   - 3-cost: Electro DMG × 2
   - 1-cost: ATK% × 2

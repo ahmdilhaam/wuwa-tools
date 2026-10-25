@@ -31,6 +31,7 @@ import type {
 	Sequence,
 	SkillHit,
 	SonataSet,
+	GameEcho,
 	SyncMeta,
 	WeaponType
 } from '../src/lib/data/game/types';
@@ -302,7 +303,7 @@ async function syncWeapons(): Promise<{ weapons: GameWeapon[]; idOk: boolean }> 
 
 // ---------- sonata ----------
 
-async function syncSonata(): Promise<{ sets: SonataSet[]; echoCount: number; idOk: boolean }> {
+async function syncSonata(): Promise<{ sets: SonataSet[]; echoes: GameEcho[]; idOk: boolean }> {
 	const list = await api('en', 'echo');
 	const echoes = nonEmpty(list?.Echo, 'echo');
 	// Probe id: endpoint id/echo tidak selalu berbentuk sama dengan en
@@ -338,6 +339,22 @@ async function syncSonata(): Promise<{ sets: SonataSet[]; echoCount: number; idO
 		}
 	}
 	const sets = [...map.values()].sort((a, b) => a.id - b.id);
+
+	// Daftar echo (tanpa Phantom Appearance kosmetik); boss tanpa stat musuh tetap masuk di sini.
+	const echoList: GameEcho[] = echoes
+		.filter((e: any) => e.Type === 'Echo')
+		.map((e: any) => {
+			const el = need<string>(e.Element?.Name, `echo ${e.Id} Element`);
+			return {
+				id: e.Id,
+				name: need<string>(e.Name, `echo ${e.Id} Name`),
+				element: el === 'Physical' ? 'physical' : elementOf(el),
+				icon: String(e.Icon ?? ''),
+				setIds: [...new Set<number>((e.FetterGroups ?? []).map((g: any) => g.Id))].sort((a, b) => a - b)
+			};
+		})
+		.sort((a: GameEcho, b: GameEcho) => a.name.localeCompare(b.name) || a.id - b.id);
+	if (echoList.length === 0) fail('tidak ada echo bertipe Echo');
 	for (const s of sets) s.echoIds = [...new Set(s.echoIds)].sort((a, b) => a - b);
 
 	// Daftar echo hanya memuat template ({0}); detail satu echo anggota punya teks yang sudah dirender.
@@ -349,7 +366,7 @@ async function syncSonata(): Promise<{ sets: SonataSet[]; echoCount: number; idO
 			if (hasPlaceholder(b.text.en)) fail(`sonata ${s.name} (${b.pieces}pc) masih memuat placeholder: ${b.text.en}`);
 		}
 	});
-	return { sets, echoCount: echoes.length, idOk };
+	return { sets, echoes: echoList, idOk };
 }
 
 // ---------- monster ----------
@@ -424,7 +441,7 @@ async function main() {
 	console.log('-> senjata');
 	const { weapons, idOk: weaponIdOk } = await syncWeapons();
 	console.log('-> sonata echo');
-	const { sets, echoCount, idOk: echoIdOk } = await syncSonata();
+	const { sets, echoes, idOk: echoIdOk } = await syncSonata();
 	console.log('-> monster');
 	const { monsters, breakdown } = await syncMonsters();
 
@@ -432,6 +449,7 @@ async function main() {
 	await applyWeaponI18nFromFile(weapons);
 	await writeJson('weapons.json', weapons);
 	await writeJson('sonata-sets.json', sets);
+	await writeJson('echoes.json', echoes);
 	await writeJson('monsters.json', monsters);
 	await applySkillI18nFromFiles();
 
@@ -441,7 +459,7 @@ async function main() {
 		skillFiles,
 		weapons: weapons.length,
 		sonataSets: sets.length,
-		echoes: echoCount,
+		echoes: echoes.length,
 		monstersTotal: Object.values(breakdown).reduce((a, b) => a + b, 0),
 		monstersWithDetail: monsters.length,
 		...Object.fromEntries(Object.entries(breakdown).map(([k, v]) => [`monsters_${k}`, v]))
