@@ -377,3 +377,49 @@
   - Rotation is ~7s+ — longer than average Hybrid, compensated by high personal damage output.
   - In Whimpering Wastes, Shorekeeper may edge out Mornye (Off-Tune rarely built multiple times on same enemy).
   - Tier 1 Hybrid in Tower of Adversity (Patch 3.4).
+
+### Suoming — Hybrid / Sub-DPS (Electro)
+**Source:** Game8 (updated October 22, 2026, Patch 3.7 Phase 2), cross-referenced with wutheringwavesguides.com — early-launch data, may shift after more testing
+- **Echo:** Reminiscence: Suhsin the Inevitable | Heart of Sworn Vigil (5pc) [primary — Main DPS / Seal Master]
+  - Alternative (Sub-DPS for Hsin): Soulfrayer | Heart of Sworn Vigil (5pc)
+  - Alternative (Basic Attack DPS): Impermanence Heron | Moonlit Clouds (5pc)
+  - 4-cost main stat: CRIT DMG or CRIT Rate
+  - 3-cost: Electro DMG × 2
+  - 1-cost: ATK% × 2
+- **Weapons:**
+  - BiS sig: Unspoken Rue (R1) — CRIT Rate + ATK; Electro DMG Bonus on gaining Unison, team-wide Electro DMG buff (Binding Mind)
+  - #2: Red Spring (R1) — high ATK + CRIT Rate, Basic Attack DMG passive
+  - #3: Emerald of Genesis (R1) — CRIT Rate + Energy Regen, stacking ATK on Resonance Skill
+  - 4-star (Battle Pass): Lumingloss — extra Basic Attack DMG on Resonance Skill
+  - F2P 4-star: Somnoire Anchor — universal ATK / CRIT Rate effect
+  - F2P 4-star: Endless Collapse — extra Resonance Energy + long ATK buff
+  - Budget 4-star: Commando of Conviction — ATK buff on Intro Skill
+- **Stats (Level 90, S0):**
+  - No numeric targets published yet; prioritize CRIT, Electro DMG on 3-costs, then Basic Attack DMG Bonus
+  - Seal Master grants an extra +100% CRIT DMG — balance CRIT Rate/DMG around it and the weapon
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Intro Skill > Res. Skill
+  - As Main DPS, level Basic Attack first
+- **Substats:** CRIT DMG = CRIT Rate > Energy Regen > Basic DMG% = ATK% > ATK
+- **Teams:**
+  - Best (Unison): Hsin + Suoming + Shorekeeper / Verina / Mornye
+  - Tune Break DPS: Suoming + Lynae + Mornye
+  - F2P Basic Attack: Suoming + Sanhua / Buling + Verina / Baizhi
+- **Rotation:**
+  - Unison (Hsin team): Shorekeeper → Suoming: Res. Liberation (gain Unison) → swap Hsin → cycle Hsin ↔ Suoming via Unison Outros, Forte-enhanced Basic Attacks, and held Res. Skill → end on Shorekeeper
+  - Seal Master (DPS): Res. Liberation (Unison for 5s) → Res. Skill "Furled Canopy: Rift Cleaver" while holding Unison (consumes Unison + 20 Concerto → Seal Master 12s) → Forte-enhanced Basic Attacks
+  - F2P: Verina (Concerto) → Sanhua (Ice Structures) → Suoming: Unison + Forte-enhanced attacks → Echo Skill → Verina Outro
+- **Sequences:**
+  - S1: +60% Intro Skill DMG; Unforsaken Mind uninterruptible — Medium value (mostly Unison teams)
+  - S2: +40% CRIT DMG + Outro CRIT DMG buff for the incoming Resonator — High value (best with Hsin)
+  - S3: Intro grants Unison Boon; Res. Liberation grants 30% Basic Attack DMG Amplification — Very high value (recommended stopping point)
+  - S4: +20% ATK — Medium value (expensive for what it gives)
+  - S5: +40% Miasma Lock DMG — Low value (doesn't scale her main Basic Attack damage)
+  - S6: Unison Boon effects +50% (up to 4 stacks), +50% Engraved Heart, +200% CRIT DMG in Seal Master — Extremely high value
+- **Notes:**
+  - Limited 5-star (banner "Nine Deaths, One Unbent Heart", Oct 22 – Nov 11, 2026).
+  - Main value is as Hsin's Unison partner; without Hsin she is a mid-ceiling Basic Attack DPS.
+  - Some of her DPS self-buffs are removed in Unison teams — they only apply as Main DPS outside Unison.
+  - Outro (Canopy Rumble): 20% Electro DMG Amplification for 8s to the incoming Resonator (+25% Res. Skill DMG Amplification with Unison Boon).
+  - State limits effectively lock her out of Quickswap; plan full rotations.
+  - Unison Response cannot trigger in Co-op.
+  - Shares the weekly boss Suhsin the Inevitable (Remnant of the Wheel) with Hsin.

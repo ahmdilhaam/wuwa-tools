@@ -10,7 +10,7 @@ Quick reference to find any character's build data. All files are fully populate
 Yangyang, Aalto, Jiyan, Jianxin, Ciaccona, Rover (Aero), Cartethyia, Iuno, Qiuyuan, Sigrika
 
 ## Electro — `characters/electro.md`
-Calcharo, Yinlin, Yuanwu, Xiangli Yao, Lumi, Augusta, Buling, Rebecca
+Calcharo, Yinlin, Yuanwu, Xiangli Yao, Lumi, Augusta, Buling, Rebecca, Suoming
 
 ## Fusion — `characters/fusion.md`
 Chixia, Encore, Mortefi, Changli, Brant, Lupa, Galbrena, Mornye, Aemeath, Denia
