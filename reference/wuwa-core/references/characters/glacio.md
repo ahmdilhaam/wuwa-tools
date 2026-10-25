@@ -189,3 +189,52 @@
   13. Outro
 - **Sequences:** S1: Foreclaimed Self Basic multipliers +120%, Basic 3 pulls enemies, interrupt immunity on 4/5 — transformative damage and tankiness boost. S2: Iai DMG ×2.25, full Forte resource restore after leaving combat — massive Iai damage + rotation consistency. S3: Snow Rust auto-gains 1 extra stack every 2s (fixes solo play), Heavy ATK multipliers +160%, S2 Glacio Bite DMG at 2 stacks +488% multiplier. S4: Team +20% DMG for 30s on Skill cast + 18% HP restore. S6: Inward Vision + Blade Liberation CRIT DMG +500%; at 2 Snow Rust stacks, Glacio Bite triggers from ALL team Chafe applications — enormous. Priority: S1 first big breakpoint; S3 for solo content; S6 for whale territory.
 - **Notes:** Fine Snow passive (Inherent Skill 1): Hiyuki gains Snow Rust stacks per Glacio Chafe/Havoc Bane applier on the team. 1 stack = Hiyuki's own Chafe; 2nd stack from Chisa (Havoc Bane) or Lucilla (Glacio Chafe) is the critical breakpoint — massively boosts Glacio Bite DMG. 3rd stack = +30% Glacio Bite Amp. Chisa is effectively mandatory for the 2nd Snow Rust stack. Glacio Chafe mechanic: all Chafe applied by any team member converts to Glacio Bite (Chafe type that deals significantly more DMG per stack + stuns 2s instead of freezing). Snowforged Blade management: can hold 3 stacks; save for strong enemy waves in multi-wave content by tapping instead of holding Blade Liberation. Very F2P unfriendly for optimal teambuilding — Lucilla, Lynae, and Chisa are all premium limited units. T0 DPS in Tower of Adversity as of Patch 3.3. Best Glacio DPS by a large margin in premium team. Outro: Glacio DMG dealt by nearby non-Hiyuki Resonators Amplified by 20% vs targets affected by Glacio Chafe for 20s.
+
+### Suisui — Support / Healer (Glacio)
+**Source:** Game8 (updated September 30, 2026, Patch 3.7 Phase 2), cross-referenced with allthings.how (August 26, 2026)
+- **Echo:** Forbidden Bastion | Song of Feathered Trace (5pc) [primary — team ATK buff for Negative Status teams]
+  - Alternative: Fallacy of No Return | Rejuvenating Glow (5pc) [longer 15% ATK buff + 10% Healing Bonus]
+  - Early game: Bell-Borne Geochelone | Rejuvenating Glow (5pc)
+  - 4-cost main stat: Healing Bonus or HP%
+  - 3-cost: Energy Regen or HP% (Glacio DMG Bonus is an option with Firstlight's Herald)
+  - 1-cost: HP% × 2
+- **Weapons:**
+  - BiS sig: Firstlight's Herald (R1) — Energy Regen; +12% Max HP, extra Concerto Energy after Res. Liberation, 20% team ATK buff
+  - #2: Stellar Symphony (R1) — Energy Regen; HP increase, extra Concerto on Liberation, weaker but longer team ATK buff
+  - #3: Boson Astrolabe (R1) — viable off-banner, weapon skill nearly useless on Suisui
+  - Best 4-star: Variation (R5) — Energy Regen; Concerto on Res. Skill (about 25% less ER than the sig)
+  - 4-star: Call of the Abyss (R5) — Energy Regen; Healing Bonus passive
+  - 4-star: Rectifier#25 (R5) — Energy Regen
+  - 4-star: Comet Flare (R5) — HP%; scales off HP
+  - F2P 3-star: Rectifier of Voyager (R5) — Energy Regen
+- **Stats (Level 90, S0):**
+  - ER: 260% target (Liberation costs 175 Energy)
+  - Between 200% and 260% ER, allies gain extra DMG dealt and ATK (Game8: up to +12% DMG and up to +50% ATK — cap unverified)
+  - With Variation about 5 ER substat rolls reach 260%; Firstlight's Herald frees a 3-cost slot for HP% or Glacio DMG Bonus
+  - No numeric targets published for HP, ATK or Healing Bonus
+- **Forte priority:** Res. Skill > Intro Skill > Res. Liberation > Forte Circuit > Basic Attack
+  - Her healing comes from her Inherent Skill, so leveling for sustain is unnecessary (allthings.how)
+- **Substats:** Energy Regen (until 260%) > HP% = HP > CRIT DMG = CRIT Rate (low value)
+- **Teams:**
+  - Premium Havoc Bane: Yangyang: Xuanling + Chisa + Suisui (Rover (Electro) / Mortefi / Iuno for Chisa)
+  - Glacio Chafe: Hiyuki + Lucilla + Suisui (Lynae / Chisa / Rover (Electro) / Zhezhi for Lucilla)
+  - Electro Flare: Hsin + Rover (Electro) + Suisui
+  - Fusion Burst (S1 recommended): Aemeath + Denia + Suisui
+  - Aero Erosion: Cartethyia + Ciaccona + Suisui (ATK buff largely wasted since Cartethyia scales off HP)
+- **Rotation:**
+  - Team opener: Suisui (build Forte → Res. Skill → attacks → Liberation → Echo Skill) → Outro into the sub-DPS → main DPS → swap back to Suisui
+  - Solo combo (no Intro): Basic ×3 → Res. Skill → mid-air attack → Basic ×4 → Liberation → Echo Skill → Outro
+  - Solo combo (with Intro): Intro → mid-air attack → Basic ×4 → Res. Skill → Liberation → Echo Skill → Outro
+- **Sequences:**
+  - S1: Undulating Mist ATK also applies after inflicting Negative Status; Reflecting Shadows lasts 100% longer; some Drizzle Stance attacks interruption-immune — High value (needed for many Negative Status teams to reach the full ATK buff)
+  - S2: Nearby Negative Status appliers gain +50% CRIT DMG for 30s — High value (best stopping point for most players)
+  - S3: Extra Stage 4 attack option and Kingfisher (restores 20 Concerto and 350 Floral Epistle, once per 25s) — Medium value
+  - S4: Enrichment and Spring's Birth healing +50% — Medium value
+  - S5: Drizzle Basic and Heavy Attack multipliers +100% — Low value (does not make her a DPS)
+  - S6: CRIT DMG of Intro and Awakening Spring +500% — Low value
+- **Notes:**
+  - Limited 5-star (banner "Blessings From Dewy Wings", Jul 30 – Aug 19, 2026). Negative Status healer/support, not a damage dealer; topped the meta from Patch 3.5 Phase 2 and gained an Electro Flare team with Hsin in Patch 3.7.
+  - Her Ceaseless Landscape field raises max stack limits for Glacio Chafe, Havoc Bane, Spectro Frazzle, Fusion Burst and Aero Erosion (allthings.how).
+  - Inherent Skill "Glimmering Gold": revives a fallen Resonator with 50% of her current HP, once every 10 minutes.
+  - Weaknesses: needs about 260% ER and is weaker as a general healer outside Negative Status teams.
+  - Without S1, Hiyuki is the partner that works best.

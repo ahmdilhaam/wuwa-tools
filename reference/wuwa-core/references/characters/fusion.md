@@ -511,3 +511,54 @@
 ---
 
 *Sources: [Prydwen.gg](https://www.prydwen.gg/wuthering-waves/characters) | [Game8.co](https://game8.co/games/Wuthering-Waves) | [Wutheringlab.com](https://wutheringlab.com)*
+
+### Jingran — Main DPS (Fusion)
+**Source:** Game8 (updated October 4, 2026; debut Patch 3.5 Phase 2, banner Patch 3.6 Phase 2), cross-referenced with AllThingsHow (updated Sep 7, 2026)
+- **Echo:** Myriad Snare: Rustfire Chassis | Lamp of Nether Road (5pc) [primary — Heavy Attack DPS]
+  - Alternative: The False Sovereign | Crown of Valor (3pc) + Lamp of Nether Road (2pc) (second best; transform-type echo, must be woven into combos)
+  - 4-cost main stat: CRIT Rate + CRIT DMG (one each, 4-4-1-1-1 layout)
+  - 3-cost: none in the recommended build
+  - 1-cost: HP% × 3
+  - Without the signature weapon: 4-3-1-1-1 or 4-1-1-1-1 trades CRIT for HP to reach the thresholds; Game8 says 4-4-1-1-1 is still better for the CRIT ratio if HP stays high
+- **Weapons:**
+  - BiS sig: Thousandfold Deliverance (R1) — HP 72.2%, 12% All-Attribute DMG, Heavy Attack DMG passives; makes the 50,000 HP target reachable
+  - #2: Thunderflare Dominion (R1) — high base ATK + CRIT Rate, Heavy Attack DMG buff; best no-signature option
+  - #3: Verdant Summit (R1) — CRIT DMG, stackable Heavy Attack DMG on Intro/Liberation
+  - #4: Ages of Harvest (R1) — CRIT Rate; AllThingsHow calls it the weakest 5-star fit for Heavy Attacks (not listed by Game8)
+  - 4-star (Battle Pass): Aureate Zenith — CRIT DMG, extra ATK and Heavy Attack DMG on Liberation
+  - 4-star (Battle Pass): Autumntrace — CRIT Rate, stackable ATK on Heavy Attacks
+  - 4-star: Helios Cleaver — ATK 30.4%, extra ATK on Resonance Skill
+  - 4-star: Waning Redshift — extra Resonance Energy + long ATK buff after Resonance Skill
+- **Stats (Level 90, S0):**
+  - Max HP 50,000 (unlocks full kit scaling; very hard without Thousandfold Deliverance)
+  - Energy Regen ~125%
+  - CRIT Rate above 90% (AllThingsHow: ~35% from kit and echo set, ~35% from substats, plus a 4-cost CRIT Rate main stat)
+  - DEF is fixed at 0 — needs a healer or shielder
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack = Res. Skill > Intro Skill
+  - Forte Circuit is about 62% of damage and Liberation about 19% (AllThingsHow)
+- **Substats:** CRIT Rate = CRIT DMG > HP% (until ~50,000 HP) = Heavy Attack DMG > Energy Regen (~125%) > ATK%
+  - Game8 ranks Energy Regen last (1 star); AllThingsHow places it before Heavy Attack DMG
+- **Teams:**
+  - Best (Heavy Attack): Jingran + Iuno + Shorekeeper (alternatives: Rebecca or Mortefi for Iuno; Lynae, Mornye or Verina for Shorekeeper)
+  - Mono Fusion: Jingran + Lupa + Mornye (needs three Fusion units; Brant, Mortefi or Denia can replace Mornye)
+  - Tune Break: Jingran + Lynae + Mornye
+  - Accessible (AllThingsHow): Jingran + Mortefi + Baizhi
+  - Other options: Brant, Denia, Mortefi, Changli or Lupa as partners — less sustain, so more vulnerable
+- **Rotation:**
+  - Heavy Attack team: Shorekeeper: Res. Liberation → swap Iuno (Res. Skill, enter New Moon, Liberation, Basic Attacks + Res. Skills, Heavy Attack for Full Moon Domain) → Jingran: Res. Liberation → Heavy Attack → Res. Skill → Basic Attack → Forte Heavy Attack (twice) → 4 Basic Attacks → Heavy Attack → swap Shorekeeper to detonate Stellarealm
+  - Solo loop: Intro → Res. Liberation → Heavy Attack → Res. Skill → Basic Attack → Heavy Attack (twice) → 4 Basic Attacks → Heavy Attack → Echo Skill → Outro
+  - Qi engine: Res. Liberation gives 200 Qi and opens a 15s Yinghuo window; Heavy Attack while holding Wayfarer's Mark gives 200 Qi. Spend Qi on Forte Heavy Attacks, refill with Basic Attacks or Res. Skill, and Outro before Yinghuo ends (AllThingsHow)
+- **Sequences:**
+  - S1: +80% multiplier on Encroaching Yin / Netherworld Traverse / Scorching Yang / Afterlife's Guide, and they become interruption-immune — Low value (minor upgrade)
+  - S2: +46% Heavy Attack multipliers, +46% Fire of Life multiplier boost, 300 Qi on entering combat — Extremely high value
+  - S3: Ghost Shroud on Heavy Attacks; 50 ATK per 1,000 Max HP (up to 2,500) for 15s after Liberation — Extremely high value (recommended stopping point for low spenders)
+  - S4: When any team member gains a shield, the team gets +20% All-Attribute DMG for 30s — Medium value
+  - S5: Survives one fatal hit every 10 minutes with a shield worth 50% Max HP for 15s — Low value (emergency only)
+  - S6: Targets take 40% more Heavy Attack DMG from Jingran; Chimei Wangliang gets +80% multiplier and extra summons in Yinghuo — Extremely high value
+- **Notes:**
+  - Limited 5-star Fusion Broadblade; Game8 rates him SS overall (Main DPS) and calls him one of the best F2P-friendly picks.
+  - Kit scales with Max HP: +36 ATK per 1,000 HP (cap 1,800 ATK), +1.5% Fusion DMG per 1,000 HP (cap 75%), both capped at 50,000 HP.
+  - Res. Liberation drops him to 50% Max HP if he is above half health, so healers and shields are essential.
+  - Ghost Shroud comes from shields and converts to Fusion DMG Bonus via the Intro Skill.
+  - Shadow Step dodge deals fixed Basic Attack damage and is not affected by DMG bonuses.
+  - Game8 notes his kit lacks Tune Shifting and Negative Status mechanics, and mentions possible late-patch weakening.

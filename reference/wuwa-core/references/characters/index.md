@@ -7,19 +7,19 @@ Quick reference to find any character's build data. All files are fully populate
 ---
 
 ## Aero — `characters/aero.md`
-Yangyang, Aalto, Jiyan, Jianxin, Ciaccona, Rover (Aero), Cartethyia, Iuno, Qiuyuan, Sigrika
+Yangyang, Aalto, Jiyan, Jianxin, Ciaccona, Rover (Aero), Cartethyia, Iuno, Qiuyuan, Sigrika, Qingxiao
 
 ## Electro — `characters/electro.md`
-Calcharo, Yinlin, Yuanwu, Xiangli Yao, Lumi, Augusta, Buling, Rebecca, Suoming
+Calcharo, Yinlin, Yuanwu, Xiangli Yao, Lumi, Augusta, Buling, Rebecca, Suoming, Hsin, Rover (Electro)
 
 ## Fusion — `characters/fusion.md`
-Chixia, Encore, Mortefi, Changli, Brant, Lupa, Galbrena, Mornye, Aemeath, Denia
+Chixia, Encore, Mortefi, Changli, Brant, Lupa, Galbrena, Mornye, Aemeath, Denia, Jingran
 
 ## Glacio — `characters/glacio.md`
-Sanhua, Baizhi, Lingyang, Zhezhi, Youhu, Carlotta, Lucilla, Hiyuki
+Sanhua, Baizhi, Lingyang, Zhezhi, Youhu, Carlotta, Lucilla, Hiyuki, Suisui
 
 ## Havoc — `characters/havoc.md`
-Taoqi, Danjin, Camellya, Rover (Havoc), Roccia, Cantarella, Phrolova, Chisa
+Taoqi, Danjin, Camellya, Rover (Havoc), Roccia, Cantarella, Phrolova, Chisa, Yangyang: Xuanling
 
 ## Spectro — `characters/spectro.md`
 Verina, Rover (Spectro), Jinhsi, Shorekeeper, Phoebe, Zani, Lynae, Luuk Herssen, Lucy (Collab)

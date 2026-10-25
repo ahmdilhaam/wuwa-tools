@@ -490,3 +490,44 @@
 | Iuno | Hybrid / Main DPS | 5★ | Gauntlets | T0.5 (DPS) / T1 (Hybrid) | Crown of Valor | Lady of the Sea |
 | Qiuyuan | Hybrid / Buffer | 5★ | Sword | T0 | Law of Harmony / Moonlit Clouds | Reminiscence: Fenrico / Impermanence Heron |
 | Sigrika | Main DPS | 5★ | Gauntlets | T0 | Sound of True Name | Nameless Explorer |
+
+### Qingxiao — Main DPS (Aero)
+**Source:** Game8 (updated September 25, 2026, Patch 3.7 Phase 2; released Patch 3.6 Phase 1), cross-referenced with allthings.how (updated August 20, 2026)
+- **Echo:** Calamity Effigy | Heart of Evil's Purge (5pc) [primary — Aero DMG bonuses when Tune Strain is applied; weave its skill into combos]
+  - Alternative: Nightmare: Feilian Beringal | Sierra Gale (5pc) — Aero DMG + Heavy Attack DMG; Sierra Gale boosts Aero DMG after her Intro Skill
+  - 4-cost main stat: CRIT Rate or CRIT DMG
+  - 3-cost: Aero DMG Bonus + ATK% (one each, with Glint of Clouds); Aero DMG × 2 without Glint of Clouds
+  - 1-cost: ATK% × 2
+- **Weapons:**
+  - BiS sig: Glint of Clouds (R1) — 36.0% CRIT Rate; +12% ATK, stacking Aero DMG Bonus on Tune Strain - Shifting with near-constant uptime; Game8 says alternatives perform "significantly worse"
+  - #2: Red Spring (R1) — CRIT Rate; extra ATK, Basic Attack DMG passive
+  - #3: Emerald Sentence (R1) — CRIT Rate; Heavy Attack DMG amp on Echo Skill
+  - #4: Emerald of Genesis (R1) — CRIT Rate; extra ER, stackable ATK buff on Resonance Skill
+  - Best 4-star (Battle Pass): Feather Edge — CRIT Rate; ATK + Res. Liberation DMG
+  - 4-star (Battle Pass, F2P-friendly): Lumingloss — ATK%; extra Heavy Attack DMG on Resonance Skill
+  - 4-star: Sword#18 — ATK%; Heavy Attack DMG below 40% HP, healing
+- **Stats (Level 90, S0):**
+  - No numeric targets published for ATK, CRIT or Aero DMG; prioritize CRIT, then Aero DMG on 3-costs
+  - ER: ~125% for comfortable rotations (Game8: 125%; allthings.how: ~120–125%)
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Res. Skill = Intro Skill
+- **Substats:** CRIT Rate = CRIT DMG > Energy Regen (to ~125%) > ATK% > ATK > Heavy Attack DMG = Res. Liberation DMG = Basic Attack DMG
+- **Teams:**
+  - Best (Tune Strain): Qingxiao + Denia + Mornye (Lynae / Ciaccona / Sanhua for Denia; Shorekeeper for Mornye)
+  - Hypercarry: Qingxiao + Sanhua + Mornye
+- **Rotation:**
+  - Core combo: Intro → air and ground Basic Attacks → Res. Skill → Heavy Attack (hold) → Basic Attacks → Tune Break (any time) → Heavy Attack → Res. Liberation → Outro
+  - Forte: fill both Qin Heart (Sheathed Stance) and Sword Cadence (Drawn Stance) → Heavy Attack - Stringblade enters Ephemeral Transcendence
+  - Tune Strain team: Mornye (Liberation, High Syntony Field) → Denia (Liberation, Breakdown Form, second Liberation for Erosion Field) → Outro to Qingxiao → Skill to fill Forte → Heavy Attack into Ephemeral Transcendence → hold Attack to fill second Forte → Heavy Attack + Liberation → Outro to Mornye
+- **Sequences:**
+  - S1: +16% CRIT Rate; Swordlight Ward max 2; Exorcising Seal and Juque Perdition (400% ATK) — High value
+  - S2: +40% Heavy Attack - Stringblade DMG; Mindlock limit 15 → 25 — High value
+  - S3: +100% Res. Liberation CRIT DMG; Gathered Mind applies 2 Tune Strain - Interfered — Very high value (recommended stopping point)
+  - S4: +20% team ATK for 8s after Tune Strain - Shifting — Medium value
+  - S5: +100% Judgement DMG; −30% Flight Qi cost — Low value
+  - S6: Enemies take 40% more DMG from key skills; Juque Perdition upgraded; +20% Tune Strain - Interfered response — Very high value
+- **Notes:**
+  - Limited 5-star. Game8 ranks: Main DPS SS (upgraded from S+ on Sep 10, 2026), ToA SS, Whimpering Wastes S+.
+  - Much weaker outside Tune Strain teams; few weapons fit her kit; burst-focused; Tune Strain ramp-up is weak in wave content like Whimpering Wastes.
+  - Mindlock: up to 15 stacks (25 with S2), 2% DMG per stack plus an extra 5% for the first 7 stacks; applies only to her Stringblade / Ephemeral Transcendence / Heaven's Reckoning / Liberation hits.
+  - Glint of Clouds R1: +12% ATK, 11.2% Aero DMG per stack (max 5); at max stacks the buff lasts 30s and ignores 10% DEF.
+  - Heart of Evil's Purge 5pc (allthings.how): +20% CRIT DMG and +30% Aero DMG for 15s on Tune Strain - Shifting.

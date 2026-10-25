@@ -179,8 +179,8 @@ for (const el of elements) {
 	flush();
 }
 
-if (characters.length !== 54) {
-	console.error(`Jumlah karakter ${characters.length}, diharapkan 54`);
+if (characters.length !== 60) {
+	console.error(`Jumlah karakter ${characters.length}, diharapkan 60`);
 	process.exit(1);
 }
 

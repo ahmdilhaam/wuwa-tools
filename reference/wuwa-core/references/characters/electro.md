@@ -423,3 +423,100 @@
   - State limits effectively lock her out of Quickswap; plan full rotations.
   - Unison Response cannot trigger in Co-op.
   - Shares the weekly boss Suhsin the Inevitable (Remnant of the Wheel) with Hsin.
+
+### Hsin — Main DPS (Electro)
+**Source:** Game8 (updated October 22, 2026, Patch 3.7 Phase 2), cross-referenced with buffbuff.com (updated September 21, 2026, beta data) — early-launch data, may shift after more testing
+- **Echo:** Reminiscence: Suhsin the Inevitable | Heart of Sworn Vigil (5pc) [primary — Main DPS, both Unison and Electro Flare modes]
+  - Alternative (Sub-DPS): Soulfrayer | Heart of Sworn Vigil (5pc)
+  - Alternative set (Electro Flare sub-DPS): Flash of Electric Reflection (5pc)
+  - Main DPS pattern 4-3-3-1-1; Sub-DPS pattern 3-4-3-1-1
+  - 4-cost main stat: CRIT DMG or CRIT Rate (CRIT DMG preferred with the signature weapon; balance the ratio)
+  - 3-cost: Electro DMG + ATK% (one each)
+  - 1-cost: ATK% × 2
+- **Weapons:**
+  - BiS sig: Blooming Jadehaven (R1) — CRIT Rate + ATK; unconditional All-Attribute DMG Bonus, Resonance Skill DMG and Electro DMG buffs, amplifies Electro Flare DMG
+  - #2: Lethean Elegy (R1) — CRIT Rate + ATK; Resonance Skill DMG Bonus, ignores 8% enemy DEF, unconditional ATK buff
+  - #3: Stringmaster (R1) — very high CRIT Rate; effect triggers on Resonance Skill cast
+  - #4: Cosmic Ripples (R1) — ATK% + Energy Regen; hard to balance CRIT, Basic Attack passive mostly wasted on Hsin
+  - Best 4-star (Battle Pass): Augment — ATK + CRIT Rate
+  - F2P 4-star (Electro Flare): Waltz in Masquerade — ATK%; not ideal for Unison
+  - F2P 4-star: Fusion Accretion — ATK% + 10% ATK buff
+  - Budget 4-star: Jinzhou Keeper — ATK% + 8% ATK on Intro
+- **Stats (Level 90, S0):**
+  - Game8 publishes no numeric build targets
+  - buffbuff.com long-term goal: about 70% CRIT Rate and 200% CRIT DMG
+  - ER: 115–120% (Game8) so Liberation is up every rotation; buffbuff suggests about 125% as a starting point — do not sacrifice strong CRIT pieces to hit it
+- **Forte priority:** Forte Circuit > Res. Liberation > Intro Skill > Basic Attack > Res. Skill
+  - Intro Skill matters most in Unison mode; buffbuff.com ranks Res. Skill above Intro and Basic
+- **Substats:** CRIT DMG = CRIT Rate > Energy Regen > Res. Skill DMG% > ATK% > ATK
+- **Teams:**
+  - Premium Unison: Hsin + Suoming + Shorekeeper / Verina / Mornye
+  - Electro Flare: Hsin + Rover (Electro) + Suisui / Buling
+  - Dual Unison DPS: Hsin + Jinhsi + Verina / Shorekeeper / Buling
+  - Electro Sub-DPS: Augusta + Hsin + Shorekeeper
+  - F2P: Hsin + Rover (Electro) + Buling
+- **Rotation:**
+  - Unison: Intro → 2 Basic → Heavy → Res. Liberation → Unison Outro; second Intro → 4 Basic → Heavy → Res. Liberation → Outro
+  - Electro Flare: Intro → 2 Basic → Heavy → Res. Liberation → Res. Skill → 2 Basic → Res. Skill → 4 Basic → Heavy → Res. Liberation → Outro
+  - In Unison, keep damage windows short and swap often with Suoming (buffbuff.com)
+- **Sequences:**
+  - S1: Liberation Formshift grants 2 Radiance Ward stacks (60% DMG reduction + interruption immunity); Unison Intro DMG +15% (+10% per Unison Boon stack); Electro Flare: Heart of Thunder 50 on entering combat — Medium value
+  - S2: +60% Heavy Attack multipliers on the four finishers; resets finisher cooldowns and restores 100 Answering Heart on entering combat (once per 12s) — High value
+  - S3: +70% Pillars Across Heaven multiplier; Unison: +20% CRIT DMG (+15% per Unison Boon stack); Electro Flare: extra Electro Flare instance on the last hit — Extremely high value (best stopping point for low spenders)
+  - S4: Team-wide +20% All-Attribute DMG Bonus for 30s on Electro Flare / Electro Rage / gaining Unison / Unison Response — Medium value
+  - S5: −20% damage taken in Illumining Form; fatal-hit revive once per 10 minutes — Low value
+  - S6: +40% Res. Skill DMG, ignores 20% DEF; Unison: +1 max Unison Boon stack; Electro Flare DMG can crit (80% rate, 230% DMG) — Extremely high value
+- **Notes:**
+  - Limited 5-star Rectifier; Game8 rates her Main DPS SS, Sub-DPS S, ToA SS, Whimpering Wastes SS.
+  - Two Resonance Modes: Unison (Suoming partner; Unison Outro gives 20% All DMG Amplification for 30s; Unison Boon +3% total DMG per stack) and Electro Flare (Outro gives 20% Electro DMG for 20s; Heart of Thunder up to 100 stacks from teammates' Electro Rage).
+  - Two forms: Answering Form (default) and Illumining Form (after Liberation). Forte gauges: Answering Heart (max 100), Illumining Heart (max 300).
+  - Edict (Unison): 21 stacks for 45s after Formshift, each can trigger an off-field Coordinated Attack. Mechanism Dominion lasts 13s and replaces Basic Attacks.
+  - Suoming's S2 is a strong buff for Hsin. Recommended sequence order (buffbuff.com): S0 → S2 → S3 → S6.
+
+### Rover (Electro) — Sub-DPS (Electro)
+**Source:** Game8 (updated September 30, 2026, Patch 3.7 Phase 2), cross-referenced with wuwabuild.com (Patch 3.7, updated August 21, 2026; labels Rover a Support/buffer) — Game8 lists no numeric stat targets
+- **Echo:** Soulfrayer | Flash of Electric Reflection (5pc) [primary — Electro Flare sub-DPS, cost 3/4/3/1/1]
+  - Alternative (Negative Status teams): Impermanence Heron | Moonlit Clouds (5pc), cost 4/3/3/1/1
+  - Alternative (dual 2pc): Voidwing Moth | Void Thunder (2pc) + Reel of Spliced Memories (2pc) — slightly lower personal damage, better buffing
+  - Alternative (damage-focused): Nightmare: Tempest Mephis (passive Electro DMG and Resonance Skill DMG)
+  - 4-cost main stat: CRIT Rate or CRIT DMG
+  - 3-cost: Electro DMG × 2
+  - 1-cost: ATK% × 2
+- **Weapons:**
+  - BiS: Blazing Brilliance (R1) — CRIT DMG; stackable Resonance Skill DMG buffs, unconditional ATK passive
+  - Best budget: Emerald of Genesis (R1) — CRIT Rate; unconditional Energy Regen, stackable ATK from skill
+  - Alt: Red Spring — high ATK + CRIT Rate, no weapon-skill benefit (wuwabuild ranks it #2, 91.1%)
+  - Alt: Azure Oath — wuwabuild 90.4%
+  - 4-star: Somnoire Anchor — universal ATK / CRIT Rate effect
+  - 4-star: Commando of Conviction — ATK buff on Intro Skill
+  - 4-star: Endless Collapse — ATK buff + extra Resonance Energy
+  - F2P: Fables of Wisdom — stackable ATK vs. Negative Status targets
+  - Budget: Feather Edge (named by wuwabuild)
+- **Stats (Level 90, S0):**
+  - No numeric targets published
+  - Priority: CRIT Rate / CRIT DMG, Electro DMG on 3-costs, Energy Regen ~120%
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Res. Skill > Intro Skill
+- **Substats:** CRIT Rate > CRIT DMG > Energy Regen (~120%) > Res. Skill DMG% > ATK% > ATK
+  - wuwabuild instead puts Energy Regen first (until satisfied) > CRIT Rate = CRIT DMG > ATK%
+- **Teams:**
+  - Best (Electro Flare): Hsin + Rover (Electro) + Suisui (Chisa or Buling can replace Suisui)
+  - Negative Status: Yangyang: Xuanling + Rover (Electro) + Chisa (Hiyuki or Aemeath can replace Yangyang: Xuanling); Game8 advises against Zani and Cartethyia here
+  - Backup buffer (wuwabuild): Rover (Electro) + Hiyuki + Shorekeeper; or Rover (Electro) + Jianxin + Verina
+- **Rotation:**
+  - Electro Flare: Suisui (build Forte, Res. Skill stance switch, Liberation, Echo Skill) → Outro to Rover → Intro → Res. Skill + Basic Attacks to fill Forte → empowered Res. Skill → Res. Liberation → Echo Skill → Outro to Hsin → Hsin: fill Forte → Res. Liberation → Res. Skill → Mechanism Dominion → Res. Liberation → Outro to Suisui (Suisui opener can be skipped after the first cycle)
+  - Standard combo: Intro → Res. Skill → Basic Attacks until full Forte → Res. Skill (press) → Res. Liberation → Echo Skill → Outro
+  - Extended combo (maximize own damage): Intro → Basic Attacks until full Forte → Res. Skill (held) → repeated Res. Skill presses until Concerto is full → Res. Liberation → Outro
+- **Sequences:**
+  - S1: Interruption resistance for 0.5s on Basic Attack and Thrum of All Sounds — Medium value
+  - S2: Inflicts 5 Electro Flare stacks after Res. Liberation — High value
+  - S3: +20% Overshock DMG Multiplier — Medium value
+  - S4: +20% Res. Liberation DMG Multiplier — Medium value
+  - S5: +20% CRIT DMG in Apex Resonance — High value
+  - S6: +20% DMG Multiplier on Thrum of All Sounds and Thunder Bane — High value
+- **Notes:**
+  - Free character (Chapter 4 Act 2, defeat Myriad Snare: Rustfire Chassis); released Patch 3.5; the Hsin Electro Flare team (Patch 3.7) made Rover a competitive meta pick.
+  - Game8 ratings: Sub-DPS S, Tower of Adversity S, Whimpering Wastes S.
+  - Overshock (press): clears Electric Surge and gives the team +10% ATK for 20s. Overshock (hold): enters Apex Resonance, unlocks Thrum of All Sounds, consumes Thunder Rage.
+  - Outro: +25% All DMG Amplification for 14s to Negative Status characters.
+  - Parry: holding Basic Attack gives interruption immunity and 60% damage reduction; release triggers Riposte Strike.
+  - Press Res. Skill as a sub-DPS (shorter field time, faster ATK buff); hold it only to maximize personal damage.

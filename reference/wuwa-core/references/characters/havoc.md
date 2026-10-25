@@ -440,3 +440,51 @@
 | Cantarella | Hybrid / Healer | Rectifier | Lorelei | Midnight Veil / Moonlit Clouds | 65–80% | 120–140% | 20% Havoc + 25% Skill Deepen |
 | Phrolova | Main DPS / SubDPS | Rectifier | NM: Hecate | Dream of the Lost 3pc + 2pc | 60%+ | **100% (NO ER)** | 20% Havoc + 25% Heavy ATK Deepen |
 | Chisa | Support (Neg. Status) | Broadblade | Rem: Threnodian-Leviathan | Thread of Severed Fate 3pc + 2pc | 65–80% | 125% | Neg. Status cap +3 stacks |
+
+### Yangyang: Xuanling — Main DPS (Havoc)
+**Source:** Game8 (updated September 15, 2026, Patch 3.7 Phase 2), cross-referenced with allthings.how (updated September 8, 2026) — Game8 gives no numeric stat targets
+- **Echo:** Thousand-Puppet Pavilion | Song of Feathered Trace (5pc) [primary — BiS]
+  - Alternative (Thread split): Reminiscence: Threnodian - Leviathan | Thread of Severed Fate (3pc) + Havoc Eclipse (2pc)
+  - Alternative (early): Nightmare: Crownless | Havoc Eclipse (5pc)
+  - Cost pattern 4-3-3-1-1
+  - 4-cost main stat: CRIT Rate or CRIT DMG
+  - 3-cost: Havoc DMG × 2
+  - 1-cost: ATK% × 2
+- **Weapons:**
+  - BiS sig: Azure Oath (R1) — CRIT Rate; strong Heavy Attack DMG effect
+  - #2–#4: Emerald Sentence / Emerald of Genesis / Red Spring (R1) — CRIT Rate stat-sticks
+  - Best permanent 5-star (F2P): Emerald of Genesis (R1)
+  - Best 4-star: Lumingloss (R5) — ATK%
+  - Budget 4-star: Somnoire Anchor / Endless Collapse / Fables of Wisdom (R5)
+  - Budget 4-star: Commando of Conviction (R5)
+- **Stats (Level 90, S0):**
+  - No numeric targets published; prioritize CRIT Rate, CRIT DMG, ATK, Havoc DMG, Heavy Attack DMG
+  - ER: at least 115% (allthings.how: 115–120%)
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Res. Skill = Intro Skill
+  - Game8 target levels: Forte Circuit 5/5, Liberation 5/5, Basic 3/5, Skill 2/5, Intro 2/5
+- **Substats:** CRIT Rate = CRIT DMG > Energy Regen (to 115%) = Heavy Attack DMG% = ATK% > ATK
+- **Teams:**
+  - Premium Havoc Bane: Yangyang: Xuanling + Chisa + Suisui (Cantarella / Roccia for Chisa; Shorekeeper / Mornye / Verina for Suisui)
+  - Heavy Attack Hypercarry: Yangyang: Xuanling + Rebecca + Chisa (Mortefi / Iuno for Rebecca; Mornye / Verina for Chisa)
+  - Havoc Dual DPS: Yangyang: Xuanling + Phrolova + Shorekeeper (Danjin for Phrolova; Mornye / Verina for Shorekeeper)
+  - Tune Break: Yangyang: Xuanling + Lynae + Mornye
+  - F2P: Yangyang: Xuanling + Rover (Electro) + Verina
+- **Rotation:**
+  - Core loop: Intro → hold Heavy Attack → Res. Skill (stance switch) → hold Heavy Attack → Res. Liberation → Res. Skill → Heavy Attack → Outro
+  - Extended: adds a Basic Attack and a Feather-stance Heavy Attack for more damage, at the cost of about 3.5s field time
+  - Premium team: Suisui (fill Forte, switch stance) → Chisa (basic string + Liberation) → Yangyang: Xuanling (hold Heavy Attack until Forte depleted → Skill → Heavy Attack → Liberation → Skill → Heavy Attack) → Outro to Suisui → repeat
+  - Basic Attacks consume Melody (max 100); when Melody is empty, Res. Skill becomes Sword Stance Flow, which restores 100 Melody and grants 1 Azure Plume (max 2); two Plumes unlock the enhanced Heavy Attack
+- **Sequences:**
+  - S1: Interruption immunity on key attacks — High value
+  - S2: Boosts empowered Heavy Attacks and adds an Azure Plume — High value
+  - S3: Boosts her highest-damage skill; +3 Havoc Bane stack cap — Extremely high value (best early stopping point)
+  - S4: Team-wide ATK boost — Medium value
+  - S5: Revive effect, little direct damage — Low value
+  - S6: +40% Heavy Attack DMG for 30s after inflicting Havoc Bane; summons Shadow of Xuanling (337.98% ATK Havoc DMG, guaranteed CRIT, counts as Heavy Attack, up to 5 summons, 25s cooldown) — Extremely high value
+- **Notes:**
+  - Limited 5-star Havoc Sword, distinct from the 4-star Aero Yangyang. Game8 rankings: Main DPS SS, Tower of Adversity SS, Whimpering Wastes S+.
+  - Damage comes mostly from empowered Heavy Attacks fueled by Melody / Azure Plume / stance switching.
+  - Keeping Havoc Bane active maintains the Song of Feathered Trace bonus (5pc: +20% CRIT Rate and +35% Heavy Attack DMG for 15s on Havoc Bane).
+  - Havoc Bane amplification: 10% per stack up to 30% (1–3 stacks), 12% per stack up to 36% (4–6 stacks); Chisa and her own S3 each raise the stack cap by 3.
+  - Outro deals Havoc DMG equal to 300% of her ATK.
+  - allthings.how: keep CRIT Rate slightly under the cap before the set activates, since the set adds CRIT Rate.
