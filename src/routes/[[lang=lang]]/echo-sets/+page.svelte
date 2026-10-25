@@ -1,6 +1,7 @@
 <script lang="ts">
 	import sonataSets from '#lib/data/game/sonata-sets.json';
-	import type { SonataSet } from '#lib/data/game/types.ts';
+	import echoData from '#lib/data/game/echoes.json';
+	import type { GameEcho, SonataSet } from '#lib/data/game/types.ts';
 	import { echoSets, comboNotes } from '#lib/data/echo-sets.ts';
 	import { normalizeName } from '#lib/data/merged.ts';
 	import { gameText, t } from '#lib/i18n/index.svelte.ts';
@@ -16,6 +17,16 @@
 
 	const notesByKey = new Map(echoSets.map((s) => [key(s.name), s]));
 
+	// Echo per set. Satu nama bisa punya beberapa id (varian), tampilkan sekali saja.
+	const echoesBySet = new Map<number, { name: string; icon: string }[]>();
+	for (const e of echoData as GameEcho[]) {
+		for (const id of e.setIds) {
+			const list = echoesBySet.get(id) ?? [];
+			if (!list.some((x) => x.name === e.name)) list.push({ name: e.name, icon: e.icon });
+			echoesBySet.set(id, list);
+		}
+	}
+
 	const rows = (sonataSets as SonataSet[]).map((s) => {
 		const hand = notesByKey.get(key(s.name));
 		return {
@@ -27,16 +38,21 @@
 			forCharacter: hand?.forCharacter,
 			// Urut per jumlah keping; set 3pc tidak punya bonus 2pc/5pc.
 			bonuses: [...s.bonuses].sort((a, b) => a.pieces - b.pieces).map((b) => ({ pieces: b.pieces, text: b.text.en })),
-			echoCount: s.echoIds.length
+			echoes: echoesBySet.get(s.id) ?? []
 		};
 	});
 
 	let query = $state('');
+	const q = $derived(query.trim().toLowerCase());
+	const echoHit = (name: string) => q !== '' && name.toLowerCase().includes(q);
 	const filtered = $derived(
-		rows.filter((r) => {
-			const q = query.trim().toLowerCase();
-			return q === '' || r.name.toLowerCase().includes(q) || r.abbrev.some((a) => a.toLowerCase().includes(q));
-		})
+		rows.filter(
+			(r) =>
+				q === '' ||
+				r.name.toLowerCase().includes(q) ||
+				r.abbrev.some((a) => a.toLowerCase().includes(q)) ||
+				r.echoes.some((e) => echoHit(e.name))
+		)
 	);
 </script>
 
@@ -63,7 +79,7 @@
 			<tr>
 				<th>{t('library.echoSets.set')}</th>
 				<th>{t('library.echoSets.abbreviation')}</th>
-				<th class="num">{t('library.echoSets.echoes')}</th>
+				<th>{t('library.echoSets.echoes')}</th>
 				<th>{t('library.echoSets.bonus')}</th>
 			</tr>
 		</thead>
@@ -78,7 +94,20 @@
 						{#if r.note}<div class="muted small">{gameText(r.note)}</div>{/if}
 					</td>
 					<td class="muted">{r.abbrev.join(', ') || '—'}</td>
-					<td class="num">{r.echoCount}</td>
+					<td class="echoes">
+						<!-- Terbuka otomatis kalau pencarian cocok dengan salah satu echo di set ini -->
+						<details open={r.echoes.some((e) => echoHit(e.name))}>
+							<summary>{t('library.echoSets.echoCount', { count: r.echoes.length })}</summary>
+							<ul>
+								{#each r.echoes as e (e.name)}
+									<li class:hit={echoHit(e.name)}>
+										{#if e.icon}<img src={e.icon} alt="" loading="lazy" width="24" height="24" />{/if}
+										<span>{e.name}</span>
+									</li>
+								{/each}
+							</ul>
+						</details>
+					</td>
 					<td class="txt">
 						<dl class="bonuses">
 							{#each r.bonuses as b (b.pieces)}
@@ -132,6 +161,36 @@
 	}
 	.txt {
 		min-width: 22rem;
+	}
+	.echoes {
+		min-width: 13rem;
+	}
+	.echoes summary {
+		cursor: pointer;
+		font-size: var(--fs-sm);
+		white-space: nowrap;
+	}
+	.echoes ul {
+		list-style: none;
+		margin: 0.5rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.3rem;
+	}
+	.echoes li {
+		display: flex;
+		gap: 0.45rem;
+		align-items: center;
+		font-size: var(--fs-sm);
+		border-radius: var(--radius-sm);
+	}
+	.echoes li img {
+		border-radius: var(--radius-sm);
+		flex: none;
+	}
+	.echoes li.hit {
+		color: var(--gold);
+		font-weight: 600;
 	}
 	.bonuses {
 		display: grid;
