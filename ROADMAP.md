@@ -49,7 +49,7 @@ Status legend: ☐ not started · ◐ in progress · ☑ done
 
 **Done when:** a sample build matches an in-game attribute page within rounding.
 
-## 4. Echo scorer ☐
+## 4. Echo scorer ☑
 
 **Why:** players want to know if an echo is worth keeping.
 

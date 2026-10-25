@@ -1,9 +1,11 @@
 import { calc_id } from './dict/calc.id.ts';
 import { library_id } from './dict/library.id.ts';
+import { echo_id } from './dict/echo.id.ts';
 // Kamus bahasa Indonesia: sumber kebenaran struktur. en.ts harus mengikuti bentuk yang sama.
 export const id = {
 	calc: calc_id,
 	library: library_id,
+	echo: echo_id,
 	layout: {
 		skip: 'Lewati ke konten',
 		brandLabel: 'WuWa Tools, beranda',
@@ -13,6 +15,7 @@ export const id = {
 			calculator: 'Kalkulator',
 			characters: 'Resonator',
 			echoSets: 'Echo set',
+			echoScorer: 'Penilai echo',
 			weapons: 'Senjata',
 			mechanics: 'Mekanik'
 		},

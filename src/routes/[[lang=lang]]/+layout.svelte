@@ -20,6 +20,7 @@
 		{ href: '/calculator/', label: 'layout.nav.calculator' },
 		{ href: '/characters/', label: 'layout.nav.characters' },
 		{ href: '/echo-sets/', label: 'layout.nav.echoSets' },
+		{ href: '/echo-scorer/', label: 'layout.nav.echoScorer' },
 		{ href: '/weapons/', label: 'layout.nav.weapons' },
 		{ href: '/mechanics/', label: 'layout.nav.mechanics' }
 	] as const;
@@ -235,7 +236,7 @@
 		.topbar .inner {
 			padding-top: 0.5rem;
 		}
-		/* Lima tautan muat dalam dua baris; lebih rapi daripada scroll horizontal. */
+		/* Enam tautan muat dalam dua baris; lebih rapi daripada scroll horizontal. */
 		nav {
 			order: 2;
 			width: 100%;

@@ -1,11 +1,13 @@
 import type { Dict } from './id.ts';
 import { calc_en } from './dict/calc.en.ts';
 import { library_en } from './dict/library.en.ts';
+import { echo_en } from './dict/echo.en.ts';
 
 // Tipe Dict membuat kunci yang kurang atau berlebih menjadi error compile.
 export const en = {
 	calc: calc_en,
 	library: library_en,
+	echo: echo_en,
 	layout: {
 		skip: 'Skip to content',
 		brandLabel: 'WuWa Tools, home',
@@ -15,6 +17,7 @@ export const en = {
 			calculator: 'Calculator',
 			characters: 'Resonators',
 			echoSets: 'Echo sets',
+			echoScorer: 'Echo scorer',
 			weapons: 'Weapons',
 			mechanics: 'Mechanics'
 		},
