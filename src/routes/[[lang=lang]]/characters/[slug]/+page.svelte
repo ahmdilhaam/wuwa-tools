@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { inlineMd } from '#lib/data/format.ts';
 	import { formatNumber, getLocale, localize, t } from '#lib/i18n/index.svelte.ts';
 	import type { CharacterSection } from '#lib/data/types.ts';
@@ -64,7 +66,50 @@
 	const skillsTranslated = $derived(hasTranslation(skills?.skills ?? []));
 	const seqTranslated = $derived(hasTranslation(skills?.sequences ?? []));
 	const movingSkills = $derived((skills?.skills ?? []).filter((sk) => sk.hits.length > 0));
+
+	// Tab detail; Build selalu ada dan jadi default, tab skill hanya bila data skill tersedia.
+	type Tab = 'build' | 'skill' | 'mv' | 'sequence';
+	const tabs = $derived<{ id: Tab; label: string }[]>([
+		{ id: 'build', label: t('library.detail.section.build') },
+		...(skills
+			? ([
+					{ id: 'skill', label: t('library.detail.section.skill') },
+					{ id: 'mv', label: t('library.detail.section.motionValue') },
+					{ id: 'sequence', label: t('library.detail.section.sequence') }
+				] as const)
+			: [])
+	]);
+	let selected = $state<Tab>('build');
+	// Kembali ke Build bila tab terpilih tidak ada di karakter lain.
+	const active = $derived(tabs.some((x) => x.id === selected) ? selected : 'build');
+	// Tab disinkronkan ke hash URL (#skill, #mv, #sequence); Build tanpa hash.
+	const isTab = (v: string): v is Tab => ['build', 'skill', 'mv', 'sequence'].includes(v);
+	const readHash = () => {
+		const h = location.hash.slice(1);
+		selected = isTab(h) ? h : 'build';
+	};
+	const select = (id: Tab) => {
+		selected = id;
+		goto(id === 'build' ? location.pathname + location.search : `#${id}`, { shallow: true, replace: true });
+	};
+	onMount(readHash);
+	// Panah kiri/kanan, Home, End memindah tab sesuai pola WAI-ARIA tabs.
+	const onTabKey = (e: KeyboardEvent) => {
+		const i = tabs.findIndex((x) => x.id === active);
+		const next =
+			e.key === 'ArrowRight' ? (i + 1) % tabs.length
+			: e.key === 'ArrowLeft' ? (i - 1 + tabs.length) % tabs.length
+			: e.key === 'Home' ? 0
+			: e.key === 'End' ? tabs.length - 1
+			: -1;
+		if (next < 0) return;
+		e.preventDefault();
+		select(tabs[next].id);
+		document.getElementById(`tab-${selected}`)?.focus();
+	};
 </script>
+
+<svelte:window onhashchange={readHash} />
 
 <svelte:head>
 	<title>{t('library.pageTitle', { name: game.name })}</title>
@@ -89,20 +134,25 @@
 	</div>
 </header>
 
-<nav class="subnav" aria-label={t('library.detail.subnavLabel')}>
-	{#if c}<a href="#build">{t('library.detail.section.build')}</a>{/if}
-	{#if skills}
-		<a href="#skill">{t('library.detail.section.skill')}</a>
-		<a href="#mv">{t('library.detail.section.motionValue')}</a>
-		<a href="#sequence">{t('library.detail.section.sequence')}</a>
-	{/if}
-</nav>
+<div class="tabs" role="tablist" aria-label={t('library.detail.subnavLabel')}>
+	{#each tabs as tab (tab.id)}
+		<button
+			type="button"
+			role="tab"
+			id="tab-{tab.id}"
+			aria-selected={active === tab.id}
+			aria-controls="panel-{tab.id}"
+			tabindex={active === tab.id ? 0 : -1}
+			onclick={() => select(tab.id)}
+			onkeydown={onTabKey}>{tab.label}</button
+		>
+	{/each}
+</div>
 
-{#if !c}
-	<p class="notice">{t('library.detail.noBuildNotice')}</p>
-{:else}
-	<section id="build" class="block">
-		<h2>{t('library.detail.section.build')}</h2>
+<div id="panel-build" class="block" role="tabpanel" tabindex="0" aria-labelledby="tab-build" hidden={active !== 'build'}>
+	{#if !c}
+		<p class="notice">{t('library.detail.noBuildNotice')}</p>
+	{:else}
 		<div class="sections">
 			{#each blocks as { title, s }, i (i)}
 				<section class="sec">
@@ -117,12 +167,11 @@
 				</section>
 			{/each}
 		</div>
-	</section>
-{/if}
+	{/if}
+</div>
 
 {#if skills}
-	<section id="skill" class="block">
-		<h2>{t('library.detail.section.skill')}</h2>
+	<div id="panel-skill" class="block" role="tabpanel" tabindex="0" aria-labelledby="tab-skill" hidden={active !== 'skill'}>
 		{#if skillsTranslated}
 			<button type="button" class="toggle" aria-pressed={showOtherSkill} onclick={() => (showOtherSkill = !showOtherSkill)}>
 				{toggleLabel(showOtherSkill)}
@@ -144,10 +193,9 @@
 				{/each}
 			</div>
 		{/each}
-	</section>
+	</div>
 
-	<section id="mv" class="block">
-		<h2>{t('library.detail.section.motionValue')}</h2>
+	<div id="panel-mv" class="block" role="tabpanel" tabindex="0" aria-labelledby="tab-mv" hidden={active !== 'mv'}>
 		<div class="levels">
 			<span class="muted" id="lvl-label">{t('library.detail.skillLevel')}</span>
 			<div class="segmented" role="group" aria-labelledby="lvl-label">
@@ -178,10 +226,9 @@
 				</div>
 			</div>
 		{/each}
-	</section>
+	</div>
 
-	<section id="sequence" class="block">
-		<h2>{t('library.detail.section.sequence')}</h2>
+	<div id="panel-sequence" class="block" role="tabpanel" tabindex="0" aria-labelledby="tab-sequence" hidden={active !== 'sequence'}>
 		{#if seqTranslated}
 			<button type="button" class="toggle" aria-pressed={showOtherSeq} onclick={() => (showOtherSeq = !showOtherSeq)}>
 				{toggleLabel(showOtherSeq)}
@@ -198,7 +245,7 @@
 				</li>
 			{/each}
 		</ol>
-	</section>
+	</div>
 {/if}
 
 <style>
@@ -259,21 +306,31 @@
 		margin: 0.3rem 0 0;
 		font-size: var(--fs-xs);
 	}
-	.subnav {
+	.tabs {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.25rem 1.25rem;
-		margin: 1.25rem 0 0.5rem;
-		padding: 0.6rem 0;
+		gap: 0 1.25rem;
+		margin: 1.25rem 0 0;
 		border-bottom: 1px solid var(--border);
+	}
+	.tabs button {
+		background: none;
+		border: 0;
+		border-bottom: 2px solid transparent;
+		margin-bottom: -1px;
+		padding: 0.6rem 0;
+		color: var(--text-muted);
+		font: inherit;
 		font-size: var(--fs-sm);
 		font-weight: 500;
+		cursor: pointer;
 	}
-	.subnav a {
-		text-decoration: none;
+	.tabs button:hover {
+		color: var(--text);
 	}
-	.subnav a:hover {
-		text-decoration: underline;
+	.tabs button[aria-selected='true'] {
+		color: var(--text);
+		border-bottom-color: var(--gold);
 	}
 	.notice {
 		margin: 1rem 0;
@@ -283,8 +340,7 @@
 		font-size: var(--fs-sm);
 	}
 	.block {
-		margin-top: 2.5rem;
-		scroll-margin-top: 4.5rem;
+		margin-top: 1.5rem;
 	}
 	.sections {
 		display: grid;
