@@ -79,7 +79,7 @@ Status legend: ☐ not started · ◐ in progress · ☑ done
 
 **Done when:** a manual `workflow_dispatch` run opens a PR (or reports "no changes").
 
-## 7. Complete build data ☐
+## 7. Complete build data ☑
 
 **Why:** 7 characters show "no build data yet", and Aero data is from Patch 3.2.
 

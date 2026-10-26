@@ -199,8 +199,7 @@ for (const c of characters) {
 	if (!c.weapons) miss.push('weapons');
 	if (!c.stats) miss.push('stats');
 	if (c.echo.length === 0) miss.push('echo');
-	if (c.rarity === null) miss.push('rarity');
-	if (c.weaponType === null) miss.push('weaponType');
+	// rarity & weaponType tidak dicek: situs memakai nilai dari data game (lihat src/lib/data/merged.ts).
 	if (miss.length) {
 		gaps++;
 		console.log(`  ${c.slug} (${c.element}): ${miss.join(', ')}`);

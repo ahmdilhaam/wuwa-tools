@@ -1,6 +1,6 @@
 # Wuthering Waves — Aero Element Character Build Reference
 **Sources:** Prydwen.gg (primary), Wutheringlab (cross-reference)
-**Last fetched:** June 2026 (Patch 3.2 data)
+**Last fetched:** 2026-10-26 (Patch 3.7 data; Prydwen profile updates 22 Oct 2026)
 
 ---
 
@@ -24,6 +24,7 @@
   - Best: Carlotta + Yangyang + Shorekeeper/Verina
   - Alt: Xiangli Yao + Yangyang + Shorekeeper/Verina (quickswap required)
   - Alt: Changli + Yangyang + Shorekeeper/Verina (quickswap required)
+  - F2P: Jiyan + Yangyang + Baizhi
 - **Rotation:**
   1. Basic P3 → Heavy Atk → Heavy Atk: Zephyr Song
   2. Ultimate (cancel endlag) → Basic P1 → Heavy Atk → Heavy Atk: Zephyr Song
@@ -73,6 +74,8 @@
   - Best DPS: Aalto + Ciaccona + Rover (Aero)
   - Hybrid (Jiyan): Jiyan + Iuno + Aalto + Shorekeeper/Verina
   - Budget DPS: Aalto + Sanhua + Shorekeeper/Verina + Rover (Aero)
+  - Jiyan Aero: Jiyan + Aalto + Shorekeeper
+  - Cartethyia Erosion: Cartethyia + Aalto + Rover (Aero)
 - **Rotation (Hybrid support):**
   1. Use Skill during another character's rotation to allow cooldown refresh
   2. Intro → Ultimate → Skill: Mist Avatar (if off cooldown) → Basic P1–P5 → Echo → Outro
@@ -93,7 +96,7 @@
 ---
 
 ### Jiyan — Main DPS (Aero)
-**Source:** Prydwen.gg (last major update Patch 3.2)
+**Source:** Prydwen.gg (last major update Patch 3.7)
 - **Rarity/Weapon:** 5★ Broadblade
 - **Echo (Best, needs Erosion applier):** Nightmare: Kelpie | Windward Pilgrimage (5pc)
   - 4-cost main stat: CRIT Rate (or CRIT DMG)
@@ -104,7 +107,9 @@
   - BiS Sig: Verdant Summit R1 (ATK ~587, CRIT DMG secondary; Heavy ATK DMG Bonus) — 100%
   - Alt: Thunderflare Dominion R1 (Augusta's sig; CRIT Rate + Heavy DMG) — 90.3%
   - Alt: Ages of Harvest R1 (general DMG Bonus + ATK + CRIT Rate) — 88.3%
-  - Alt: Radiance Cleaver R1 (ATK + CRIT DMG stat-stick) — 86.3%
+  - Alt: Kumokiri R1 (ATK + CRIT Rate stat-stick) — 86.9%
+  - Alt: Wildfire Mark R1 (ATK + CRIT DMG stat-stick) — 86.3%
+  - Perm: Radiance Cleaver R1 (ATK + CRIT DMG stat-stick; best permanent) — 86.3%
   - F2P BP: Aureate Zenith R5 (ATK 412, CRIT DMG; ATK + Heavy DMG passive) — 83.2%
   - F2P: Meditations on Mercy R5 (craftable; ATK-heavy, best with Negative Statuses) — 73.1%
 - **Stats (S0):** ATK 1900–2700+, ER 115–125%, CR 65–80%, CD 215–260%
@@ -115,6 +120,7 @@
   - Best: Jiyan + Iuno + Mortefi/Phrolova + Shorekeeper
   - Erosion: Jiyan + Ciaccona + Shorekeeper + Rover (Aero)
   - Budget: Jiyan + Mortefi + Verina/Shorekeeper
+  - F2P: Jiyan + Yangyang + Baizhi
 - **Rotation:**
   1. Echo (before burst) → Intro → Forte: Emerald Storm
   2. Heavy ATK: Lance of Qingloong P1 (interrupt via Skill)
@@ -182,23 +188,32 @@
 ---
 
 ### Ciaccona — Sub-DPS / Support (Aero)
-**Source:** Prydwen.gg + Wutheringlab (cross-referenced, last update Patch 2.6 / June 2026)
+**Source:** Prydwen.gg (last major update Patch 3.0; profile updated Oct 2026)
 - **Rarity/Weapon:** 5★ Pistol
-- **Echo (Best — Aero Erosion teams):** Reminiscence: Fleurdelys | Gusts of Welkin (5pc)
-  - Alt: Nightmare: Kelpie | Gusts of Welkin (5pc)
+- **Echo (Best — teams with an Aero Main DPS):** Nightmare: Kelpie | Gusts of Welkin (5pc) — 100%
+  - Alt: Reminiscence: Fleurdelys | Gusts of Welkin (5pc) — only a very small gap to Kelpie; use it if its substats are better or Lux & Umbra is the weapon
+  - Teams without an Aero Main DPS: Impermanence Heron | Moonlit Clouds (5pc) — 75.35%
+  - Main DPS Ciaccona: Nightmare: Kelpie | Windward Pilgrimage (5pc)
   - 4-cost main stat: CRIT Rate or CRIT DMG (complement weapon secondary)
-  - 3-cost: Aero DMG + Energy Regen (one of each)
+  - 3-cost: Aero DMG > ATK% (Aero DMG × 2 also works)
   - 1-cost: ATK% × 2
 - **Weapons:**
   - BiS Sig: Woodland Aria R1 (ATK 500, CRIT Rate 36%) — 100%; +12% ATK, +48% Aero DMG Bonus on Erosion, -10% Aero RES on targets with Erosion
-  - Perm: Static Mist R1 (ATK 587, CRIT Rate 24.3%) — 80%; strong for hybrid/buffer role
-  - Alt: The Last Dance R1 (ATK 500, CRIT DMG 72%) — 83.8%; best non-sig DPS option
-  - F2P: Cadenza R5 (Energy Regen) — usable for ER-intensive rotations
-- **Stats:** ATK 1600–2200+, ER 120–140% (Aero Erosion team) or 140%+ (Spectro Frazzle teams), CR 60–75%, CD 215–270%
-- **Forte priority:** Resonance Liberation > Basic Attack > Forte Circuit > Resonance Skill > Intro Skill
-- **Substats:** ER (until breakpoint) > CRIT Rate = CRIT DMG > ATK% > Flat ATK > Liberation DMG Bonus
+  - Perm: Phasic Homogenizer R1 (ATK, DMG Bonus, CRIT DMG generalist) — 87.3%; best permanent option, better than Static Mist outside ATK-buff teams
+  - Alt: Spectrum Blaster R1 (Lynae's sig; Basic ATK DMG + CRIT Rate + ATK) — 84.2%
+  - Alt: Lux & Umbra R1 (Galbrena's sig; ATK + CRIT DMG, Heavy ATK DMG Amplify + DEF Ignore; pair with Reminiscence: Fleurdelys) — 84.1%
+  - Alt: The Last Dance R1 (ATK 500, CRIT DMG 72%) — 80.2%
+  - Perm: Static Mist R1 (ATK 587, CRIT Rate 24.3%) — 79.3%; gives 10% ATK to next character on Outro
+  - F2P: Romance in Farewell R5 (ATK; best 4-star / no-gacha, strong with constant Aero Erosion) — 72.7%
+- **Stats:** HP 16500+, ATK 2000–2200+, ER 115%+, CR 55–80%, CD 225–280%, Aero DMG Bonus 30–80%+
+- **Forte priority:** Resonance Liberation > Basic Attack > Forte Circuit > Intro Skill > Resonance Skill
+  - Skill and Intro can be skipped when levelling at minimal loss
+- **Substats:** ER (until satisfied) > CRIT Rate = CRIT DMG > ATK% > Flat ATK
 - **Teams:**
   - Best — Aero Erosion: Cartethyia + Ciaccona + Rover (Aero)
+  - Premium Erosion: Cartethyia + Ciaccona + Chisa
+  - Tune Strain: Qingxiao + Denia + Ciaccona
+  - Echo Skill: Sigrika + Qiuyuan + Ciaccona
   - Jiyan Erosion: Jiyan + Iuno + Ciaccona + Shorekeeper
   - Spectro Frazzle: Phoebe + Ciaccona + Shorekeeper/Verina
   - Frazzle Alt: Zani + Ciaccona + Shorekeeper/Verina
@@ -231,7 +246,7 @@
 ---
 
 ### Rover (Aero) — Support / Sub-DPS (Aero)
-**Source:** Prydwen.gg (last major update Patch 2.6)
+**Source:** Prydwen.gg (last major update Patch 3.7)
 - **Rarity/Weapon:** 5★ Sword (free character)
 - **Echo (Best for Cartethyia team):** Bell-Borne Geochelone | Rejuvenating Glow (5pc)
   - Alt (High investment Cartethyia+Ciaccona only): Reminiscence: Fleurdelys | Windward Pilgrimage (5pc)
@@ -275,7 +290,7 @@
 ---
 
 ### Cartethyia — Main DPS (Aero)
-**Source:** Prydwen.gg (last major update Patch 3.0)
+**Source:** Prydwen.gg (last major update Patch 3.6)
 - **Rarity/Weapon:** 5★ Sword
 - **Echo:** Reminiscence: Fleurdelys | Windward Pilgrimage (5pc)
   - 4-cost main stat: CRIT Rate (slot 1)
@@ -284,10 +299,12 @@
   - IMPORTANT: Cartethyia scales off HP, not ATK — use HP% not ATK% on 1-cost slots
 - **Weapons:**
   - BiS Sig: Defier's Thorn R1 (HP% secondary + 8% DEF Ignore + 20% DMG Amplify to targets with Erosion) — 100%
-  - Alt: Red Spring R1 (CRIT Rate 24.3% + 30% Basic ATK DMG Bonus) — 79.5%
-  - BP: Feather Edge R5 (CRIT Rate 20.3% + Liberation DMG Bonus; not penalized by low Base ATK as she scales HP) — 76.3%
-  - Perm: Emerald of Genesis R1 (CRIT Rate + ER; best permanently available option) — 75.7%
-  - Last resort: Guardian Sword R5 (only other HP% Sword in the game) — 72.3%
+  - Alt: Red Spring R1 (CRIT Rate 24.3% + 30% Basic ATK DMG Bonus) — 81.4%
+  - Alt: Blazing Brilliance R1 (Changli's sig; CRIT DMG) — 79.5%
+  - BP: Feather Edge R5 (CRIT Rate 20.3% + Liberation DMG Bonus; not penalized by low Base ATK as she scales HP) — 79.1%
+  - Alt: Emerald Sentence R1 (Qiuyuan's sig; CRIT Rate) — 78.7%
+  - Perm: Emerald of Genesis R1 (CRIT Rate + ER; best permanently available option) — 78.6%
+  - Last resort: Guardian Sword R5 (only other HP% Sword in the game) — 75.8%
 - **Stats:** HP 35000–50000+, CR 65–80%, CD 240–270%, ER 110%+, Aero DMG Bonus 30%+
   - NO ATK threshold — she scales entirely off HP
 - **Forte priority:** Forte Circuit > Resonance Liberation > Basic Attack > Resonance Skill > Intro Skill
@@ -296,7 +313,7 @@
 - **Teams:**
   - Best: Cartethyia + Ciaccona + Rover (Aero)/Chisa [Chisa only better with her sig]
   - Alt: Cartethyia + Ciaccona + Shorekeeper [Whimpering Wastes where Erosion ramp is slow]
-  - Budget: Cartethyia + Sanhua + Rover (Aero)/Shorekeeper
+  - Budget: Cartethyia + Sanhua/Aalto + Rover (Aero)/Shorekeeper
   - S2+: Cartethyia + Ciaccona + Shorekeeper [S2 lets her self-generate 6 Erosion stacks, removing Rover need]
 - **Rotation:**
   1. Intro → Basic P2 → P3 → P4 → Skill: Sword to Bear Their Names
@@ -326,20 +343,26 @@
 ---
 
 ### Iuno — Hybrid / Main DPS (Aero)
-**Source:** Prydwen.gg (last major update Patch 3.0)
+**Source:** Prydwen.gg (last major update Patch 3.6)
 - **Rarity/Weapon:** 5★ Gauntlets
-- **Echo (Main DPS):** Lady of the Sea | Crown of Valor (5pc) + 2pc Aero set (Sierra Gale / Gusts of Welkin / Windward Pilgrimage / Sound of True Name)
+- **Echo (Main DPS):** Lady of the Sea | Crown of Valor (5pc) + 2pc Aero set (Sierra Gale / Gusts of Welkin / Windward Pilgrimage / Sound of True Name [recommended])
   - 4-cost main stat: CRIT Rate or CRIT DMG
   - 3-cost: Aero DMG × 2 (or Aero + ATK%)
   - 1-cost: ATK% × 2
 - **Echo (Sub DPS/Hybrid):** Impermanence Heron | Moonlit Clouds (5pc) — same slot layout
 - **Weapons:**
   - BiS Sig: Moongazer's Sigil R1 (ATK 500, CRIT Rate 36%; 36% DEF Ignore on Lib DMG after Intro; 20% Liberation DMG Bonus unconditional) — 100%/100%
-  - Alt: Verity's Handle R1 (ATK 587, CRIT Rate 24.3%; 48% Liberation DMG Bonus) — 84.1%/93.5%
-  - Alt: Blazing Justice R1 (ATK 587, CRIT DMG 48.6%; 8% DEF Ignore on Basics) — 80.4%/79%
-  - Perm: Pulsation Bracer R1 (ATK 587, CRIT Rate 24.3%; best permanent option) — 77.9%/77.1%
-  - F2P: Legend of Drunken Hero R5 (ATK 462, ATK 18.2%; strong if Ciaccona on team) — 66.4%/59.5%
-  - BP: Aether Strike R5 (CRIT DMG + ATK + Liberation DMG on Ult) — 69.4%/76.7%
+  - Alt: Verity's Handle R1 (ATK 587, CRIT Rate 24.3%; 48% Liberation DMG Bonus) — 98.7%/84.6%
+  - Alt: Blazing Justice R1 (ATK 587, CRIT DMG 48.6%; 8% DEF Ignore on Basics) — 81.5%/79.8%
+  - BP: Aether Strike R5 (CRIT DMG + ATK + Liberation DMG on Ult) — 81%/69.1%
+  - BP: Stonard R5 (CRIT Rate; Liberation DMG on Skill) — 80.3%/n/a
+  - Alt: Tragicomedy R1 (ATK + CRIT Rate stat-stick) — 79%/77.4%
+  - Perm: Pulsation Bracer R1 (ATK 587, CRIT Rate 24.3%; best permanent option) — 79%/77.4%
+  - Perm: Abyss Surges R1 (ER + ATK) — 74.7%/71.8%
+  - F2P: Celestial Spiral R5 (ER + ATK) — 67.4%/n/a
+  - F2P: Hollow Mirage R5 — 64%/n/a
+  - F2P: Legend of Drunken Hero R5 (ATK 462, ATK 18.2%; strong if Ciaccona on team) — 60.8%/65.9%
+  - Percentages are DPS/Hybrid in Prydwen column order (DPS calcs listed first)
 - **Stats (DPS):** ATK 1800–2400+, ER ~100% (DPS, Lynae+Shorekeeper), CR 65–80%, CD 215–260%
   - Hybrid ER: 120–130%+ (Augusta team)
 - **Forte priority (Main DPS):** Forte Circuit > Resonance Liberation > Basic Attack > Resonance Skill > Intro Skill
@@ -350,6 +373,7 @@
   - Main DPS Iuno: Iuno + Lynae + Ciaccona/Yinlin/Jianxin + Mornye/Shorekeeper
   - Jiyan: Jiyan + Iuno + Ciaccona + Rover (Aero)/Shorekeeper
   - Galbrena: Galbrena + Iuno + Shorekeeper/Verina
+  - Jingran: Jingran + Iuno + Shorekeeper
 - **Rotation (Sub DPS, no Augusta):**
   1. Intro → Ultimate → Jump: Flux - Moonbow (enter New Moon)
   2. Enhanced Moonbow Basic P1 → P2 → P3
@@ -401,6 +425,7 @@
   - Best: Sigrika + Qiuyuan + Ciaccona + Shorekeeper/Phrolova/Verina
   - Phrolova Team: Phrolova + Cantarella + Roccia/Danjin + Qiuyuan
   - Galbrena Team: Galbrena + Qiuyuan + Shorekeeper/Verina
+  - Main DPS: Qiuyuan + Iuno + Shorekeeper
 - **Rotation (S0–S2 Standard Hybrid):**
   1. Intro → Basic: Inkwash 3 → Basic: Inkwash 4 → Ultimate
   2. Heavy: To Teach → Heavy: To Save → Heavy: To Sacrifice → Skill (Swap) → Outro
@@ -429,29 +454,32 @@
 ---
 
 ### Sigrika — Main DPS (Aero)
-**Source:** Prydwen.gg (last major update Patch 3.2)
+**Source:** Prydwen.gg (last major update Patch 3.6)
 - **Rarity/Weapon:** 5★ Gauntlets
 - **Echo:** Nameless Explorer | Sound of True Name (5pc)
   - 4-cost main stat: CRIT DMG or CRIT Rate
-  - 3-cost: ATK% × 2 (preferred over Aero DMG due to DMG distribution)
+  - 3-cost: ATK% × 2 (preferred over Aero DMG due to DMG distribution; ATK% + Energy Regen also listed)
   - 1-cost: ATK% × 2
 - **Weapons:**
   - BiS Sig: Solsworn Ciphers R1 (ATK 588, CRIT DMG 48.6%; Echo Skill DMG Amplification + Aero DEF Ignore) — 100%
-  - Alt: Blazing Justice R1 (ATK 587, CRIT DMG 48.6%; 8% DEF Ignore on Basics) — 85.4%
-  - Perm: Pulsation Bracer R1 (ATK 587, CRIT Rate 24.3%; best permanent) — 82.1%
-  - Alt: Tragicomedy R1 / Daybreaker's Spine R1 (ATK 587, CRIT Rate 24.3%) — 82.1%
-  - F2P BP: Aether Strike R5 (ATK 412, CRIT DMG 40.5%) — 69.4%
-  - F2P: Legend of Drunken Hero R5 (ATK 462, ATK 18.2%; passive activates with Ciaccona) — 69.4%
+  - Alt: Blazing Justice R1 (ATK 587, CRIT DMG 48.6%; 8% DEF Ignore on Basics) — 85.2%
+  - Perm: Pulsation Bracer R1 (ATK 587, CRIT Rate 24.3%; best permanent) — 82%
+  - Alt: Verity's Handle R1 (ATK + CRIT Rate stat-stick) — 82%
+  - Alt: Moongazer's Sigil R1 — 80.9%
+  - Perm: Abyss Surges R1 — 78.5%
+  - F2P BP: Aether Strike R5 (ATK 412, CRIT DMG 40.5%) — 76.6%
+  - F2P: Legend of Drunken Hero R5 (ATK 462, ATK 18.2%; passive activates with Ciaccona) — 70.6%
 - **Stats:** ATK 2400–3000+, ER 109–119%, CR 65%+ (before set bonus — Sound of True Name gives +20% CR on Echo Skill hits), CD 210–290%
   - Sound of True Name set bonus: +20% CRIT Rate + 15% Aero DMG Bonus on Echo Skill hit
   - Additional ER substats above 125% give up to 50% Echo Skill DMG Bonus (2% per 1% ER over 125%)
 - **Forte priority:** Forte Circuit > Resonance Liberation > Basic Attack > Intro Skill > Resonance Skill
   - Intro and Skill practically don't matter; Forte is by far most important
-- **Substats:** ER (until requirement) > CRIT DMG = CRIT Rate > ER (above 125% for bonus Echo Skill DMG) > ATK% > Flat ATK
+- **Substats:** ER (until requirement) > CRIT DMG = CRIT Rate > ER (until 150% for bonus Echo Skill DMG) > ATK% > Flat ATK
 - **Teams:**
   - Best: Sigrika + Qiuyuan + Ciaccona + Shorekeeper/Phrolova/Verina
   - Alt: Sigrika + Lynae + Ciaccona + Mornye/Rover (Aero)/Shorekeeper/Verina
   - Phrolova Collab: Sigrika + Phrolova + Qiuyuan + Shorekeeper [AoE/Whimpering Wastes]
+  - F2P: Sigrika + Aalto + Verina/Baizhi
 - **Rotation:**
   1. Intro → Basic 2 → Basic 3 → Basic 4 → Basic: Elucidated [generates Rune: Trust]
   2. Heavy: Chain Whip (cancel endlag via Ultimate)
@@ -492,25 +520,29 @@
 | Sigrika | Main DPS | 5★ | Gauntlets | T0 | Sound of True Name | Nameless Explorer |
 
 ### Qingxiao — Main DPS (Aero)
-**Source:** Game8 (updated September 25, 2026, Patch 3.7 Phase 2; released Patch 3.6 Phase 1), cross-referenced with allthings.how (updated August 20, 2026)
+**Source:** Prydwen.gg (last major update Patch 3.6) for weapons/stats/substats/forte priority; Game8 (updated September 25, 2026, Patch 3.7 Phase 2; released Patch 3.6 Phase 1) and allthings.how (updated August 20, 2026) for the rest
 - **Echo:** Calamity Effigy | Heart of Evil's Purge (5pc) [primary — Aero DMG bonuses when Tune Strain is applied; weave its skill into combos]
   - Alternative: Nightmare: Feilian Beringal | Sierra Gale (5pc) — Aero DMG + Heavy Attack DMG; Sierra Gale boosts Aero DMG after her Intro Skill
   - 4-cost main stat: CRIT Rate or CRIT DMG
   - 3-cost: Aero DMG Bonus + ATK% (one each, with Glint of Clouds); Aero DMG × 2 without Glint of Clouds
   - 1-cost: ATK% × 2
 - **Weapons:**
-  - BiS sig: Glint of Clouds (R1) — 36.0% CRIT Rate; +12% ATK, stacking Aero DMG Bonus on Tune Strain - Shifting with near-constant uptime; Game8 says alternatives perform "significantly worse"
-  - #2: Red Spring (R1) — CRIT Rate; extra ATK, Basic Attack DMG passive
-  - #3: Emerald Sentence (R1) — CRIT Rate; Heavy Attack DMG amp on Echo Skill
-  - #4: Emerald of Genesis (R1) — CRIT Rate; extra ER, stackable ATK buff on Resonance Skill
-  - Best 4-star (Battle Pass): Feather Edge — CRIT Rate; ATK + Res. Liberation DMG
-  - 4-star (Battle Pass, F2P-friendly): Lumingloss — ATK%; extra Heavy Attack DMG on Resonance Skill
-  - 4-star: Sword#18 — ATK%; Heavy Attack DMG below 40% HP, healing
+  - BiS sig: Glint of Clouds (R1) — 36.0% CRIT Rate; +12% ATK, stacking Aero DMG Bonus on Tune Strain - Shifting with near-constant uptime; 100%, Game8 says alternatives perform "significantly worse"
+  - #2: Red Spring (R1) — CRIT Rate; extra ATK, Basic Attack DMG passive (81.1%)
+  - #3: Azure Oath (R1) / Everbright Polestar (R1) — ATK, CRIT Rate, DMG Bonus stat-sticks (79.7%)
+  - #4: Emerald Sentence (R1) — CRIT Rate; Heavy Attack DMG amp on Echo Skill (79.4%)
+  - #5: Frostburn (R1) — ATK + CRIT Rate stat-stick (79.1%)
+  - #6: Emerald of Genesis (R1) — CRIT Rate; extra ER, stackable ATK buff on Resonance Skill (78.5%)
+  - Alt: Blazing Brilliance (R1) — 75.6%
+  - Best 4-star (Battle Pass): Feather Edge — CRIT Rate; ATK + Res. Liberation DMG (70.3%)
+  - 4-star (Battle Pass, F2P-friendly): Lumingloss — ATK%; extra Heavy Attack DMG on Resonance Skill (65.8%)
+  - 4-star: Commando of Conviction (R5) — 64.6%
 - **Stats (Level 90, S0):**
-  - No numeric targets published for ATK, CRIT or Aero DMG; prioritize CRIT, then Aero DMG on 3-costs
-  - ER: ~125% for comfortable rotations (Game8: 125%; allthings.how: ~120–125%)
-- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Res. Skill = Intro Skill
-- **Substats:** CRIT Rate = CRIT DMG > Energy Regen (to ~125%) > ATK% > ATK > Heavy Attack DMG = Res. Liberation DMG = Basic Attack DMG
+  - HP 14500+, DEF 1100+, ATK 2100–2400+, CRIT Rate 55–80%+, CRIT DMG 255–275%+ (before Echo set bonuses), Aero DMG Bonus 40–70%+
+  - ER: 110–115%+ (Prydwen; lower end with Denia+Mornye/Lynae+Ciaccona, higher end with Lynae+Mornye); Game8 suggests ~125% for comfortable rotations
+- **Forte priority:** Forte Circuit > Res. Liberation > Basic Attack > Res. Skill > Intro Skill
+  - Intro and Skill can be skipped when levelling at minimal loss
+- **Substats:** Energy Regen (until satisfied) > CRIT Rate = CRIT DMG > ATK% > ATK > Heavy Attack DMG = Res. Liberation DMG = Basic Attack DMG
 - **Teams:**
   - Best (Tune Strain): Qingxiao + Denia + Mornye (Lynae / Ciaccona / Sanhua for Denia; Shorekeeper for Mornye)
   - Hypercarry: Qingxiao + Sanhua + Mornye
