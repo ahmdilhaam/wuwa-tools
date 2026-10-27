@@ -74,7 +74,7 @@
 					href={switchLocaleHref(l.locale)}
 					hreflang={l.locale}
 					lang={l.locale}
-					aria-label={l.name}
+					title={l.name}
 					aria-current={current === l.locale ? 'true' : undefined}
 				>
 					<span class="flag">
