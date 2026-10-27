@@ -1,4 +1,4 @@
-// Kamus halaman penilai echo (bahasa Indonesia, sumber struktur).
+// Echo scorer page dictionary (Indonesian, source of the structure).
 export const echo_id = {
 	title: 'Penilai echo',
 	intro:

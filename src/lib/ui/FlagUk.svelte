@@ -1,6 +1,6 @@
 <script lang="ts">
-	// Union Jack: konstruksi standar 60x30. Kotak tampil 3:2 agar sejajar dengan FlagId,
-	// jadi sisi kiri dan kanan terpotong sedikit (slice); salib tetap di tengah.
+	// Union Jack: standard 60x30 construction. The box renders at 3:2 to line up with FlagId,
+	// so the left and right sides are slightly cropped (slice); the cross stays centered.
 	let { size = 18 }: { size?: number } = $props();
 	const uid = $props.id();
 </script>
@@ -18,7 +18,7 @@
 	<g clip-path="url(#{uid}-s)">
 		<path d="M0,0 v30 h60 v-30 z" fill="#012169" />
 		<path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6" />
-		<!-- Diagonal merah tipis digeser: dipotong per kuadran lewat clipPath -t -->
+		<!-- Thin red diagonal is offset: clipped per quadrant via clipPath -t -->
 		<path
 			d="M0,0 L60,30 M60,0 L0,30"
 			clip-path="url(#{uid}-t)"

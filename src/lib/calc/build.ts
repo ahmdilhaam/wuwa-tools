@@ -1,4 +1,4 @@
-// State input UI (satuan persen) dan konversi ke DamageInput (pecahan).
+// UI input state (percent units) and its conversion to DamageInput (fractions).
 import type { DamageInput } from './damage';
 import { CUSTOM_ENEMY_ID, DEFAULT_ENEMY_ID, presetResFor, type Element } from './enemies';
 import type { GameCharacter, GameWeapon } from '#lib/data/game/types.ts';
@@ -16,29 +16,29 @@ export const damageTypes = [
 	{ id: 'tuneRupture', label: 'Tune Rupture' }
 ] as const;
 
-/** Nilai input bisa kosong (null) saat pengguna menghapus isi kolom. */
+/** An input value can be empty (null) when the user clears the field. */
 export type NumField = number | null | undefined | string;
 
 export interface BuildState {
 	attackerLevel: NumField;
-	/** Nilai stat acuan skala (ATK/HP/DEF sesuai scalingType) */
+	/** Reference scaling stat value (ATK/HP/DEF per scalingType) */
 	scalingStat: NumField;
 	scalingType: ScalingStat;
 	critRatePct: NumField;
 	critDmgPct: NumField;
 	mvPct: NumField;
-	/** Pilihan skill picker (kosong = tidak dipakai) */
+	/** Skill picker choices (empty = unused) */
 	pickCharacter: string;
 	pickSkill: string;
-	/** Id hit, atau 'all' untuk jumlah semua hit */
+	/** Hit id, or 'all' for the sum of all hits */
 	pickHit: string;
 	pickLevel: NumField;
-	/** MV hasil isian picker; dipakai mendeteksi suntingan manual */
+	/** MV filled in by the picker; used to detect manual edits */
 	pickedMv: number | null;
 	pickWeapon: string;
-	/** Refinement senjata 1..5 */
+	/** Weapon refinement 1..5 */
 	pickRefine: number;
-	/** Saklar efek pasif senjata, kunci = indeks efek */
+	/** Weapon passive effect toggles, key = effect index */
 	weaponToggles: Record<number, WeaponToggle>;
 	flatDmg: NumField;
 	element: Element;
@@ -91,22 +91,22 @@ export function defaultBuild(): BuildState {
 	};
 }
 
-/** Kolom kosong / tidak valid dianggap 0. */
+/** An empty / invalid field counts as 0. */
 export function num(v: NumField): number {
 	if (v === null || v === undefined || v === '') return 0;
 	const n = typeof v === 'number' ? v : Number(v);
 	return Number.isFinite(n) ? n : 0;
 }
 
-/** RES dasar musuh (pecahan) untuk build ini. */
+/** Enemy base RES (fraction) for this build. */
 export function baseResOf(b: BuildState): number {
 	if (b.enemyId === CUSTOM_ENEMY_ID) return num(b.customResPct) / 100;
 	return presetResFor(b.enemyId, b.element) ?? num(b.customResPct) / 100;
 }
 
 /**
- * Konversi build ke DamageInput. Efek pasif senjata yang aktif ditambahkan di atas isian pengguna
- * (isian tidak pernah diubah).
+ * Converts a build to DamageInput. Active weapon passive effects are added on top of the user's inputs
+ * (the inputs are never modified).
  */
 export function toDamageInput(
 	b: BuildState,

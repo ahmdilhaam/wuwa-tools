@@ -19,7 +19,7 @@
 	import { isDamageHit, mapDamageType, mvAt, scalingFieldLabel, scalingOf, scalingLabels, sumAllSkillsMv, sumSkillMv } from './skills';
 
 	let { build = $bindable() }: { build: BuildState } = $props();
-	// Mode bandingkan merender dua BuildInputs: id petunjuk harus unik per instance.
+	// Compare mode renders two BuildInputs: hint ids must be unique per instance.
 	const uid = $props.id();
 
 	const chars = characters as GameCharacter[];
@@ -31,20 +31,20 @@
 	const pickedChar = $derived(chars.find((x) => x.slug === build.pickCharacter) ?? null);
 	const presetRes = $derived(Math.round(baseResOf(build) * 10000) / 100);
 
-	// Filter preset musuh
+	// Enemy preset filter
 	let rarityFilter = $state<MonsterClass | 'all'>('all');
 	let enemyQuery = $state('');
 	const filteredPresets = $derived.by(() => {
 		const list = filterPresets(rarityFilter, enemyQuery);
 		const current = enemyPresets.find((p) => p.id === build.enemyId);
-		// Pilihan aktif tetap tampil walau tersaring agar <select> tidak kosong.
+		// The active choice stays visible even when filtered out, so the <select> is never empty.
 		return current && !list.includes(current) ? [current, ...list] : list;
 	});
 
 	// Skill picker
 	let charSkills = $state<CharacterSkills | null>(null);
 	let loadingSkills = $state(false);
-	// pickSkill '' berarti belum dipilih; Number('') = 0 akan diam-diam memilih skill pertama.
+	// pickSkill '' means nothing is picked; Number('') = 0 would silently select the first skill.
 	const skill = $derived(
 		build.pickSkill === '' ? null : (charSkills?.skills[Number(build.pickSkill)] ?? null)
 	);
@@ -62,7 +62,7 @@
 	);
 	const scalingLabel = $derived(scalingFieldLabel(build.scalingType, t));
 
-	// Muat data skill saat karakter terpilih (termasuk dari state awal)
+	// Load skill data when a character is picked (including from the initial state)
 	$effect(() => {
 		const slug = build.pickCharacter;
 		if (!slug) {
@@ -81,7 +81,7 @@
 		build.pickSkill = '';
 		build.pickHit = '';
 		build.pickedMv = null;
-		// Senjata karakter lama belum tentu cocok tipe senjatanya: kosongkan.
+		// The previous character's weapon may not match the new weapon type: clear it.
 		build.pickWeapon = '';
 		build.weaponToggles = {};
 		const c = chars.find((x) => x.slug === build.pickCharacter);
@@ -94,9 +94,9 @@
 		applyPick();
 	}
 
-	/** Isi MV, tipe DMG, dan stat skala dari hit/skill yang dipilih. */
+	/** Fill MV, DMG type, and scaling stat from the picked hit/skill. */
 	function applyPick() {
-		// Semua skill: tipe DMG dibiarkan karena tiap skill punya tipe berbeda.
+		// All skills: the DMG type is left alone because each skill has a different type.
 		if (allSkills) {
 			build.mvPct = build.pickedMv = allSkills.mv;
 			build.scalingType = allSkills.stat;
@@ -118,7 +118,7 @@
 		if (t) build.damageType = t;
 	}
 
-	// Picker senjata: dimuat malas setelah mount; efek terpicu ikut dihitung (lihat weapon.ts)
+	// Weapon picker: lazy-loaded after mount; triggered effects are counted too (see weapon.ts)
 	$effect(() => weaponStore.ensure());
 	let showAllWeapons = $state(false);
 	const weapon = $derived(weaponStore.find(build.pickWeapon));
@@ -135,7 +135,7 @@
 	const contrib = $derived(weaponContribution(build, weapon, pickedChar));
 	const nf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };
 	const fmt = (n: number) => nf.format(Math.round(n * 100) / 100);
-	// Kalimat efek dari data game dua bahasa: Indonesia memakai terjemahan bila ada.
+	// Effect sentence from bilingual game data: Indonesian uses the translation when available.
 	const sentenceOf = (e: WeaponEffect) => (getLocale() === 'id' ? (e.sentenceId ?? e.sentence) : e.sentence);
 	const refine = $derived(clampRefine(build.pickRefine));
 	const secondaryUnit = (name: string) =>
@@ -500,7 +500,7 @@
 		grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
 		gap: 0.9rem 0.85rem;
 	}
-	/* Petunjuk di bawah satu isian tidak boleh meregangkan isian lain di baris yang sama. */
+	/* A hint under one field must not stretch other fields in the same row. */
 	.grid > label {
 		align-content: start;
 	}

@@ -11,7 +11,7 @@
 	let role = $state('');
 	let weapon = $state<WeaponType | ''>('');
 
-	// Daftar peran unik (dipecah dari "Main DPS / Hybrid" dll).
+	// List of unique roles (split from "Main DPS / Hybrid" etc.).
 	const roles = [...new Set(characterViews.flatMap((v) => v.build?.roles ?? []))].sort();
 
 	const filtered = $derived(

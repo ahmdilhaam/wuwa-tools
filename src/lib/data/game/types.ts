@@ -1,18 +1,18 @@
-// Tipe data game hasil sinkronisasi dari api-v2.encore.moe (lihat scripts/sync-encore.ts).
+// Game data types synced from api-v2.encore.moe (see scripts/sync-encore.ts).
 import type { Element, WeaponType } from '#lib/data/types.ts';
 
 export type { Element, WeaponType };
 
-/** Teks dua bahasa. Kalau terjemahan Indonesia belum tersedia di sumber, `id` berisi salinan `en`. */
+/** Bilingual text. If the source has no Indonesian translation yet, `id` holds a copy of `en`. */
 export interface Localized {
 	en: string;
 	id: string;
 }
 
 export interface GameCharacter {
-	/** Id utama (terkecil) */
+	/** Primary id (the smallest) */
 	id: number;
-	/** Semua id dengan nama+elemen sama (mis. Rover laki-laki/perempuan) */
+	/** All ids sharing the same name+element (e.g. male/female Rover) */
 	ids: number[];
 	slug: string;
 	name: string;
@@ -20,36 +20,36 @@ export interface GameCharacter {
 	rarity: 4 | 5;
 	weaponType: WeaponType;
 	icon: string;
-	/** Stat dasar karakter di Lv90 (tanpa senjata/echo); dipakai mengonversi ATK%/HP%/DEF% ke angka */
+	/** Character base stats at Lv90 (no weapon/echo); used to convert ATK%/HP%/DEF% to flat numbers */
 	base: { atk: number; hp: number; def: number };
 }
 
 export interface SkillAttribute {
 	name: string;
-	/** Level 1..10, string mentah karena ada rumus seperti "53.50%*4" */
+	/** Levels 1..10, raw strings because some are formulas like "53.50%*4" */
 	values: string[];
-	/** '%', 's', atau '' */
+	/** '%', 's', or '' */
 	unit: string;
 }
 
 export interface SkillHit {
 	id: number;
-	/** Jenis damage menurut sumber, mis. "Resonance Skill", "Heavy Attack" */
+	/** Damage type per the source, e.g. "Resonance Skill", "Heavy Attack" */
 	damageType: string;
-	/** "Damage" | "Heal" | "Shield" dst. (DmgType sumber) */
+	/** "Damage" | "Heal" | "Shield" etc. (the source's DmgType) */
 	kind: string;
-	/** Stat yang jadi acuan skala: ATK, HP, DEF */
+	/** Stat the scaling is based on: ATK, HP, DEF */
 	scaling: string;
-	/** Level 1..10, satuan persen (181 = 181%) */
+	/** Levels 1..10, in percent (181 = 181%) */
 	mv: number[];
-	/** Kondisi hit (kosong dihilangkan) */
+	/** Hit condition (empty ones omitted) */
 	condition?: string;
 }
 
 export interface GameSkill {
 	name: string;
 	type: string;
-	/** URL ikon skill; tidak semua skill punya */
+	/** Skill icon URL; not every skill has one */
 	icon?: string;
 	description: Localized;
 	attributes: SkillAttribute[];
@@ -68,7 +68,7 @@ export interface CharacterSkills {
 	sequences: Sequence[];
 }
 
-/** Id tipe DMG kalkulator (lihat damageTypes di calc/build.ts) */
+/** Calculator DMG type id (see damageTypes in calc/build.ts) */
 export type DamageTypeId = 'basic' | 'heavy' | 'skill' | 'liberation' | 'intro' | 'outro' | 'echo' | 'tuneRupture';
 
 export type WeaponEffectStat =
@@ -84,22 +84,22 @@ export type WeaponEffectStat =
 	| 'energyRegen'
 	| 'other';
 
-/** Satu efek pasif senjata yang diturunkan dari teks template (lihat parseWeaponEffects). */
+/** One weapon passive effect derived from template text (see parseWeaponEffects). */
 export interface WeaponEffect {
 	stat: WeaponEffectStat;
-	/** 'all' = semua DMG (mis. Attribute DMG Bonus); null = tanpa cakupan (ATK%, Crit, dst.) */
+	/** 'all' = all DMG (e.g. Attribute DMG Bonus); null = no scope (ATK%, Crit, etc.) */
 	scope: 'all' | Element | DamageTypeId | null;
-	/** Nilai R1..R5 dalam satuan persen (12 = 12%) */
+	/** R1..R5 values in percent (12 = 12%) */
 	values: number[];
-	/** "stacking up to N times"; null bila tidak bertumpuk */
+	/** "stacking up to N times"; null if it does not stack */
 	maxStacks: number | null;
-	/** Heuristik: kalimat punya syarat (when/after/stack/...); false = permanen, sudah ada di halaman atribut */
+	/** Heuristic: the sentence has a condition (when/after/stack/...); false = permanent, already on the attributes page */
 	triggered: boolean;
-	/** Efek untuk rekan tim / resonator lain, bukan pemegang senjata */
+	/** Effect for teammates / other resonators, not the weapon holder */
 	team: boolean;
-	/** Kalimat sumber dengan nilai R1 untuk ditampilkan */
+	/** Source sentence with the R1 value, for display */
 	sentence: string;
-	/** Terjemahan Indonesia dari sentence (overlay i18n); sama dengan sentence bila belum diterjemahkan */
+	/** Indonesian translation of sentence (i18n overlay); same as sentence if not yet translated */
 	sentenceId?: string;
 }
 
@@ -119,7 +119,7 @@ export interface GameWeapon {
 	type: WeaponType;
 	rarity: 1 | 2 | 3 | 4 | 5;
 	icon: string;
-	/** ATK dasar di level 90 */
+	/** Base ATK at level 90 */
 	atk90: number;
 	secondary: { name: string; value90: number };
 	passive: WeaponPassive;
@@ -138,7 +138,7 @@ export interface SonataSet {
 	echoIds: number[];
 }
 
-/** Echo dari /echo (Phantom Appearance kosmetik tidak ikut). Nama bisa kembar antar-elemen, kunci = id. */
+/** Echoes from /echo (cosmetic Phantom Appearances excluded). Names can repeat across elements, key = id. */
 export interface GameEcho {
 	id: number;
 	name: string;
@@ -164,14 +164,14 @@ export interface GameMonster {
 	name: string;
 	rarity: MonsterClass;
 	element: Element | 'physical';
-	/** Pecahan, 0.1 = 10% */
+	/** Fraction, 0.1 = 10% */
 	res: Resistances;
 }
 
 export interface SyncMeta {
 	fetchedAt: string;
 	source: 'api-v2.encore.moe';
-	/** Apakah teks bahasa Indonesia benar-benar tersedia dari sumber */
+	/** Whether Indonesian text is actually available from the source */
 	idLocalized: { character: boolean; weapon: boolean; echo: boolean };
 	counts: Record<string, number>;
 }

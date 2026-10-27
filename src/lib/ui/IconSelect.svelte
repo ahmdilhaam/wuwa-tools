@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-	// Select-only combobox (pola WAI-ARIA APG): <select> bawaan tidak bisa menampilkan gambar di opsinya.
+	// Select-only combobox (pola WAI-ARIA APG): the native <select> cannot show images in its options.
 	import { tick } from 'svelte';
 
 	let {
@@ -20,7 +20,7 @@
 		labelledby?: string;
 		describedby?: string;
 		disabled?: boolean;
-		/** Ikon berupa glyph putih transparan (mis. ikon skill): beri latar gelap tetap di kedua tema. */
+		/** Icon is a transparent white glyph (e.g. skill icon): give it a fixed dark background in both themes. */
 		glyph?: boolean;
 		onchange?: () => void;
 	} = $props();
@@ -57,7 +57,7 @@
 		list?.querySelector(`#${CSS.escape(optId(active))}`)?.scrollIntoView({ block: 'nearest' });
 	}
 
-	// Ketik untuk lompat ke opsi berawalan sama
+	// Type to jump to the option with the same prefix
 	let typed = '';
 	let typedAt = 0;
 	function typeahead(ch: string) {
@@ -156,7 +156,7 @@
 	{#if open}
 		<ul bind:this={list} id="{uid}-list" class="list" role="listbox" aria-labelledby={labelledby} tabindex="-1">
 			{#each options as o, i (o.value)}
-				<!-- keyboard ditangani combobox -->
+				<!-- keyboard is handled by the combobox -->
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<li
 					id={optId(i)}
@@ -241,7 +241,7 @@
 		z-index: 20;
 		top: calc(100% + 4px);
 		left: 0;
-		/* Seperti <select> bawaan: daftar boleh lebih lebar dari kolomnya agar nama tidak terpotong. */
+		/* Like the native <select>: the list may be wider than its column so names are not cut off. */
 		min-width: 100%;
 		width: max-content;
 		max-width: min(26rem, calc(100vw - 2rem));

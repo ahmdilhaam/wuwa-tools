@@ -4,12 +4,12 @@ import { id } from '#lib/i18n/id.ts';
 import { characterViews, getCharacterView } from '#lib/data/merged.ts';
 import type { CharacterSkills } from '#lib/data/game/types.ts';
 
-// Satu chunk per karakter: file skill dimuat lazy lewat glob, bukan digabung.
+// One chunk per character: skill files are lazy-loaded via glob, not bundled together.
 const skillFiles = import.meta.glob<CharacterSkills>('../../../../lib/data/game/skills/*.json', {
 	import: 'default'
 });
 
-// Prerender semua slug karakter, masing-masing dalam bahasa Indonesia (tanpa awalan) dan Inggris.
+// Prerender every character slug, each in Indonesian (no prefix) and English.
 export function entries() {
 	return characterViews.flatMap((v) => [
 		{ slug: v.game.slug },

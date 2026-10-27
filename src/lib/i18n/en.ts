@@ -3,7 +3,7 @@ import { calc_en } from './dict/calc.en.ts';
 import { library_en } from './dict/library.en.ts';
 import { echo_en } from './dict/echo.en.ts';
 
-// Tipe Dict membuat kunci yang kurang atau berlebih menjadi error compile.
+// The Dict type turns missing or extra keys into compile errors.
 export const en = {
 	calc: calc_en,
 	library: library_en,

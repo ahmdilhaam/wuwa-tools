@@ -1,5 +1,5 @@
-// Kontribusi efek pasif senjata yang terpicu saat tempur (fungsi murni, tanpa Svelte).
-// Efek permanen sudah ada di halaman atribut (Rule 2), jadi tidak pernah dihitung ulang di sini.
+// Contribution of weapon passive effects triggered in combat (pure functions, no Svelte).
+// Permanent effects are already on the attributes page (Rule 2), so they are never recounted here.
 import type { GameCharacter, GameWeapon, WeaponEffect } from '#lib/data/game/types.ts';
 import type { ScalingStat, Translate } from './skills.ts';
 import type { DictKey, Params } from '#lib/i18n/index.svelte.ts';
@@ -9,7 +9,7 @@ export interface WeaponToggle {
 	stacks: number;
 }
 
-/** Bagian BuildState yang dibutuhkan; didefinisikan di sini agar tidak ada impor melingkar. */
+/** The part of BuildState that is needed; defined here to avoid a circular import. */
 export interface WeaponBuildInput {
 	scalingType: ScalingStat;
 	element: string;
@@ -25,24 +25,24 @@ export interface EffectResult {
 	effect: WeaponEffect;
 	kind: EffectKind;
 	on: boolean;
-	/** Jumlah stack yang dipakai (1 bila tidak bertumpuk) */
+	/** Stack count in use (1 if it does not stack) */
 	stacks: number;
-	/** Efek berlaku untuk hit ini (scope, stat skala, data karakter) */
+	/** The effect applies to this hit (scope, scaling stat, character data) */
 	applies: boolean;
-	/** Alasan tidak berlaku, berupa kunci kamus (diterjemahkan saat render) */
+	/** Reason it does not apply, as a dictionary key (translated at render time) */
 	reason: { key: DictKey; params?: Params } | null;
-	/** Nilai persen setelah dikali stack (satuan persen) */
+	/** Percent value after multiplying by stacks (percent units) */
 	valuePct: number;
-	/** Tambahan stat skala (ATK/HP/DEF datar) untuk atkPct/hpPct/defPct, selain itu 0 */
+	/** Added scaling stat (flat ATK/HP/DEF) for atkPct/hpPct/defPct, otherwise 0 */
 	flat: number;
-	/** Menyumbang ke perhitungan (on dan berlaku) */
+	/** Contributes to the calculation (on and applicable) */
 	contributes: boolean;
 }
 
 export interface WeaponContribution {
-	/** Tambahan datar pada stat skala */
+	/** Flat addition to the scaling stat */
 	scalingStat: number;
-	/** Delta dalam satuan persen, sama seperti isian BuildState */
+	/** Delta in percent units, same as the BuildState inputs */
 	critRatePct: number;
 	critDmgPct: number;
 	dmgBonusPct: number;
@@ -50,7 +50,7 @@ export interface WeaponContribution {
 	defIgnorePct: number;
 	resShredPct: number;
 	effects: EffectResult[];
-	/** Ada minimal satu efek yang aktif dan berlaku */
+	/** At least one effect is active and applicable */
 	active: boolean;
 }
 
@@ -72,7 +72,7 @@ export function defaultToggle(effect: WeaponEffect): WeaponToggle {
 	return { on: false, stacks: effect.maxStacks && effect.maxStacks > 1 ? effect.maxStacks : 1 };
 }
 
-/** Cakupan efek cocok dengan hit ini? null/all selalu cocok, elemen cocok dengan elemen build, sisanya tipe DMG. */
+/** Does the effect scope match this hit? null/all always match, elements match the build element, anything else is a DMG type. */
 export function scopeMatches(scope: WeaponEffect['scope'], build: Pick<WeaponBuildInput, 'element' | 'damageType'>): boolean {
 	if (scope === null || scope === 'all') return true;
 	return scope === build.element || scope === build.damageType;
@@ -114,7 +114,7 @@ export function weaponContribution(
 		out.effects.push(r);
 		if (kind !== 'toggle') return;
 
-		// Apakah efek relevan untuk hit ini?
+		// Is the effect relevant to this hit?
 		const s = effect.stat;
 		if (s === 'energyRegen') {
 			r.applies = false;
@@ -191,7 +191,7 @@ const scopeLabels: Record<string, string> = {
 export const scopeLabel = (scope: WeaponEffect['scope'], tr: Translate): string =>
 	scope === 'all' ? tr('calc.weapon.allScope') : scope ? (scopeLabels[scope] ?? scope) : '';
 
-/** Nama stat efek untuk tampilan, mis. "Heavy Attack DMG Bonus" atau "Amplify Echo Skill". */
+/** Effect stat name for display, e.g. "Heavy Attack DMG Bonus" or "Amplify Echo Skill". */
 export function effectStatLabel(e: WeaponEffect, tr: Translate): string {
 	const sc = scopeLabel(e.scope, tr);
 	switch (e.stat) {
@@ -220,7 +220,7 @@ export function effectStatLabel(e: WeaponEffect, tr: Translate): string {
 	}
 }
 
-/** Ringkasan kontribusi satu efek, mis. "+48% Heavy Attack DMG Bonus" atau "+180 ATK". */
+/** Summary of one effect's contribution, e.g. "+48% Heavy Attack DMG Bonus" or "+180 ATK". */
 export function effectAmountLabel(r: EffectResult, fmt: (n: number) => string, tr: Translate): string {
 	const s = r.effect.stat;
 	if (s === 'atkPct' || s === 'hpPct' || s === 'defPct') return `+${fmt(r.flat)} ${effectStatLabel(r.effect, tr)} (+${fmt(r.valuePct)}%)`;

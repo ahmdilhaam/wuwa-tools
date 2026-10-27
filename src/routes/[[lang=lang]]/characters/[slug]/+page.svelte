@@ -13,7 +13,7 @@
 	const c = $derived(data.view.build);
 	const skills = $derived(data.skills);
 
-	// Urutan jenis skill yang ditampilkan; jenis lain menyusul sesuai urutan sumber.
+	// Order of skill types shown; other types follow in source order.
 	const typeOrder = ['Normal Attack', 'Resonance Skill', 'Resonance Liberation', 'Forte Circuit', 'Intro Skill', 'Outro Skill', 'Inherent Skill', 'Tune Break'];
 	const grouped = $derived.by(() => {
 		const map = new Map<string, NonNullable<typeof skills>['skills']>();
@@ -26,13 +26,13 @@
 		);
 	});
 
-	// Level MV yang dipilih (1–10), default Lv10.
+	// Selected MV level (1–10), default Lv10.
 	let level = $state(10);
 	const levels = Array.from({ length: 10 }, (_, i) => i + 1);
 	const fmt = (n: number | undefined) =>
 		n === undefined ? '—' : `${formatNumber(n, { maximumFractionDigits: 2 })}%`;
 
-	// Urutan tetap bagian: Echo, Senjata, Stat, Forte, Substat, Tim, Rotasi, Sequence, Catatan, lainnya.
+	// Fixed section order: Echo, Weapon, Stat, Forte, Substat, Team, Rotation, Sequence, Notes, others.
 	const blocks = $derived(
 		!c
 			? []
@@ -50,14 +50,14 @@
 				].filter(Boolean) as { title: string; s: CharacterSection }[])
 	);
 
-	// Teks sesuai bahasa aktif, atau bahasa lainnya bila tombol ditekan (fallback Inggris);
-	// paragraf dipisah baris kosong, baris baru tunggal dijaga lewat CSS.
+	// Text in the active language, or the other language when the button is pressed (English fallback);
+	// paragraphs are separated by blank lines, single newlines are preserved via CSS.
 	type Localized = { en: string; id: string };
 	const paragraphs = (d: Localized, showOther: boolean) => {
 		const lang = (getLocale() === 'en') !== showOther ? 'en' : 'id';
 		return (lang === 'en' ? d.en : d.id || d.en).split(/\n{2,}/);
 	};
-	// Label tombol selalu menawarkan bahasa yang sedang tidak tampil.
+	// The button label always offers the language that is not currently shown.
 	const toggleLabel = (showOther: boolean) =>
 		(getLocale() === 'en') !== showOther ? t('library.toggle.showTranslation') : t('library.toggle.showOriginal');
 	const hasTranslation = (list: { description: Localized }[]) => list.some((x) => x.description.id && x.description.id !== x.description.en);
@@ -67,7 +67,7 @@
 	const seqTranslated = $derived(hasTranslation(skills?.sequences ?? []));
 	const movingSkills = $derived((skills?.skills ?? []).filter((sk) => sk.hits.length > 0));
 
-	// Tab detail; Build selalu ada dan jadi default, tab skill hanya bila data skill tersedia.
+	// Detail tabs; Build is always present and the default, skill tabs only when skill data is available.
 	type Tab = 'build' | 'skill' | 'mv' | 'sequence';
 	const tabs = $derived<{ id: Tab; label: string }[]>([
 		{ id: 'build', label: t('library.detail.section.build') },
@@ -80,9 +80,9 @@
 			: [])
 	]);
 	let selected = $state<Tab>('build');
-	// Kembali ke Build bila tab terpilih tidak ada di karakter lain.
+	// Fall back to Build if the selected tab does not exist on another character.
 	const active = $derived(tabs.some((x) => x.id === selected) ? selected : 'build');
-	// Tab disinkronkan ke hash URL (#skill, #mv, #sequence); Build tanpa hash.
+	// Tabs are synced to the URL hash (#skill, #mv, #sequence); Build has no hash.
 	const isTab = (v: string): v is Tab => ['build', 'skill', 'mv', 'sequence'].includes(v);
 	const readHash = () => {
 		const h = location.hash.slice(1);
@@ -93,7 +93,7 @@
 		goto(id === 'build' ? location.pathname + location.search : `#${id}`, { shallow: true, replace: true });
 	};
 	onMount(readHash);
-	// Panah kiri/kanan, Home, End memindah tab sesuai pola WAI-ARIA tabs.
+	// Left/right arrows, Home, End move between tabs per the WAI-ARIA tabs pattern.
 	const onTabKey = (e: KeyboardEvent) => {
 		const i = tabs.findIndex((x) => x.id === active);
 		const next =

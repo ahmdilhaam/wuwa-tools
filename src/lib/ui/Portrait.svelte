@@ -45,7 +45,7 @@
 	.fluid {
 		width: 100%;
 	}
-	/* takik rarity di pojok kiri atas */
+	/* rarity notch in the top-left corner */
 	.portrait::before {
 		content: '';
 		position: absolute;

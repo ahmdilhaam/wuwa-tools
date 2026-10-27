@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit/hooks';
 
-// Isi atribut <html lang> dari awalan URL: "/en" berarti Inggris, selain itu Indonesia.
+// Fill the <html lang> attribute from the URL prefix: "/en" means English, anything else Indonesian.
 export const handle: Handle = ({ event, resolve }) => {
 	const lang = /^\/en(\/|$)/.test(event.url.pathname) ? 'en' : 'id';
 	return resolve(event, {

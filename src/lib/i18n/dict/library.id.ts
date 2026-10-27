@@ -1,4 +1,4 @@
-// Kamus area library (bahasa Indonesia, sumber struktur).
+// Library area dictionary (Indonesian, source of the structure).
 export const library_id = {
 	pageTitle: '{name} — WuWa Tools',
 	stars: '{count} bintang',

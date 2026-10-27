@@ -1,6 +1,6 @@
 import type { calc_id } from './calc.id.ts';
 
-// Kamus area calc (bahasa Inggris), harus mengikuti bentuk calc_id.
+// Calc area dictionary (English), must follow the shape of calc_id.
 export const calc_en = {
 	page: {
 		title: 'Damage calculator',

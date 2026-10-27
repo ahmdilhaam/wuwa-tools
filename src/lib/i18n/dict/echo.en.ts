@@ -1,6 +1,6 @@
 import type { echo_id } from './echo.id.ts';
 
-// Kamus halaman penilai echo (bahasa Inggris), harus mengikuti bentuk echo_id.
+// Echo scorer page dictionary (English), must follow the shape of echo_id.
 export const echo_en = {
 	title: 'Echo scorer',
 	intro:

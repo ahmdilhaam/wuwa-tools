@@ -1,4 +1,4 @@
-// Kamus area calc (bahasa Indonesia, sumber struktur).
+// Calc area dictionary (Indonesian, source of the structure).
 export const calc_id = {
 	page: {
 		title: 'Kalkulator damage',

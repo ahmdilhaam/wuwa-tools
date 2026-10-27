@@ -1,4 +1,4 @@
-// Terapkan overlay terjemahan ke weapons.json dan skills/*.json: bun run i18n:apply
+// Apply the translation overlay to weapons.json and skills/*.json: bun run i18n:apply
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -11,7 +11,7 @@ const skillOverlayDir = resolve(root, 'src/lib/data/i18n/skills');
 
 const listMissing = process.argv.includes('--list');
 
-/** Terapkan overlay ke senjata (mutasi in-place), cetak ringkasan; gagal keras bila placeholder tak cocok. */
+/** Apply the overlay to weapons (mutates in place) and print a summary; fails hard if placeholders do not match. */
 export async function applyWeaponI18nFromFile(weapons: WeaponI18nWeapon[]): Promise<void> {
 	const overlay = JSON.parse(await readFile(overlayFile, 'utf8')) as Record<string, string>;
 	const { missing, invalid, stale } = applyWeaponI18n(weapons, overlay);
@@ -27,7 +27,7 @@ export async function applyWeaponI18nFromFile(weapons: WeaponI18nWeapon[]): Prom
 	}
 }
 
-/** Terapkan overlay skill/sequence ke semua skills/{slug}.json dan tulis ulang; gagal keras (daftar slug + templat) bila placeholder tak cocok. */
+/** Apply the skill/sequence overlay to every skills/{slug}.json and rewrite them; fails hard (listing slug + template) if placeholders do not match. */
 export async function applySkillI18nFromFiles(): Promise<void> {
 	const slugs = (await readdir(skillDir)).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
 	const failures: string[] = [];

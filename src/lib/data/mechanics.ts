@@ -1,5 +1,5 @@
-// Mekanik universal (dari universal-mechanics.md): teks Indonesia ditulis ulang, teks Inggris
-// diambil dari sumber aslinya.
+// Universal mechanics (from universal-mechanics.md): Indonesian text is rewritten, English text
+// is taken from the original source.
 import type { LocalizedText } from './types';
 
 export interface MechanicBlock {
@@ -98,7 +98,7 @@ export interface ForteRow {
 	recommendation: LocalizedText;
 }
 
-/** Tabel prioritas Forte Tree: ditampilkan apa adanya dari sumber. */
+/** Forte Tree priority table: shown as-is from the source. */
 export const forteRows: ForteRow[] = [
 	{ skillShare: '1–9%', recommendation: { id: 'Lv1 atau Lv6', en: 'Lv1 or Lv6' } },
 	{ skillShare: '≤10%', recommendation: { id: 'Minimal Lv6', en: 'At least Lv6' } },

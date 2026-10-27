@@ -1,7 +1,7 @@
-// Preset musuh dari data game (monsters.json, hasil sinkronisasi encore.moe).
-// Data game memuat resistensi Physical (DamageResistancePhys), jadi kolom `physical`
-// tetap disimpan. Namun tidak ada Resonator yang menghasilkan DMG Physical,
-// sehingga Physical tidak bisa dipilih sebagai elemen penyerang.
+// Enemy presets from game data (monsters.json, synced from encore.moe).
+// Game data includes Physical resistance (DamageResistancePhys), so the `physical` field
+// is kept. However, no Resonator deals Physical DMG,
+// so Physical cannot be selected as the attacker's element.
 import monsters from '#lib/data/game/monsters.json';
 import type { GameMonster, MonsterClass } from '#lib/data/game/types.ts';
 import type { DictKey } from '#lib/i18n/index.svelte.ts';
@@ -20,7 +20,7 @@ export const elementLabels: Record<Element, string> = {
 
 export type EnemyElement = Element | 'physical';
 
-/** Kunci kamus label rarity; terjemahkan saat render lewat t(). */
+/** Dictionary keys for rarity labels; translate at render time via t(). */
 export const rarityKeys: Record<MonsterClass, DictKey> = {
 	standard: 'calc.rarity.standard',
 	elite: 'calc.rarity.elite',
@@ -33,7 +33,7 @@ export interface EnemyPreset {
 	name: string;
 	rarity: MonsterClass;
 	element: EnemyElement;
-	/** RES per elemen dalam pecahan (0.1 = 10%) */
+	/** RES per element as a fraction (0.1 = 10%) */
 	res: Record<EnemyElement, number>;
 }
 
@@ -49,7 +49,7 @@ function buildPresets(list: GameMonster[]): EnemyPreset[] {
 	for (const m of list) nameCount.set(m.name, (nameCount.get(m.name) ?? 0) + 1);
 	return list
 		.map((m) => ({
-			// Nama unik -> slug nama (id lama seperti 'mourning-aix' tetap berlaku); nama kembar diberi akhiran id.
+			// Unique name -> name slug (legacy ids like 'mourning-aix' still hold); duplicate names get the id as a suffix.
 			id: nameCount.get(m.name) === 1 ? slugify(m.name) : `${slugify(m.name)}-${m.id}`,
 			name: m.name,
 			rarity: m.rarity,
@@ -61,12 +61,12 @@ function buildPresets(list: GameMonster[]): EnemyPreset[] {
 
 export const enemyPresets: EnemyPreset[] = buildPresets(monsters as GameMonster[]);
 
-/** Preset bawaan; jatuh ke preset pertama bila Mourning Aix tidak ada. */
+/** Default preset; falls back to the first preset if Mourning Aix is missing. */
 export const DEFAULT_ENEMY_ID = enemyPresets.some((e) => e.id === 'mourning-aix')
 	? 'mourning-aix'
 	: (enemyPresets[0]?.id ?? 'custom');
 
-/** ID khusus untuk RES yang diketik manual */
+/** Special ID for manually typed RES */
 export const CUSTOM_ENEMY_ID = 'custom';
 
 export function presetResFor(enemyId: string, element: Element): number | null {
@@ -74,7 +74,7 @@ export function presetResFor(enemyId: string, element: Element): number | null {
 	return p ? p.res[element] : null;
 }
 
-/** Filter preset berdasarkan rarity ('all' = semua) dan kata kunci nama. */
+/** Filter presets by rarity ('all' = every rarity) and a name keyword. */
 export function filterPresets(
 	rarity: MonsterClass | 'all',
 	query: string,

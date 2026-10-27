@@ -1,5 +1,5 @@
-// Konversi markdown karakter (reference/wuwa-core/references/characters/*.md) menjadi JSON terstruktur.
-// Jalankan: bun scripts/convert-characters.ts
+// Convert character markdown (reference/wuwa-core/references/characters/*.md) into structured JSON.
+// Run: bun scripts/convert-characters.ts
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import type { Character, CharacterSection, Element, WeaponType } from '../src/lib/data/types';
@@ -9,7 +9,7 @@ const srcDir = resolve(root, 'reference/wuwa-core/references/characters');
 const outFile = resolve(root, 'src/lib/data/characters.json');
 const elements: Element[] = ['aero', 'electro', 'fusion', 'glacio', 'havoc', 'spectro'];
 
-// Slug: buang kurung kecuali kurung elemen (mis. "Rover (Aero)" -> rover-aero).
+// Slug: drop parentheses except element ones (e.g. "Rover (Aero)" -> rover-aero).
 const slugify = (s: string) =>
 	s
 		.toLowerCase()
@@ -27,10 +27,10 @@ function normWeapon(w: string): WeaponType | null {
 	return null;
 }
 
-// Catatan meta tentang sesi scraping — bukan data game.
+// Meta notes about the scraping session — not game data.
 const metaRe = /vidiq|transcript credits|_style_notes|style observations/i;
 
-// Tabel ringkasan (fallback rarity / senjata) per nama karakter.
+// Summary table (fallback for rarity / weapon) keyed by character name.
 const summary = new Map<string, { rarity: 4 | 5 | null; weaponType: WeaponType | null }>();
 function readSummaryTable(lines: string[]) {
 	let idx: { rarity: number; weapon: number } | null = null;
@@ -171,7 +171,7 @@ for (const el of elements) {
 			continue;
 		}
 		if (/^\s+\S/.test(line) && last) {
-			// Baris lanjutan: tempelkan ke item/nilai terakhir.
+			// Continuation line: append to the last item/value.
 			if (last.itemIdx >= 0) last.sec.items[last.itemIdx] += ' ' + line.trim();
 			else last.sec.value += ' ' + line.trim();
 		}
@@ -199,7 +199,7 @@ for (const c of characters) {
 	if (!c.weapons) miss.push('weapons');
 	if (!c.stats) miss.push('stats');
 	if (c.echo.length === 0) miss.push('echo');
-	// rarity & weaponType tidak dicek: situs memakai nilai dari data game (lihat src/lib/data/merged.ts).
+	// rarity & weaponType are not checked: the site uses values from game data (see src/lib/data/merged.ts).
 	if (miss.length) {
 		gaps++;
 		console.log(`  ${c.slug} (${c.element}): ${miss.join(', ')}`);

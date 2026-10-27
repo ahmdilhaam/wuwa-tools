@@ -1,17 +1,17 @@
-// Fungsi murni kalkulator damage Wuthering Waves (tanpa Svelte).
-// Semua persentase dalam bentuk pecahan internal (0.72 = 72%).
+// Pure functions for the Wuthering Waves damage calculator (no Svelte).
+// All percentages are internal fractions (0.72 = 72%).
 
 export interface DamageInput {
-	/** Level penyerang */
+	/** Attacker level */
 	attackerLevel: number;
-	/** Level musuh */
+	/** Enemy level */
 	enemyLevel: number;
 	atk: number;
-	/** Crit Rate (pecahan, 0.72) */
+	/** Crit Rate (fraction, 0.72) */
 	critRate: number;
-	/** Crit DMG sebagai pengali total (2.8 = 280%) */
+	/** Crit DMG as a total multiplier (2.8 = 280%) */
 	critDmg: number;
-	/** Motion Value dalam persen penuh (1212.75 = 1212.75%) */
+	/** Motion Value in full percent (1212.75 = 1212.75%) */
 	mv: number;
 	flatDmg: number;
 	elementBonus: number;
@@ -22,7 +22,7 @@ export interface DamageInput {
 	special: number;
 	defReduction: number;
 	defIgnore: number;
-	/** RES dasar musuh (pecahan) */
+	/** Enemy base RES (fraction) */
 	baseRes: number;
 	resShred: number;
 }
@@ -64,7 +64,7 @@ export function defFactor(
 	defIgnore = 0
 ): { enemyDef: number; modifiedDef: number; attackerDefTerm: number; factor: number } {
 	const enemyDef = enemyBaseDef(enemyLevel);
-	// DEF Reduction diterapkan dulu, lalu DEF Ignore (Rule 4)
+	// DEF Reduction is applied first, then DEF Ignore (Rule 4)
 	const modifiedDef = enemyDef * (1 - defReduction) * (1 - defIgnore);
 	const attackerDefTerm = 800 + 8 * attackerLevel;
 	return {

@@ -11,7 +11,7 @@ import { isDamageHit, mapDamageType, mvAt, scalingFieldLabel, scalingOf, sumSkil
 import type { GameSkill, SkillHit } from '#lib/data/game/types.ts';
 
 describe('DEF%', () => {
-	// Penyerang Lv90, tanpa DEF reduction / ignore
+	// Attacker Lv90, no DEF reduction / ignore
 	it.each([
 		[85, 0.508],
 		[90, 0.5013],
@@ -62,7 +62,7 @@ describe('enemy presets', () => {
 });
 
 describe('end-to-end', () => {
-	// ATK 2400, MV 1212.75%, Ele 30%, musuh Lv90 vs penyerang Lv90, RES 10%, CR 72%, CD 280%
+	// ATK 2400, MV 1212.75%, Ele 30%, enemy Lv90 vs attacker Lv90, RES 10%, CR 72%, CD 280%
 	// base    = 2400 * 12.1275               = 29106
 	// pool    = 1 + 0.30 = 1.3               -> 37837.8
 	// DEF%    = 1520 / (1512 + 1520)         = 0.5013193 -> 18968.8
@@ -101,7 +101,7 @@ describe('end-to-end', () => {
 
 	it('amplify, special, flat, shred ikut terhitung', () => {
 		const r = calculateDamage({ ...input, flatDmg: 100, amplify: 0.2, special: 0.1, resShred: 0.1 });
-		// RES efektif 0 -> faktor 1
+		// Effective RES 0 -> factor 1
 		const expected = (29106 + 100) * 1.3 * 1.2 * 1.1 * (1520 / 3032) * 1;
 		expect(r.nonCritDamage).toBeCloseTo(expected, 4);
 	});

@@ -1,4 +1,4 @@
-// Fungsi murni untuk sinkronisasi data encore.moe (tanpa I/O supaya mudah diuji).
+// Pure functions for syncing encore.moe data (no I/O, so they are easy to test).
 import type { WeaponEffect, WeaponEffectStat } from '../src/lib/data/game/types';
 
 
@@ -11,7 +11,7 @@ const ENTITIES: Record<string, string> = {
 	'&#39;': "'"
 };
 
-/** Buang tag rich-text game (`<te href=..>`, `<color=..>`, `<span>`, `<size=..>`), pertahankan teks dalam. `<br>` jadi baris baru. */
+/** Strip game rich-text tags (`<te href=..>`, `<color=..>`, `<span>`, `<size=..>`), keeping the inner text. `<br>` becomes a newline. */
 export function stripRichText(input: string): string {
 	return input
 		.replace(/<br\s*\/?>/gi, '\n')
@@ -23,7 +23,7 @@ export function stripRichText(input: string): string {
 		.trim();
 }
 
-/** "181%" / "53.50%" / "587.50" -> angka; format rumus ("53.50%*4") atau kosong -> null. */
+/** "181%" / "53.50%" / "587.50" -> number; formula format ("53.50%*4") or empty -> null. */
 export function parseNumber(input: string | number | null | undefined): number | null {
 	if (typeof input === 'number') return Number.isFinite(input) ? input : null;
 	if (typeof input !== 'string') return null;
@@ -31,21 +31,21 @@ export function parseNumber(input: string | number | null | undefined): number |
 	return m ? Number(m[1]) : null;
 }
 
-/** Alias semantik untuk MV: "181%" -> 181. */
+/** Semantic alias for MV: "181%" -> 181. */
 export const parseMultiplier = parseNumber;
 
-/** Basis poin -> pecahan (1000 = 10% = 0.1). Dibulatkan agar bebas noise floating point. */
+/** Basis points -> fraction (1000 = 10% = 0.1). Rounded to avoid floating-point noise. */
 export function basisPointsToFraction(bp: number): number {
 	return Math.round(bp) / 10000;
 }
 
-/** Satuan atribut skill: '%' bila nilai berakhiran persen, kalau tidak pakai Description sumber (mis. "s"). */
+/** Skill attribute unit: '%' if the values end in a percent sign, otherwise use the source Description (e.g. "s"). */
 export function deriveUnit(values: string[], description: string): string {
 	if (values.some((v) => v.includes('%'))) return '%';
 	return description.trim();
 }
 
-/** Nama kebab-case dari nama Inggris: "Rover: Spectro" -> "rover-spectro". */
+/** kebab-case name from the English name: "Rover: Spectro" -> "rover-spectro". */
 export function kebab(name: string): string {
 	return name
 		.normalize('NFD')
@@ -59,14 +59,14 @@ export interface ParamArray {
 	ArrayString?: string[];
 }
 
-/** Ganti placeholder `{0}`, `{1}`... dengan params[i] (string). Placeholder tanpa param dibiarkan. */
+/** Replace placeholders `{0}`, `{1}`... with params[i] (string). Placeholders without a param are left as is. */
 export function fillParams(template: string, params: string[]): string {
 	return template.replace(/\{(\d+)\}/g, (m, i) => params[Number(i)] ?? m);
 }
 
 /**
- * Render deskripsi pasif senjata untuk refinement `rank` (1..5).
- * Mendukung dua bentuk: placeholder `{i}` atau teks sumber yang sudah memuat "a/b/c/d/e" (diganti nilai ke-rank).
+ * Render the weapon passive description for refinement `rank` (1..5).
+ * Supports two forms: `{i}` placeholders, or source text that already contains "a/b/c/d/e" (replaced with the value at that rank).
  */
 export function renderRefinement(desc: string, params: ParamArray[], rank: number): string {
 	const idx = rank - 1;
@@ -81,19 +81,19 @@ export function renderRefinement(desc: string, params: ParamArray[], rank: numbe
 	return cleanSapTags(stripRichText(out));
 }
 
-/** Nama stat sekunder senjata: ATK/HP/DEF berbentuk rasio diberi akhiran '%'. */
+/** Weapon secondary stat name: ratio-type ATK/HP/DEF get a '%' suffix. */
 export function secondaryName(name: string, isRatio: boolean): string {
 	return isRatio && ['ATK', 'HP', 'DEF'].includes(name) ? `${name}%` : name;
 }
 
-/** Ada placeholder `{n}` yang belum terganti? */
+/** Is there a `{n}` placeholder left unreplaced? */
 export function hasPlaceholder(s: string): boolean {
 	return /\{\d+\}/.test(s);
 }
 
 /**
- * Ambil teks bonus sonata yang sudah dirender dari detail echo.
- *  berbentuk objek berkunci nama set; EffectKeys (jumlah pieces) sejajar dengan EffectDescriptions.
+ * Get the already-rendered sonata bonus text from the echo detail.
+ *  is an object keyed by set name; EffectKeys (piece counts) are parallel to EffectDescriptions.
  */
 export function renderedSonataText(
 	fetterDetails: Record<string, { EffectKeys?: number[]; EffectDescriptions?: string[] }> | undefined,
@@ -105,7 +105,7 @@ export function renderedSonataText(
 	return k >= 0 ? (d?.EffectDescriptions?.[k] ?? null) : null;
 }
 
-// ---------- efek pasif senjata ----------
+// ---------- weapon passive effects ----------
 
 type EffectScope = WeaponEffect['scope'];
 
@@ -129,17 +129,17 @@ const STAT_WORD = '(?:ATK|DEF|Max HP|HP)';
 const STAT_LIST = `${STAT_WORD}(?:(?:\\s*,\\s*|\\s+and\\s+)${STAT_WORD})*`;
 const TAIL_DMG = /^(?:\s+(?:is|are))?(?:\s+(?:increased|amplified|increases?))?(?:\s+by)?(?:\s+an?\s+additional)?\s*$/i;
 const TAIL_STAT = /^(?:\s+of\s+[^,]*?)?(?:\s+(?:is|are))?(?:\s+(?:increased|increases?))?(?:\s+by)?(?:\s+an?\s+additional)?\s*$/i;
-// "Crit. " dimasking jadi "Crit\u0001 " supaya titiknya tidak dianggap akhir kalimat
+// "Crit. " is masked to "Crit\u0001 " so its period is not treated as a sentence end
 const CRIT = 'Crit\\u0001? (Rate|DMG)';
 
 const scopeOfWord = (w: string): EffectScope => {
 	const k = w.toLowerCase();
 	if (k === 'attribute' || k === 'all-attribute') return 'all';
 	if (DT_IDS[k]) return DT_IDS[k] as EffectScope;
-	return k as EffectScope; // elemen
+	return k as EffectScope; // element
 };
 
-/** Semua scope yang disebut dalam frasa DMG ("Basic Attack and Heavy Attack DMG Bonus"). */
+/** All scopes mentioned in a DMG phrase ("Basic Attack and Heavy Attack DMG Bonus"). */
 function scopesOf(phrase: string): EffectScope[] {
 	const out: EffectScope[] = [];
 	for (const m of phrase.matchAll(new RegExp(SCOPE, 'g'))) {
@@ -159,8 +159,8 @@ export interface StatHit {
 }
 
 /**
- * Tentukan stat + scope untuk satu nilai persen, dari teks sebelum dan sesudahnya
- * (dalam kalimat yang sama). `null` = tidak dikenal (jadi 'other').
+ * Determine the stat + scope for a single percent value, from the text before and after it
+ * (within the same sentence). `null` = unrecognized (becomes 'other').
  */
 export function classifyEffectStat(before: string, after: string): StatHit[] | null {
 	const A = after.trimStart();
@@ -169,7 +169,7 @@ export function classifyEffectStat(before: string, after: string): StatHit[] | n
 		return scopesOf(phrase).map((scope) => ({ stat, scope }));
 	};
 
-	// 1. Kata kunci tepat setelah angka ("24% Basic Attack DMG Bonus", "10% Fusion RES", "of the target's DEF")
+	// 1. Keyword right after the number ("24% Basic Attack DMG Bonus", "10% Fusion RES", "of the target's DEF")
 	let m: RegExpMatchArray | null;
 	if (/ignor/i.test(before) && /^(?:of\s+)?(?:the\s+)?(?:target'?s\s+)?DEF\b/.test(A)) {
 		const sm = before.match(new RegExp(`(${DMG_PHRASE})\\s+(?:dealt\\s+)?(?:to\\s+)?ignores?\\s*$`));
@@ -185,7 +185,7 @@ export function classifyEffectStat(before: string, after: string): StatHit[] | n
 	if ((m = A.match(new RegExp(`^(?:additional\\s+)?(${STAT_LIST})\\b`)))) return statWords(m[1]);
 	if ((m = A.match(new RegExp(`^(?:additional\\s+)?(${DMG_PHRASE})`)))) return dmgHits(m[1]);
 
-	// 2. Kata kunci tepat sebelum angka ("increases Heavy Attack DMG Bonus by", "ATK is increased by")
+	// 2. Keyword right before the number ("increases Heavy Attack DMG Bonus by", "ATK is increased by")
 	if (
 		(m = before.match(
 			new RegExp(`${CRIT}((?:\\s+of\\s+[^,]*?)?)(?:\\s+(?:is|are))?(?:\\s+(?:increased|increases?))?(?:\\s+by)?\\s*$`, 'i')
@@ -228,14 +228,14 @@ interface ValueToken {
 	first: string;
 }
 
-/** `{Cus:Sap,S=time P=times SapTag=2}` -> bentuk jamak ("times"). */
+/** `{Cus:Sap,S=time P=times SapTag=2}` -> plural form ("times"). */
 export function cleanSapTags(s: string): string {
 	return s.replace(/\{Cus:Sap,S=(\S+) P=(\S+)[^}]*\}/g, '$2');
 }
 
 /**
- * Turunkan efek terstruktur dari template Desc pasif senjata (nilai per refinement "a/b/c/d/e" atau `{i}`).
- * Kalimat tanpa nilai persen diabaikan; persen yang tak dikenal menjadi stat 'other' (hanya teks).
+ * Derive structured effects from a weapon passive Desc template (per-refinement values "a/b/c/d/e" or `{i}`).
+ * Sentences without a percent value are ignored; unrecognized percents become the 'other' stat (text only).
  */
 export function parseWeaponEffects(desc: string, params: ParamArray[] = []): WeaponEffect[] {
 	let text = stripRichText(desc);
@@ -289,7 +289,7 @@ export function parseWeaponEffects(desc: string, params: ParamArray[] = []): Wea
 			const after = s.slice(end, idx + 1 < markers.length ? markers[idx + 1].index : undefined);
 			if (/(?:above|below|under|at least|capped at)\s*$/i.test(before)) return;
 			if (/up to\s*$/i.test(before)) {
-				// "…, up to 24%" = batas total; jadikan jumlah stack efek sebelumnya
+				// "…, up to 24%" = total cap; turn it into the stack count of the previous effect
 				const base = mine[mine.length - 1];
 				if (base && base.values[0] > 0) base.maxStacks = Math.round(tok.nums[0] / base.values[0]) || null;
 				return;
@@ -316,7 +316,7 @@ export function parseWeaponEffects(desc: string, params: ParamArray[] = []): Wea
 			const n = stackOf(s);
 			if (n) for (const e of prev) if (e.maxStacks === null) e.maxStacks = n;
 		}
-		// Kalimat berlabel ("Nature's Order: ... up to 24%") tanpa kata pemicu tetap terpicu bila bertumpuk
+		// Labeled sentences ("Nature's Order: ... up to 24%") without a trigger word still count as triggered when stackable
 		for (const e of mine) if (e.maxStacks) e.triggered = true;
 		effects.push(...mine);
 		prev = mine;
@@ -324,36 +324,36 @@ export function parseWeaponEffects(desc: string, params: ParamArray[] = []): Wea
 	return effects;
 }
 
-// ---------- templat angka untuk overlay terjemahan ----------
+// ---------- number templates for translation overlays ----------
 
 const NUMBER_RE = /\d+(?:\.\d+)?/g;
 
-/** Ganti tiap angka (termasuk desimal) dengan {0}, {1}, ... sesuai urutan. Tanda % / satuan tetap di luar placeholder. */
+/** Replace each number (including decimals) with {0}, {1}, ... in order. The % sign / unit stays outside the placeholder. */
 export function toNumberTemplate(text: string): { template: string; nums: string[] } {
 	const nums: string[] = [];
 	const template = text.replace(NUMBER_RE, (m) => `{${nums.push(m) - 1}}`);
 	return { template, nums };
 }
 
-/** "12.8" → "12,8"; bilangan bulat tidak berubah. */
+/** "12.8" → "12,8"; integers are unchanged. */
 export function toIdDecimal(num: string): string {
 	return num.replace(/^(\d+)\.(\d+)$/, '$1,$2');
 }
 
-/** Kebalikan toNumberTemplate: isi {n} dengan nums[n]. */
+/** Inverse of toNumberTemplate: fill {n} with nums[n]. */
 export function fromNumberTemplate(template: string, nums: string[]): string {
 	return template.replace(/\{(\d+)\}/g, (m, i) => nums[Number(i)] ?? m);
 }
 
-/** Placeholder {n} dalam templat, terurut (multiset) untuk validasi terjemahan. */
+/** Placeholders {n} in a template, sorted (multiset) for translation validation. */
 export function placeholderMultiset(template: string): string[] {
 	return (template.match(/\{\d+\}/g) ?? []).sort();
 }
 
 /**
- * Bersihkan tag template game yang tersisa di teks skill/sequence:
- * `{Cus:Sap,S=stack P=stacks SapTag=A}` -> bentuk tunggal bila didahului angka 1, selain itu jamak;
- * `{Cus:Ipt,Touch=Tapping PC=Pressing Gamepad=Pressing}` -> varian PC ("Pressing").
+ * Clean up leftover game template tags in skill/sequence text:
+ * `{Cus:Sap,S=stack P=stacks SapTag=A}` -> singular form when preceded by the number 1, plural otherwise;
+ * `{Cus:Ipt,Touch=Tapping PC=Pressing Gamepad=Pressing}` -> PC variant ("Pressing").
  */
 export function cleanGameTags(s: string): string {
 	return s
@@ -362,7 +362,7 @@ export function cleanGameTags(s: string): string {
 		.replace(/\{Cus:Ipt,Touch=.+? PC=(.+?) Gamepad=.+?\}/g, '$1');
 }
 
-/** Bagian templat/angka dari tiap teks pasif dan kalimat efek, untuk ekstraksi + penerapan. */
+/** Template/number parts of each passive text and effect sentence, for extraction + application. */
 export interface WeaponI18nWeapon {
 	name: string;
 	passive: {
@@ -377,25 +377,25 @@ export interface WeaponI18nWeapon {
 
 const RANKS = ['r1', 'r2', 'r3', 'r4', 'r5'] as const;
 
-/** Templat unik (urutan kemunculan) dari daftar teks Inggris. */
+/** Unique templates (in order of appearance) from a list of English texts. */
 export function uniqueTemplates(texts: string[]): string[] {
 	const set = new Set<string>();
 	for (const t of texts) if (t !== '') set.add(toNumberTemplate(t).template);
 	return [...set];
 }
 
-/** Semua templat sumber (unik, terurut) dari daftar senjata. */
+/** All source templates (unique, sorted) from a list of weapons. */
 export function collectWeaponTemplates(weapons: WeaponI18nWeapon[]): string[] {
 	return uniqueTemplates(weaponTexts(weapons)).sort();
 }
 
-/** Semua teks Inggris senjata, urutan tetap: r1..r5 lalu kalimat efek per senjata. */
+/** All English weapon texts in a fixed order: r1..r5, then the effect sentences per weapon. */
 function weaponTexts(weapons: WeaponI18nWeapon[]): string[] {
 	return weapons.flatMap((w) => [...RANKS.map((k) => w.passive[k].en), ...w.passive.effects.map((e) => e.sentence)]);
 }
 
 export interface OverlayResult {
-	/** Terjemahan sejajar dengan `texts` (id dengan angka dipulihkan); tanpa terjemahan -> teks asli. */
+	/** Translations parallel to `texts` (id with numbers restored); without a translation -> original text. */
 	translated: string[];
 	missing: string[];
 	invalid: { template: string; translation: string; expected: string[]; got: string[] }[];
@@ -403,8 +403,8 @@ export interface OverlayResult {
 }
 
 /**
- * Terapkan overlay { templatInggris: templatIndonesia } ke daftar teks Inggris.
- * Placeholder harus identik (multiset); angka dipulihkan dengan koma desimal.
+ * Apply an overlay { englishTemplate: indonesianTemplate } to a list of English texts.
+ * Placeholders must be identical (multiset); numbers are restored with a decimal comma.
  */
 export function applyOverlay(texts: string[], overlay: Record<string, string>): OverlayResult {
 	const missing = new Set<string>();
@@ -413,7 +413,7 @@ export function applyOverlay(texts: string[], overlay: Record<string, string>): 
 	const used = new Set<string>();
 
 	const translated = texts.map((en) => {
-		if (en === '') return en; // deskripsi kosong dari sumber: tidak ada yang diterjemahkan
+		if (en === '') return en; // empty description from the source: nothing to translate
 		const { template, nums } = toNumberTemplate(en);
 		used.add(template);
 		const tr = overlay[template];
@@ -428,7 +428,7 @@ export function applyOverlay(texts: string[], overlay: Record<string, string>): 
 			bad.add(template);
 			return en;
 		}
-		// Teks Indonesia memakai koma desimal (12,8%), sama dengan format angka di kalkulator.
+		// Indonesian text uses a decimal comma (12,8%), matching the number format in the calculator.
 		return fromNumberTemplate(tr, nums.map(toIdDecimal));
 	});
 	const stale = Object.keys(overlay).filter((k) => !used.has(k)).sort();
@@ -437,7 +437,7 @@ export function applyOverlay(texts: string[], overlay: Record<string, string>): 
 
 export type ApplyWeaponI18nResult = Omit<OverlayResult, 'translated'>;
 
-/** Terapkan overlay: isi passive.rN.id dan effects[i].sentenceId (mutasi in-place). Tanpa terjemahan -> id = en. */
+/** Apply the overlay: fill passive.rN.id and effects[i].sentenceId (mutates in place). Without a translation -> id = en. */
 export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<string, string>): ApplyWeaponI18nResult {
 	const { translated, ...rest } = applyOverlay(weaponTexts(weapons), overlay);
 	let i = 0;
@@ -448,7 +448,7 @@ export function applyWeaponI18n(weapons: WeaponI18nWeapon[], overlay: Record<str
 	return rest;
 }
 
-// ---------- skill & sequence karakter ----------
+// ---------- character skills & sequences ----------
 
 export interface SkillI18nFile {
 	slug: string;
@@ -456,17 +456,17 @@ export interface SkillI18nFile {
 	sequences: { description: { en: string; id: string } }[];
 }
 
-/** Semua teks Inggris skill lalu sequence, sesuai urutan file. */
+/** All English skill texts, then sequence texts, in file order. */
 export function skillTexts(file: SkillI18nFile): string[] {
 	return [...file.skills.map((s) => s.description.en), ...file.sequences.map((s) => s.description.en)];
 }
 
-/** Templat sumber unik (urutan file) untuk satu karakter. */
+/** Unique source templates (in file order) for one character. */
 export function collectSkillTemplates(file: SkillI18nFile): string[] {
 	return uniqueTemplates(skillTexts(file));
 }
 
-/** Isi description.id skill + sequence dari overlay (mutasi in-place). */
+/** Fill skill + sequence description.id from the overlay (mutates in place). */
 export function applySkillI18n(file: SkillI18nFile, overlay: Record<string, string>): ApplyWeaponI18nResult {
 	const { translated, ...rest } = applyOverlay(skillTexts(file), overlay);
 	let i = 0;

@@ -3,10 +3,10 @@
 	import type { DamageBreakdown } from './damage.ts';
 	import type { WeaponContribution } from './weapon.ts';
 
-	// wc: kontribusi pasif senjata (opsional); dipakai untuk sub-baris "dari senjata"
+	// wc: weapon passive contribution (optional); used for the "from weapon" sub-row
 	let { r, wc = null }: { r: DamageBreakdown; wc?: WeaponContribution | null } = $props();
 
-	const CAP = Math.log(4); // bar penuh = ×4 atau ×0,25
+	const CAP = Math.log(4); // full bar = ×4 or ×0.25
 	const nf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 0 }) };
 	const mf = { format: (n: number) => formatNumber(n, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) };
 	const pf = { format: (n: number) => formatNumber(n, { maximumFractionDigits: 2 }) };

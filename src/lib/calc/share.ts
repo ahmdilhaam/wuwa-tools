@@ -1,5 +1,5 @@
-// Serialisasi state kalkulator ke query string agar perhitungan bisa dibagikan lewat tautan.
-// Hanya kolom yang berbeda dari defaultBuild() yang ditulis, dengan kunci pendek.
+// Serializes calculator state into a query string so a calculation can be shared via link.
+// Only fields that differ from defaultBuild() are written, using short keys.
 import { damageTypes, defaultBuild, type BuildState, type NumField } from './build';
 import { CUSTOM_ENEMY_ID, elements, enemyPresets } from './enemies';
 import type { WeaponToggle } from './weapon';
@@ -17,7 +17,7 @@ type NumKey = {
 	[K in keyof BuildState]: BuildState[K] extends NumField ? (NumField extends BuildState[K] ? K : never) : never;
 }[keyof BuildState];
 
-/** Kolom angka bebas (boleh kosong). */
+/** Free numeric fields (may be empty). */
 const numKeys: Record<string, NumKey> = {
 	lv: 'attackerLevel',
 	st: 'scalingStat',
@@ -39,7 +39,7 @@ const numKeys: Record<string, NumKey> = {
 	rs: 'resShredPct'
 };
 
-/** Kolom pilihan dengan himpunan nilai tertutup. */
+/** Choice fields with a closed set of values. */
 const enumKeys = {
 	sc: { field: 'scalingType', values: ['ATK', 'HP', 'DEF'] },
 	el: { field: 'element', values: elements },
@@ -47,7 +47,7 @@ const enumKeys = {
 	e: { field: 'enemyId', values: [...enemyPresets.map((p) => p.id), CUSTOM_ENEMY_ID] }
 } as const satisfies Record<string, { field: keyof BuildState; values: readonly string[] }>;
 
-/** Id bebas (karakter, skill, hit, senjata); divalidasi bentuknya saja, data dicek saat dipakai. */
+/** Free ids (character, skill, hit, weapon); only the format is validated, data is checked on use. */
 const idKeys = {
 	c: 'pickCharacter',
 	s: 'pickSkill',
@@ -58,7 +58,7 @@ const idKeys = {
 const ID_PATTERN = /^[a-z0-9_-]{1,64}$/i;
 const COMPARE = 'cmp';
 
-/** Nilai NumField yang dinormalkan: null untuk kosong / tidak valid. */
+/** Normalized NumField value: null for empty / invalid. */
 function normNum(v: NumField): number | null {
 	if (v === null || v === undefined || v === '') return null;
 	const n = typeof v === 'number' ? v : Number(v);
@@ -89,7 +89,7 @@ function decodeToggles(raw: string): Record<number, WeaponToggle> {
 	return out;
 }
 
-/** Pasangan [kunci, nilai] untuk kolom yang berbeda dari bawaan. */
+/** [key, value] pairs for fields that differ from the defaults. */
 export function encodeBuild(b: BuildState): [string, string][] {
 	const d = defaultBuild();
 	const out: [string, string][] = [];
@@ -110,7 +110,7 @@ export function encodeBuild(b: BuildState): [string, string][] {
 	return out;
 }
 
-/** Bangun BuildState dari parameter; kunci tak dikenal atau nilai tidak valid diabaikan. */
+/** Build a BuildState from parameters; unknown keys or invalid values are ignored. */
 export function decodeBuild(get: (key: string) => string | null): BuildState {
 	const b = defaultBuild();
 	for (const [key, field] of Object.entries(idKeys)) {
@@ -141,7 +141,7 @@ export function decodeBuild(get: (key: string) => string | null): BuildState {
 	return b;
 }
 
-/** Query string (tanpa "?") untuk seluruh state kalkulator; kosong bila semuanya bawaan. */
+/** Query string (without "?") for the whole calculator state; empty when everything is default. */
 export function encodeShare(s: ShareState): string {
 	const params = new URLSearchParams();
 	if (s.mode === 'compare') {
@@ -154,7 +154,7 @@ export function encodeShare(s: ShareState): string {
 	return params.toString();
 }
 
-/** Kebalikan encodeShare. Mode bandingkan membaca prefiks "a." dan "b.". */
+/** Inverse of encodeShare. Compare mode reads the "a." and "b." prefixes. */
 export function decodeShare(search: string | URLSearchParams): ShareState {
 	const params = typeof search === 'string' ? new URLSearchParams(search) : search;
 	const at = (prefix: string) => (key: string) => params.get(prefix + key);

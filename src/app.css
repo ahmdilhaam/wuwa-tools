@@ -1,12 +1,12 @@
 /*
- * Sistem desain "Resonance readout".
- * - Warna elemen hanya untuk informasi elemen, bukan dekorasi.
- * - Emas = 5★ dan aksi utama; ungu = 4★.
- * - Sudut terpotong (.panel-cut) hanya untuk panel "instrumen" utama.
- * Tema mengikuti sistem; bisa dipaksa via <html data-theme="light|dark">.
+ * "Resonance readout" design system.
+ * - Element colors are for element information only, not decoration.
+ * - Gold = 5★ and primary actions; violet = 4★.
+ * - Cut corners (.panel-cut) are for main "instrument" panels only.
+ * The theme follows the system; it can be forced via <html data-theme="light|dark">.
  */
 :root {
-	/* Tema gelap (default) */
+	/* Dark theme (default) */
 	--bg: #161e36;
 	--bg-deep: #10172b;
 	--surface: #1d2642;
@@ -24,7 +24,7 @@
 	--violet: #9b82e0;
 	--violet-soft: rgba(155, 130, 224, 0.16);
 
-	/* Alias lama — dipakai komponen yang belum dimigrasi */
+	/* Legacy aliases — used by components not yet migrated */
 	--accent: var(--gold);
 	--accent-soft: var(--gold-soft);
 	--danger: #ef8a8a;
@@ -42,7 +42,7 @@
 	--font-display: 'Unbounded Variable', 'Segoe UI', system-ui, sans-serif;
 	--font-body: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
 
-	/* Skala tipe (rasio ~1.25) */
+	/* Type scale (ratio ~1.25) */
 	--fs-xs: 0.78rem;
 	--fs-sm: 0.875rem;
 	--fs-md: 1rem;
@@ -165,7 +165,7 @@ textarea {
 	outline-offset: 2px;
 }
 
-/* ---------- Kontrol form ---------- */
+/* ---------- Form controls ---------- */
 input[type='text'],
 input[type='search'],
 input[type='number'],
@@ -274,7 +274,7 @@ button {
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
 }
 
-/* ---------- Permukaan ---------- */
+/* ---------- Surfaces ---------- */
 .card {
 	background: var(--surface);
 	border: 1px solid var(--border);
@@ -282,11 +282,11 @@ button {
 	padding: 1rem 1.1rem;
 }
 
-/* Panel instrumen: sudut kanan atas terpotong, khas UI Resonator. */
+/* Instrument panel: top-right corner cut, typical of the Resonator UI. */
 .panel-cut {
 	--d: calc(var(--cut) * 0.7071);
 	position: relative;
-	/* garis diagonal 1px tepat di dalam potongan sudut, sisanya permukaan panel */
+	/* 1px diagonal line right inside the corner cut, the rest is panel surface */
 	background: linear-gradient(
 		225deg,
 		transparent var(--d),
@@ -299,7 +299,7 @@ button {
 	clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
 }
 
-/* ---------- Tabel ---------- */
+/* ---------- Tables ---------- */
 .table-wrap {
 	overflow-x: auto;
 	border: 1px solid var(--border);
@@ -342,9 +342,9 @@ th.num {
 	white-space: nowrap;
 }
 
-/* ---------- Penanda domain ---------- */
+/* ---------- Domain markers ---------- */
 .el {
-	/* chip elemen: pakai style="--c: var(--el-aero)" atau kelas .el-aero */
+	/* element chip: use style="--c: var(--el-aero)" or the .el-aero class */
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;

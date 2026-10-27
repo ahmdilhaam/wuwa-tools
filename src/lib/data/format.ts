@@ -1,4 +1,4 @@
-// Format markdown inline secara aman: escape HTML dulu, baru ubah **tebal** menjadi <strong>.
+// Safely formats inline markdown: escape HTML first, then turn **bold** into <strong>.
 
 export function escapeHtml(s: string): string {
 	return s

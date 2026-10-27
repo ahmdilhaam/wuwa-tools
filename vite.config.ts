@@ -16,7 +16,7 @@ export default defineConfig({
 			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 			adapter: adapter({ fallback: undefined }),
 
-			// Crawl semua rute statis, plus akar versi Inggris agar seluruh /en/ ikut ter-crawl.
+			// Crawl all static routes, plus the English root so the whole /en/ tree is crawled too.
 			prerender: { entries: ['*', '/en/'] }
 		})
 	]

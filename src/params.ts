@@ -1,6 +1,6 @@
 import { defineParams } from '@sveltejs/kit/params';
 
-// Parameter matcher. Hanya "en" yang berawalan di URL; bahasa Indonesia (default) tanpa awalan.
+// Parameter matcher. Only "en" is prefixed in the URL; Indonesian (the default) has no prefix.
 export const params = defineParams({
 	lang: (param) => (param === 'en' ? param : undefined)
 });

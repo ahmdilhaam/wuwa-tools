@@ -13,7 +13,7 @@
 	let query = $state('');
 	let type = $state<WeaponType | ''>('');
 	let rarity = $state<number | 0>(0);
-	/** Refinement per senjata (1–5), default R1 */
+	/** Refinement per weapon (1–5), default R1 */
 	let refine = $state<Record<number, number>>({});
 
 	const rarities = [5, 4, 3, 2, 1];
@@ -26,7 +26,7 @@
 		)
 	);
 
-	/** Tampilkan bahasa lainnya (bukan bahasa aktif) di detail pasif */
+	/** Show the other language (not the active one) in the passive details */
 	let showOther = $state(false);
 	const passiveText = (w: GameWeapon, r: number) => {
 		const p = w.passive[`r${r}` as 'r1' | 'r2' | 'r3' | 'r4' | 'r5'];

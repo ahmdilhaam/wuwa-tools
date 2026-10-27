@@ -1,4 +1,4 @@
-// Muat data skill per karakter secara malas agar 60 file JSON tidak masuk chunk kalkulator.
+// Lazy-load skill data per character so the 60 JSON files stay out of the calculator chunk.
 import type { CharacterSkills } from '#lib/data/game/types.ts';
 
 const loaders = import.meta.glob<CharacterSkills>('../data/game/skills/*.json', {

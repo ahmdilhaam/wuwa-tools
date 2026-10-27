@@ -3,7 +3,7 @@ import type { LocalizedText, Weapon } from './types';
 export const weapons: Weapon[] = [
 	{
 		name: 'The Last Dance',
-		// Koreksi: sumber menulis (Sword); The Last Dance adalah Pistols.
+		// Correction: the source says (Sword); The Last Dance is Pistols.
 		type: 'Pistols',
 		stats: 'ATK 500, CDmg 72%',
 		users: ['Carlotta (BiS)', 'Chixia (BiS)'],
@@ -29,7 +29,7 @@ export const weapons: Weapon[] = [
 	{ name: 'Forged Dwarf Star', type: 'Pistols', stats: 'ATK 500, CR 36%', users: ['Denia (BiS sig)'] },
 	{
 		name: 'Unflickering Valor',
-		// Koreksi: sumber menulis (Rectifier); Brant pengguna pedang, jadi Sword.
+		// Correction: the source says (Rectifier); Brant wields a sword, so Sword.
 		type: 'Sword',
 		stats: 'ATK 412, ER 77%',
 		users: ['Brant (BiS sig)'],

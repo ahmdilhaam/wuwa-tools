@@ -1,4 +1,4 @@
-// Data senjata dimuat malas (124 senjata) dan dibagi ke semua BuildInputs serta halaman hasil.
+// Weapon data is lazy-loaded (124 weapons) and shared across all BuildInputs and the results page.
 import characters from '#lib/data/game/characters.json';
 import type { GameCharacter, GameWeapon } from '#lib/data/game/types.ts';
 
@@ -9,7 +9,7 @@ export const weaponStore = {
 	get list() {
 		return list;
 	},
-	/** Mulai memuat (sekali). Aman dipanggil berulang. */
+	/** Start loading (once). Safe to call repeatedly. */
 	ensure() {
 		if (list || loading) return;
 		loading = true;

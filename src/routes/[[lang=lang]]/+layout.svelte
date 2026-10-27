@@ -36,7 +36,7 @@
 
 	onMount(enableLocationSuffix);
 
-	// Navigasi klien tidak memuat ulang HTML, jadi <html lang> disinkronkan di sini.
+	// Client navigation does not reload the HTML, so <html lang> is synced here.
 	$effect(() => {
 		document.documentElement.lang = current;
 	});
@@ -55,7 +55,7 @@
 <header class="topbar">
 	<div class="inner">
 		<a class="brand" href={localize('/')} aria-label={t('layout.brandLabel')}>
-			<!-- Gelombang resonansi: tiga puncak dengan amplitudo menurun -->
+			<!-- Resonance wave: three peaks with decreasing amplitude -->
 			<svg viewBox="0 0 40 20" aria-hidden="true">
 				<path d="M1 10 Q5 1 9 10 T17 10 Q20 4 23 10 T29 10 Q31 7 33 10 T39 10" />
 			</svg>
@@ -238,13 +238,13 @@
 		.topbar .inner {
 			padding-top: 0.5rem;
 		}
-		/* Enam tautan muat dalam dua baris; lebih rapi daripada scroll horizontal. */
+		/* Six links fit in two rows; tidier than horizontal scrolling. */
 		nav {
 			order: 2;
 			width: 100%;
 			gap: 0 0.1rem;
 		}
-		/* Pengganti bahasa tetap di baris merek, rata kanan; nav turun ke bawah. */
+		/* The language switcher stays on the brand row, right-aligned; nav drops below. */
 		.lang {
 			order: 1;
 		}

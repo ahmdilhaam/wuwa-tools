@@ -1,7 +1,7 @@
 import { calc_id } from './dict/calc.id.ts';
 import { library_id } from './dict/library.id.ts';
 import { echo_id } from './dict/echo.id.ts';
-// Kamus bahasa Indonesia: sumber kebenaran struktur. en.ts harus mengikuti bentuk yang sama.
+// Indonesian dictionary: source of truth for the structure. en.ts must follow the same shape.
 export const id = {
 	calc: calc_id,
 	library: library_id,
@@ -49,5 +49,5 @@ export const id = {
 	}
 };
 
-// Tipe struktur kamus: semua daun bertipe string.
+// Dictionary structure type: all leaves are strings.
 export type Dict = typeof id;

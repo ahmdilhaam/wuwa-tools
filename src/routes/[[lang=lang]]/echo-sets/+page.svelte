@@ -6,7 +6,7 @@
 	import { normalizeName } from '#lib/data/merged.ts';
 	import { gameText, t } from '#lib/i18n/index.svelte.ts';
 
-	// Nama di game berbeda dari catatan tulisan tangan: samakan lewat alias.
+	// In-game names differ from the hand-written notes: reconcile them via aliases.
 	const aliases: Record<string, string> = {
 		reelsofsplicedmemories: 'reelofsplicedmemories'
 	};
@@ -17,7 +17,7 @@
 
 	const notesByKey = new Map(echoSets.map((s) => [key(s.name), s]));
 
-	// Echo per set. Satu nama bisa punya beberapa id (varian), tampilkan sekali saja.
+	// Echoes per set. One name can have several ids (variants); show it only once.
 	const echoesBySet = new Map<number, { name: string; icon: string }[]>();
 	for (const e of echoData as GameEcho[]) {
 		for (const id of e.setIds) {
@@ -36,7 +36,7 @@
 			abbrev: hand?.abbrev ?? [],
 			note: hand?.note,
 			forCharacter: hand?.forCharacter,
-			// Urut per jumlah keping; set 3pc tidak punya bonus 2pc/5pc.
+			// Sorted by piece count; 3pc sets have no 2pc/5pc bonus.
 			bonuses: [...s.bonuses].sort((a, b) => a.pieces - b.pieces).map((b) => ({ pieces: b.pieces, text: b.text.en })),
 			echoes: echoesBySet.get(s.id) ?? []
 		};
@@ -95,7 +95,7 @@
 					</td>
 					<td class="muted">{r.abbrev.join(', ') || '—'}</td>
 					<td class="echoes">
-						<!-- Terbuka otomatis kalau pencarian cocok dengan salah satu echo di set ini -->
+						<!-- Opens automatically if the search matches one of the echoes in this set -->
 						<details open={r.echoes.some((e) => echoHit(e.name))}>
 							<summary>{t('library.echoSets.echoCount', { count: r.echoes.length })}</summary>
 							<ul>

@@ -1,5 +1,5 @@
-// Sinkronisasi data game dari api-v2.encore.moe -> src/lib/data/game/*.json
-// Jalankan: bun scripts/sync-encore.ts [--no-cache]
+// Sync game data from api-v2.encore.moe -> src/lib/data/game/*.json
+// Run: bun scripts/sync-encore.ts [--no-cache]
 import { applyWeaponI18nFromFile, applySkillI18nFromFiles } from './apply-weapon-i18n';
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
@@ -43,7 +43,7 @@ const root = resolve(import.meta.dirname, '..');
 const cacheDir = resolve(root, '.cache/encore');
 const outDir = resolve(root, 'src/lib/data/game');
 const iconDir = resolve(root, 'static/img/characters');
-// Tampil 32–132px; 160px menjaga total ~470 KB untuk ~60 ikon (192px q80 ~700 KB)
+// Displayed at 32–132px; 160px keeps the total at ~470 KB for ~60 icons (192px q80 ~700 KB)
 const ICON_WIDTH = 160;
 const NO_CACHE = process.argv.includes('--no-cache');
 const CONCURRENCY = 4;
@@ -51,7 +51,7 @@ const TIMEOUT_MS = 30_000;
 const RETRIES = 3;
 const MV_LEVELS = 10;
 
-// ---------- fetch sopan: batas konkurensi, retry, timeout, cache ----------
+// ---------- polite fetch: concurrency limit, retry, timeout, cache ----------
 
 let active = 0;
 const waiters: Array<() => void> = [];
@@ -68,7 +68,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 let networkCalls = 0;
 let cacheHits = 0;
 
-/** Ambil JSON; `null` bila 404. Gagal keras setelah retry habis. */
+/** Fetch JSON; `null` on 404. Fails hard once retries are exhausted. */
 async function api<T = any>(lang: string, path: string): Promise<T | null> {
 	const cacheFile = resolve(cacheDir, lang, `${path.replace(/\//g, '_')}.json`);
 	if (!NO_CACHE && existsSync(cacheFile)) {
@@ -103,7 +103,7 @@ async function api<T = any>(lang: string, path: string): Promise<T | null> {
 	}
 }
 
-/** Ambil file biner (gambar) dengan cache yang sama; gagal keras bila tidak ada. */
+/** Fetch a binary file (image) with the same cache; fails hard if it is missing. */
 async function binary(url: string): Promise<Buffer> {
 	const cacheFile = resolve(cacheDir, 'img', basename(new URL(url).pathname));
 	if (!NO_CACHE && existsSync(cacheFile)) {
@@ -139,7 +139,7 @@ async function mapPool<T, R>(items: T[], fn: (item: T, i: number) => Promise<R>)
 	return Promise.all(items.map((item, i) => fn(item, i)));
 }
 
-// ---------- util ----------
+// ---------- utilities ----------
 
 function fail(msg: string): never {
 	console.error(`GAGAL: ${msg}`);
@@ -162,8 +162,8 @@ const elementOf = (name: string): Element => {
 	return e;
 };
 const text = (s: unknown) => (typeof s === 'string' ? stripRichText(s) : '');
-/** Gabungkan teks en + id; id kosong -> salinan en. */
-/** Teks skill/sequence: buang rich-text lalu tag template game ({Cus:Sap..}, {Cus:Ipt..}). */
+/** Combine en + id text; empty id -> copy of en. */
+/** Skill/sequence text: strip rich text, then game template tags ({Cus:Sap..}, {Cus:Ipt..}). */
 const skillText = (s: unknown) => cleanGameTags(text(s));
 const loc = (en: string, id: string | undefined | null): Localized => ({ en, id: id ? id : en });
 
@@ -173,7 +173,7 @@ async function writeJson(rel: string, data: unknown) {
 	await writeFile(file, JSON.stringify(data) + '\n');
 }
 
-// ---------- karakter ----------
+// ---------- characters ----------
 
 async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean; skillFiles: number }> {
 	const list = await api('en', 'character');
@@ -211,7 +211,7 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 		slugs.add(c.slug);
 	}
 
-	// Probe: apakah /api/id/ benar-benar memuat teks skill terjemahan?
+	// Probe: does /api/id/ actually contain translated skill text?
 	const probe = await api('id', `character/${chars[0].id}`);
 	const idOk = !!probe?.Skills?.some((s: any) => typeof s.SkillDescribe === 'string' && s.SkillDescribe.length > 0);
 	if (!idOk) console.warn('PERINGATAN: /api/id/character tidak berisi teks terjemahan; id diisi salinan en.');
@@ -220,7 +220,7 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 	let warnPlaceholder = 0;
 	await mapPool(chars, async (c) => {
 		const en = need<any>(await api('en', `character/${c.id}`), `character/${c.id}`);
-		// Stat dasar Lv90 (tanpa senjata/echo)
+		// Base stats at Lv90 (without weapon/echo)
 		const base90 = (name: string) => {
 			const p = (en.Properties ?? []).find((x: any) => x.Name === name);
 			const v = p?.GrowthValues?.find((g: any) => g.level === 90 || g.Level === 90)?.value;
@@ -243,7 +243,7 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 			const hits: SkillHit[] = [];
 			for (const d of s.DamageList ?? []) {
 				const mv = (d.RateLv ?? []).slice(0, MV_LEVELS).map((v: string) => parseNumber(v));
-				// Lewati hit tanpa MV numerik (mis. entri murni energi/ketangguhan)
+				// Skip hits without a numeric MV (e.g. pure energy/toughness entries)
 				if (mv.length === 0 || mv.some((v: number | null) => v === null)) continue;
 				const hit: SkillHit = {
 					id: d.Id,
@@ -292,8 +292,8 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 }
 
 /**
- * Ikon karakter di-host sendiri: diperkecil ke WebP lalu diberi hash isi di nama file,
- * supaya aman di-cache immutable (cache encore.moe cuma 2 menit). `icon` diganti path lokal.
+ * Character icons are self-hosted: downsized to WebP and given a content hash in the file name,
+ * so they are safe to cache as immutable (encore.moe's cache is only 2 minutes). `icon` is replaced with the local path.
  */
 async function localizeCharacterIcons(chars: GameCharacter[]): Promise<number> {
 	await mkdir(iconDir, { recursive: true });
@@ -311,7 +311,7 @@ async function localizeCharacterIcons(chars: GameCharacter[]): Promise<number> {
 	return keep.size;
 }
 
-// ---------- senjata ----------
+// ---------- weapons ----------
 
 async function syncWeapons(): Promise<{ weapons: GameWeapon[]; idOk: boolean }> {
 	const list = await api('en', 'weapon');
@@ -363,7 +363,7 @@ async function syncWeapons(): Promise<{ weapons: GameWeapon[]; idOk: boolean }> 
 async function syncSonata(): Promise<{ sets: SonataSet[]; echoes: GameEcho[]; idOk: boolean }> {
 	const list = await api('en', 'echo');
 	const echoes = nonEmpty(list?.Echo, 'echo');
-	// Probe id: endpoint id/echo tidak selalu berbentuk sama dengan en
+	// Probe id: the id/echo endpoint does not always have the same shape as en
 	const idList = await api('id', 'echo');
 	const idEcho: any[] = idList?.Echo ?? [];
 	const idFetter = new Map<number, string>();
@@ -397,7 +397,7 @@ async function syncSonata(): Promise<{ sets: SonataSet[]; echoes: GameEcho[]; id
 	}
 	const sets = [...map.values()].sort((a, b) => a.id - b.id);
 
-	// Daftar echo (tanpa Phantom Appearance kosmetik); boss tanpa stat musuh tetap masuk di sini.
+	// Echo list (excluding cosmetic Phantom Appearance); bosses without enemy stats are still included here.
 	const echoList: GameEcho[] = echoes
 		.filter((e: any) => e.Type === 'Echo')
 		.map((e: any) => {
@@ -414,7 +414,7 @@ async function syncSonata(): Promise<{ sets: SonataSet[]; echoes: GameEcho[]; id
 	if (echoList.length === 0) fail('tidak ada echo bertipe Echo');
 	for (const s of sets) s.echoIds = [...new Set(s.echoIds)].sort((a, b) => a - b);
 
-	// Daftar echo hanya memuat template ({0}); detail satu echo anggota punya teks yang sudah dirender.
+	// The echo list only contains templates ({0}); the detail of one member echo has the already-rendered text.
 	await mapPool(sets, async (s) => {
 		const d = need<any>(await api('en', `echo/${s.echoIds[0]}`), `echo/${s.echoIds[0]}`);
 		for (const b of s.bonuses) {
@@ -426,7 +426,7 @@ async function syncSonata(): Promise<{ sets: SonataSet[]; echoes: GameEcho[]; id
 	return { sets, echoes: echoList, idOk };
 }
 
-// ---------- monster ----------
+// ---------- monsters ----------
 
 const MONSTER_CLASS: Record<number, MonsterClass> = { 1: 'standard', 2: 'elite', 3: 'overlord', 4: 'calamity' };
 const ELEMENT_BY_ID: Record<number, keyof Resistances> = {
@@ -452,7 +452,7 @@ async function syncMonsters(): Promise<{ monsters: GameMonster[]; breakdown: Rec
 	const parsed = await mapPool(bosses, async (m): Promise<GameMonster | null> => {
 		const d = need<any>(await api('en', `monster/${m.Id}`), `monster/${m.Id}`);
 		const p = d.Properties ?? {};
-		// Sebagian monster (mis. varian Phantom) tidak punya data stat sama sekali -> dilewati
+		// Some monsters (e.g. Phantom variants) have no stat data at all -> skipped
 		if (Object.keys(p).length === 0) {
 			skippedNoStats++;
 			return null;
@@ -486,7 +486,7 @@ async function syncMonsters(): Promise<{ monsters: GameMonster[]; breakdown: Rec
 	return { monsters, breakdown };
 }
 
-// ---------- utama ----------
+// ---------- main ----------
 
 async function main() {
 	console.log(`Sinkronisasi dari ${BASE} (cache: ${NO_CACHE ? 'dimatikan' : cacheDir})`);
@@ -532,7 +532,7 @@ async function main() {
 	};
 	await writeJson('meta.json', meta);
 
-	// Cek slug terhadap data karakter yang sudah ada
+	// Check slugs against the existing character data
 	const existingFile = resolve(root, 'src/lib/data/characters.json');
 	if (existsSync(existingFile)) {
 		const existing: Array<{ slug: string }> = JSON.parse(await readFile(existingFile, 'utf8'));

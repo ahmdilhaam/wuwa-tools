@@ -2,7 +2,7 @@ import type { EchoSet, LocalizedText } from './types';
 
 const b = (twoPiece: string | null, fivePiece: string | null) => ({ twoPiece, fivePiece });
 
-/** Set yang disebut di data karakter tetapi tidak ada di echo-sets.md. */
+/** Sets mentioned in character data but absent from echo-sets.md. */
 const missingDetail = (name: string): EchoSet => ({
 	name,
 	abbrev: [],
@@ -13,13 +13,13 @@ const missingDetail = (name: string): EchoSet => ({
 });
 
 export const echoSets: EchoSet[] = [
-	// --- Set elemen ---
+	// --- Element sets ---
 	{ name: 'Sierra Gale', abbrev: ['SG', 'Gale'], kind: 'aero', bonuses: b('Aero DMG +10%', 'Aero DMG +30% selama 15 dtk setelah Intro Skill'), verified: true },
 	{ name: 'Void Thunder', abbrev: ['VT'], kind: 'electro', bonuses: b('Electro DMG +10%', 'Electro DMG +15% setelah Heavy ATK atau Skill (stack 2×, masing-masing 15 dtk)'), verified: true },
 	{ name: 'Molten Rift', abbrev: ['MR'], kind: 'fusion', bonuses: b('Fusion DMG +10%', 'Fusion DMG +30% selama 15 dtk setelah Resonance Skill'), verified: true },
 	{ name: 'Freezing Frost', abbrev: ['FF'], kind: 'glacio', bonuses: b('Glacio DMG +10%', 'Glacio DMG +10% setelah Basic/Heavy ATK (stack 3×, masing-masing 15 dtk)'), verified: true },
 	{
-		// Nama di data game saat ini "Havoc Eclipse"; "Sun-sinking Eclipse" (SSE) adalah nama lamanya.
+		// Current name in game data is "Havoc Eclipse"; "Sun-sinking Eclipse" (SSE) is the old name.
 		name: 'Havoc Eclipse',
 		abbrev: ['HE', 'SSE'],
 		kind: 'havoc',
@@ -32,11 +32,11 @@ export const echoSets: EchoSet[] = [
 	},
 	{ name: 'Celestial Light', abbrev: ['CL'], kind: 'spectro', bonuses: b('Spectro DMG +10%', 'Spectro DMG +30% selama 15 dtk setelah Intro Skill'), verified: true },
 
-	// --- Set universal ---
+	// --- Universal sets ---
 	{ name: 'Moonlit Clouds', abbrev: ['MC', 'Moonlit'], kind: 'universal', bonuses: b('ER +10%', 'Saat Outro Skill: Resonator berikutnya mendapat ATK +22.5% selama 15 dtk'), verified: true },
 	{ name: 'Rejuvenating Glow', abbrev: ['RG', 'Rejuv', 'Heal'], kind: 'universal', bonuses: b('Healing +10%', 'Menyembuhkan sekutu: ATK seluruh party +15% selama 30 dtk'), verified: true },
 	{
-		// Sumber hanya menulis "kondisi khusus"; rincian di bawah dari pengetahuan umum, bukan dari file sumber.
+		// The source only says "special condition"; the details below come from general knowledge, not the source file.
 		name: 'Tidebreaking Courage',
 		abbrev: ['TC'],
 		kind: 'universal',
@@ -49,7 +49,7 @@ export const echoSets: EchoSet[] = [
 	},
 	{ name: 'Lingering Tunes', abbrev: ['LT'], kind: 'universal', bonuses: b('ATK +10%', 'ATK +5% tiap 1.5 dtk saat on-field (stack 4×) + Outro DMG +60%'), verified: true },
 	{
-		// Sumber hanya menulis "set pendukung Coordinated ATK"; rincian dari pengetahuan umum.
+		// The source only says "Coordinated ATK support set"; details come from general knowledge.
 		name: 'Empyrean Anthem',
 		abbrev: ['EA'],
 		kind: 'universal',
@@ -61,7 +61,7 @@ export const echoSets: EchoSet[] = [
 		}
 	},
 
-	// --- Set khusus karakter (sumber hanya memberi catatan, bukan bonus) ---
+	// --- Character-specific sets (the source only gives notes, not bonuses) ---
 	{ name: 'Frosty Resolve', abbrev: ['FR'], kind: 'character', forCharacter: 'Carlotta', bonuses: null, verified: true, note: { id: 'Resonance Skill DMG. Detail bonus belum ada di sumber.', en: 'Resonance Skill DMG. Bonus details are not in the source yet.' } },
 	{ name: 'Chromatic Foam', abbrev: ['CF'], kind: 'character', forCharacter: 'Denia', bonuses: null, verified: true, note: { id: 'Fusion Burst DMG. Detail bonus belum ada di sumber.', en: 'Fusion Burst DMG. Bonus details are not in the source yet.' } },
 	{ name: 'Flaming Clawprint', abbrev: ['FCP'], kind: 'character', forCharacter: 'Lupa', bonuses: null, verified: true, note: { id: 'Set khusus Lupa. Detail bonus belum ada di sumber.', en: 'Lupa\x27s dedicated set. Bonus details are not in the source yet.' } },
@@ -70,7 +70,7 @@ export const echoSets: EchoSet[] = [
 	{ name: 'Eternal Radiance', abbrev: ['ER set'], kind: 'character', forCharacter: 'Spectro Frazzle users', bonuses: null, verified: true, note: { id: 'Hanya untuk pengguna Spectro Frazzle — Jinhsi TIDAK bisa memakainya. Detail bonus belum ada di sumber.', en: 'Spectro Frazzle users only; Jinhsi CANNOT use it. Bonus details are not in the source yet.' } },
 	{ name: 'Sigillum', abbrev: [], kind: 'character', forCharacter: 'Aemeath', bonuses: null, verified: true, note: { id: 'Set Tune Rupture. Detail bonus belum ada di sumber.', en: 'Tune Rupture set. Bonus details are not in the source yet.' } },
 
-	// --- Disebut di data karakter, tidak ada di echo-sets.md: tanpa bonus, tidak dikarang ---
+	// --- Mentioned in character data, absent from echo-sets.md: no bonus, nothing invented ---
 	missingDetail('Windward Pilgrimage'),
 	missingDetail('Midnight Veil'),
 	missingDetail('Wishes of Quiet Snowfall'),

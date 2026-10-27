@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Bendera Indonesia: merah di atas, putih di bawah, rasio 3:2.
+	// Indonesian flag: red on top, white below, 3:2 ratio.
 	let { size = 18 }: { size?: number } = $props();
 </script>
 

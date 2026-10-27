@@ -1,5 +1,5 @@
-// Tulis daftar templat sumber (angka -> {n}) untuk diterjemahkan: bun run i18n:extract
-// Mencakup pasif senjata dan deskripsi skill/sequence per karakter.
+// Write the list of source templates (numbers -> {n}) to translate: bun run i18n:extract
+// Covers weapon passives and per-character skill/sequence descriptions.
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -24,7 +24,7 @@ for (const slug of slugs) {
 	totalTemplates += list.length;
 	totalChars += chars;
 	await writeFile(resolve(outDir, `${slug}.source.json`), JSON.stringify(list, null, '\t') + '\n');
-	// Overlay tidak pernah ditimpa; dibuat kosong bila belum ada.
+	// Overlays are never overwritten; created empty if missing.
 	const overlay = resolve(outDir, `${slug}.id.json`);
 	if (!existsSync(overlay)) await writeFile(overlay, '{}\n');
 	console.log(`  ${slug}: ${list.length} templat, ${chars} karakter`);

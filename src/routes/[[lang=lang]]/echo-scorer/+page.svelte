@@ -48,7 +48,7 @@
 	function onStat(row: Row) {
 		row.value = '';
 	}
-	// Satu stat tidak bisa muncul dua kali di echo yang sama.
+	// A stat cannot appear twice on the same echo.
 	const takenElsewhere = (i: number, key: SubstatKey) => rows.some((r, j) => j !== i && r.key === key);
 </script>
 

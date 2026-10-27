@@ -15,7 +15,7 @@
 		})
 	);
 
-	// Urutan elemen seperti di menu game.
+	// Element order as in the game menu.
 	const order: Element[] = ['glacio', 'fusion', 'electro', 'aero', 'spectro', 'havoc'];
 
 	let query = $state('');

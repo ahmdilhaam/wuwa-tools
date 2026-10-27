@@ -1,6 +1,6 @@
-// Tipe data bersama untuk perpustakaan pengetahuan WuWa.
+// Shared data types for the WuWa knowledge library.
 
-/** Teks tulisan tangan dua bahasa. */
+/** Hand-written bilingual text. */
 export interface LocalizedText {
 	id: string;
 	en: string;
@@ -9,11 +9,11 @@ export interface LocalizedText {
 export type Element = 'aero' | 'glacio' | 'fusion' | 'electro' | 'spectro' | 'havoc';
 export type WeaponType = 'Sword' | 'Broadblade' | 'Pistols' | 'Gauntlets' | 'Rectifier';
 
-/** Satu bagian data karakter: label asli dari sumber, nilai satu baris, dan sub-bullet. */
+/** One section of character data: the original label from the source, a single-line value, and sub-bullets. */
 export interface CharacterSection {
 	label: string;
 	value: string;
-	/** Sub-bullet bersarang; teks markdown inline dipertahankan. */
+	/** Nested sub-bullets; inline markdown text is preserved. */
 	items: string[];
 }
 
@@ -34,17 +34,17 @@ export interface Character {
 	rotation: CharacterSection | null;
 	sequences: CharacterSection | null;
 	notes: CharacterSection | null;
-	/** Label yang tidak terpetakan — tidak pernah dibuang. */
+	/** Unmapped labels — never dropped. */
 	other: CharacterSection[];
 }
 
 export interface EchoSet {
 	name: string;
 	abbrev: string[];
-	/** 'universal', nama elemen, atau 'character' */
+	/** 'universal', an element name, or 'character' */
 	kind: Element | 'universal' | 'character';
 	forCharacter?: string;
-	/** null = detail bonus belum ada di sumber. */
+	/** null = bonus details not yet in the source. */
 	bonuses: { twoPiece: string | null; fivePiece: string | null } | null;
 	verified: boolean;
 	note?: LocalizedText;
@@ -56,7 +56,7 @@ export interface Weapon {
 	stats?: string;
 	users: string[];
 	notes?: LocalizedText;
-	/** Catatan koreksi atas data sumber. */
+	/** Correction note on the source data. */
 	correction?: LocalizedText;
 }
 
