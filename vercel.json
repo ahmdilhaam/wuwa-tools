@@ -4,5 +4,11 @@
 	"installCommand": "bun install",
 	"buildCommand": "bun run build",
 	"outputDirectory": "build",
-	"trailingSlash": true
+	"trailingSlash": true,
+	"headers": [
+		{
+			"source": "/img/characters/(.*)",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		}
+	]
 }

@@ -1,9 +1,11 @@
 // Sinkronisasi data game dari api-v2.encore.moe -> src/lib/data/game/*.json
 // Jalankan: bun scripts/sync-encore.ts [--no-cache]
 import { applyWeaponI18nFromFile, applySkillI18nFromFiles } from './apply-weapon-i18n';
+import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { basename, dirname, resolve } from 'node:path';
+import sharp from 'sharp';
 import {
 	basisPointsToFraction,
 	deriveUnit,
@@ -40,6 +42,9 @@ const BASE = 'https://api-v2.encore.moe/api';
 const root = resolve(import.meta.dirname, '..');
 const cacheDir = resolve(root, '.cache/encore');
 const outDir = resolve(root, 'src/lib/data/game');
+const iconDir = resolve(root, 'static/img/characters');
+// Tampil 32–132px; 160px menjaga total ~470 KB untuk ~60 ikon (192px q80 ~700 KB)
+const ICON_WIDTH = 160;
 const NO_CACHE = process.argv.includes('--no-cache');
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 30_000;
@@ -86,6 +91,38 @@ async function api<T = any>(lang: string, path: string): Promise<T | null> {
 				await mkdir(dirname(cacheFile), { recursive: true });
 				await writeFile(cacheFile, text);
 				return data;
+			} catch (e) {
+				lastErr = e;
+				if ((e as { fatal?: boolean }).fatal || attempt === RETRIES) break;
+				await sleep(500 * 2 ** attempt);
+			}
+		}
+		throw new Error(`Gagal mengambil ${url}: ${(lastErr as Error)?.message}`);
+	} finally {
+		release();
+	}
+}
+
+/** Ambil file biner (gambar) dengan cache yang sama; gagal keras bila tidak ada. */
+async function binary(url: string): Promise<Buffer> {
+	const cacheFile = resolve(cacheDir, 'img', basename(new URL(url).pathname));
+	if (!NO_CACHE && existsSync(cacheFile)) {
+		cacheHits++;
+		return readFile(cacheFile);
+	}
+	await acquire();
+	try {
+		let lastErr: unknown;
+		for (let attempt = 0; attempt <= RETRIES; attempt++) {
+			try {
+				networkCalls++;
+				const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+				if (res.status >= 500 || res.status === 429) throw new Error(`HTTP ${res.status}`);
+				if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}`), { fatal: true });
+				const buf = Buffer.from(await res.arrayBuffer());
+				await mkdir(dirname(cacheFile), { recursive: true });
+				await writeFile(cacheFile, buf);
+				return buf;
 			} catch (e) {
 				lastErr = e;
 				if ((e as { fatal?: boolean }).fatal || attempt === RETRIES) break;
@@ -252,6 +289,26 @@ async function syncCharacters(): Promise<{ chars: GameCharacter[]; idOk: boolean
 	});
 	if (warnPlaceholder) console.warn(`PERINGATAN: ${warnPlaceholder} deskripsi skill masih memuat placeholder {n}`);
 	return { chars, idOk, skillFiles: chars.length };
+}
+
+/**
+ * Ikon karakter di-host sendiri: diperkecil ke WebP lalu diberi hash isi di nama file,
+ * supaya aman di-cache immutable (cache encore.moe cuma 2 menit). `icon` diganti path lokal.
+ */
+async function localizeCharacterIcons(chars: GameCharacter[]): Promise<number> {
+	await mkdir(iconDir, { recursive: true });
+	const keep = new Set<string>();
+	await mapPool(chars, async (c) => {
+		const src = await binary(c.icon);
+		const out = await sharp(src).resize({ width: ICON_WIDTH, withoutEnlargement: true }).webp({ quality: 75, effort: 6 }).toBuffer();
+		const name = `${c.slug}.${createHash('sha256').update(out).digest('hex').slice(0, 8)}.webp`;
+		keep.add(name);
+		const file = resolve(iconDir, name);
+		if (!existsSync(file)) await writeFile(file, out);
+		c.icon = `/img/characters/${name}`;
+	});
+	for (const f of await readdir(iconDir)) if (!keep.has(f)) await rm(resolve(iconDir, f));
+	return keep.size;
 }
 
 // ---------- senjata ----------
@@ -438,6 +495,8 @@ async function main() {
 
 	console.log('-> karakter');
 	const { chars, idOk: charIdOk, skillFiles } = await syncCharacters();
+	console.log('-> ikon karakter');
+	const characterIcons = await localizeCharacterIcons(chars);
 	console.log('-> senjata');
 	const { weapons, idOk: weaponIdOk } = await syncWeapons();
 	console.log('-> sonata echo');
@@ -457,6 +516,7 @@ async function main() {
 		characters: chars.length,
 		characterIds: chars.reduce((n, c) => n + c.ids.length, 0),
 		skillFiles,
+		characterIcons,
 		weapons: weapons.length,
 		sonataSets: sets.length,
 		echoes: echoes.length,
