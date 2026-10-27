@@ -14,4 +14,8 @@ Game data (skills, weapons, sonata sets, enemies) comes from [encore.moe](https:
 
 Want to run it locally or update the data? See [DEVELOPMENT.md](DEVELOPMENT.md).
 
-Fan project, not affiliated with Kuro Games.
+## License
+
+Source code is released under the [MIT License](LICENSE).
+
+Fan project, not affiliated with Kuro Games. Wuthering Waves and all related names, game data, and assets are the property of Kuro Games; the MIT license covers this project's source code only.
