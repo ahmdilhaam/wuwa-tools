@@ -18,8 +18,8 @@
 	let buildA = $state(defaultBuild());
 	let buildB = $state(defaultBuild());
 
-	// State dibagikan lewat query string. Query tidak bisa dibaca saat prerender,
-	// jadi dibaca setelah mount; sebelum itu URL tidak ditulis ulang.
+	// State is shared via the query string. The query cannot be read during prerender,
+	// so it is read after mount; before that the URL is not rewritten.
 	let urlReady = $state(false);
 	onMount(() => {
 		const s = decodeShare(location.search);
@@ -33,7 +33,7 @@
 	const query = $derived(encodeShare({ mode, single, buildA, buildB }));
 	const shareHref = (qs: string) => page.url.pathname + (qs ? `?${qs}` : '');
 
-	// Perbarui URL (tanpa entri riwayat baru) setelah input berhenti berubah sejenak.
+	// Update the URL (without a new history entry) once input stops changing for a moment.
 	$effect(() => {
 		if (!urlReady) return;
 		const qs = query;
@@ -57,7 +57,7 @@
 		copyTimer = setTimeout(() => (copyStatus = 'idle'), 2500);
 	}
 
-	// Hasil + kontribusi pasif senjata (senjata dimuat malas lewat weaponStore)
+	// Result + weapon passive contribution (weapons are lazy-loaded via weaponStore)
 	function compute(b: BuildState) {
 		const weapon = weaponStore.find(b.pickWeapon);
 		const character = findCharacter(b.pickCharacter);
@@ -75,7 +75,7 @@
 	const resultA = $derived(calcA.r);
 	const resultB = $derived(calcB.r);
 
-	// Selisih rata-rata B terhadap A, dalam persen
+	// Average difference of B relative to A, in percent
 	const diffPct = $derived(
 		resultA.avgDamage > 0 ? (resultB.avgDamage / resultA.avgDamage - 1) * 100 : null
 	);
@@ -106,7 +106,7 @@
 		{ title: 'calc.rules.r6Title', text: 'calc.rules.r6Text' }
 	];
 
-	// Sel tabel: teks literal (istilah game, tidak diterjemahkan) atau kunci kamus.
+	// Table cell: literal text (game term, not translated) or a dictionary key.
 	type Cell = string | { key: DictKey };
 	const k = (key: DictKey): Cell => ({ key });
 	const correct = k('calc.classes.correct');
@@ -182,12 +182,12 @@
 			<div class="table-wrap">
 				<table>
 					<tbody>
-						<tr><th>Base DMG</th><td class="num">{r.baseDmg.toFixed(2)}</td></tr>
+						<tr><th>Base DMG</th><td class="num">{fixed(r.baseDmg, 2)}</td></tr>
 						<tr><th>{t('calc.result.poolBonus')}</th><td class="num">×{mult(r.bonusPool)}</td></tr>
 						<tr><th>Amplify</th><td class="num">×{mult(r.amplifyMultiplier)}</td></tr>
 						<tr><th>Special DMG</th><td class="num">×{mult(r.specialMultiplier)}</td></tr>
-						<tr><th>{t('calc.result.enemyDefBase')}</th><td class="num">{r.enemyDef.toFixed(2)}</td></tr>
-						<tr><th>{t('calc.result.enemyDefModified')}</th><td class="num">{r.modifiedDef.toFixed(2)}</td></tr>
+						<tr><th>{t('calc.result.enemyDefBase')}</th><td class="num">{fixed(r.enemyDef, 2)}</td></tr>
+						<tr><th>{t('calc.result.enemyDefModified')}</th><td class="num">{fixed(r.modifiedDef, 2)}</td></tr>
 						<tr><th>{t('calc.result.attackerTerm')}</th><td class="num">{r.attackerDefTerm}</td></tr>
 						<tr><th>DEF%</th><td class="num">×{mult(r.defFactor)} ({pct(r.defFactor)})</td></tr>
 						<tr><th>{t('calc.result.effectiveRes')}</th><td class="num">{pct(r.effectiveRes)}</td></tr>
