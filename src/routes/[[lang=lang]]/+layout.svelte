@@ -12,6 +12,8 @@
 	} from '#lib/i18n/index.svelte.ts';
 	import FlagId from '#lib/ui/FlagId.svelte';
 	import FlagUk from '#lib/ui/FlagUk.svelte';
+	import '@fontsource-variable/onest/wght.css';
+	import '@fontsource-variable/unbounded/wght.css';
 	import '../../app.css';
 
 	let { children } = $props();

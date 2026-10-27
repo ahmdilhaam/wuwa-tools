@@ -39,8 +39,8 @@
 	--el-havoc: #e07bc0;
 	--el-physical: #b5bccd;
 
-	--font-display: 'Unbounded', 'Segoe UI', system-ui, sans-serif;
-	--font-body: 'Onest', 'Segoe UI', system-ui, sans-serif;
+	--font-display: 'Unbounded Variable', 'Segoe UI', system-ui, sans-serif;
+	--font-body: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
 
 	/* Skala tipe (rasio ~1.25) */
 	--fs-xs: 0.78rem;
